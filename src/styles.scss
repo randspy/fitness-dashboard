@@ -8,3 +8,33 @@
   @tailwind components;
   @tailwind utilities;
 }
+
+@layer base {
+  :root {
+    --deep-navy-blue: 225 40% 16%;
+    --soft-pearl: 30 12% 92%;
+    --tangerine: 24 94% 62%;
+    --red: 0 84% 60%;
+
+    --background: var(--soft-pearl);
+    --background-secondary: var(--deep-navy-blue);
+    --foreground: var(--deep-navy-blue);
+    --secondary: var(--soft-pearl);
+    --secondary-foreground: var(--deep-navy-blue);
+    --accent: var(--tangerine);
+    --error: var(--red);
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground m-0 w-full overflow-x-hidden p-0;
+  }
+
+  body,
+  fit-root,
+  main,
+  fit-welcome {
+    @apply min-h-screen;
+  }
+}

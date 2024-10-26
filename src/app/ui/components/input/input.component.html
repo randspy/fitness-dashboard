@@ -1,0 +1,18 @@
+<div class="flex flex-col gap-1">
+  <label *ngIf="label()" [for]="label()" class="text-foreground text-sm">
+    {{ label() }}
+  </label>
+  <input
+    pInputText
+    [id]="label()"
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [ngModel]="value()"
+    (ngModelChange)="onInput($event)"
+    [ngClass]="{ 'ng-invalid ng-dirty': showError() }"
+    [ngClass]="styleClass()"
+  />
+  <p *ngIf="showError() && errorMessage()" class="text-error text-sm">
+    {{ errorMessage() }}
+  </p>
+</div>
