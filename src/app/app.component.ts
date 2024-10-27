@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-
 import { themeConfig } from './app.styles';
 
 @Component({
   selector: 'fit-root',
   standalone: true,
-  imports: [RouterOutlet, ButtonModule],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

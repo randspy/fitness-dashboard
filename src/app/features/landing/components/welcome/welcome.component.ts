@@ -6,9 +6,9 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { CardComponent } from '../../../ui/components/card/card.component';
-import { InputComponent } from '../../../ui/components/input/input.component';
-import { ButtonComponent } from '../../../ui/components/button/button.component';
+import { CardComponent } from '../../../../ui/components/card/card.component';
+import { InputComponent } from '../../../../ui/components/input/input.component';
+import { ButtonComponent } from '../../../../ui/components/button/button.component';
 
 @Component({
   selector: 'fit-welcome',

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WelcomeComponent } from './welcome.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CardComponent } from '../../../ui/components/card/card.component';
-import { InputComponent } from '../../../ui/components/input/input.component';
-import { ButtonComponent } from '../../../ui/components/button/button.component';
+import { CardComponent } from '../../../../ui/components/card/card.component';
+import { InputComponent } from '../../../../ui/components/input/input.component';
+import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
