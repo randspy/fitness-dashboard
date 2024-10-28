@@ -6,10 +6,22 @@ import { InputComponent } from '../../../../ui/components/input/input.component'
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { UserStore } from '../../../../core/user/user.store';
+
+import { Router, provideRouter } from '@angular/router';
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'fit-dummy',
+  template: '',
+})
+class DummyComponent {}
 
 describe('WelcomeComponent', () => {
   let component: WelcomeComponent;
   let fixture: ComponentFixture<WelcomeComponent>;
+  let userStore: InstanceType<typeof UserStore>;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -21,10 +33,17 @@ describe('WelcomeComponent', () => {
         ButtonComponent,
         NoopAnimationsModule,
       ],
+      providers: [
+        UserStore,
+        provideRouter([{ path: 'dashboard', component: DummyComponent }]),
+      ],
     }).compileComponents();
 
+    router = TestBed.inject(Router);
     fixture = TestBed.createComponent(WelcomeComponent);
     component = fixture.componentInstance;
+
+    userStore = TestBed.inject(UserStore);
     fixture.detectChanges();
   });
 
@@ -38,76 +57,92 @@ describe('WelcomeComponent', () => {
   });
 
   it('should render the input component', () => {
-    const inputElement = fixture.debugElement.query(
-      By.directive(InputComponent),
-    );
+    const inputElement = getInputElement();
     expect(inputElement).toBeTruthy();
   });
 
   it('should render the button component', () => {
-    const buttonElement = fixture.debugElement.query(
-      By.directive(ButtonComponent),
-    );
+    const buttonElement = getButtonElement();
     expect(buttonElement).toBeTruthy();
   });
 
   it('should disable submit button when form is empty', () => {
-    const buttonElement = fixture.debugElement.query(
-      By.directive(ButtonComponent),
-    );
-    expect(buttonElement.componentInstance.disabled).toBeTruthy();
+    const button = getButtonInstance();
+    expect(button.disabled()).toBeTruthy();
   });
 
   it('should enable submit button when name is provided', () => {
-    const inputElement = fixture.debugElement.query(
-      By.directive(InputComponent),
-    );
-    inputElement.componentInstance.onInput('John Doe');
+    const input = getInputInstance();
+    input.onInput('John Doe');
     fixture.detectChanges();
 
-    const buttonElement = fixture.debugElement.query(
-      By.directive(ButtonComponent),
-    );
-    expect(buttonElement.componentInstance.disabled()).toBeFalsy();
+    const button = getButtonInstance();
+    expect(button.disabled()).toBeFalsy();
   });
 
   it('should not show error message when name is valid', () => {
-    const inputElement = fixture.debugElement.query(
-      By.directive(InputComponent),
-    );
-    inputElement.componentInstance.onInput('John Doe');
+    const input = getInputInstance();
+    input.onInput('John Doe');
     fixture.detectChanges();
 
-    expect(inputElement.componentInstance.showError()).toBeFalsy();
-    expect(inputElement.componentInstance.errorMessage()).toBe('');
+    expect(input.showError()).toBeFalsy();
+    expect(input.errorMessage()).toBe('');
   });
 
   it('should show error message when name is touched, dirty and empty', () => {
-    const inputElement = fixture.debugElement.query(
-      By.directive(InputComponent),
-    );
+    const input = getInputInstance();
 
-    inputElement.componentInstance.onInput('John Doe');
-    inputElement.componentInstance.onInput('');
+    input.onInput('John Doe');
+    input.onInput('');
     fixture.detectChanges();
 
-    expect(inputElement.componentInstance.showError()).toBeTruthy();
-    expect(inputElement.componentInstance.errorMessage()).toBe(
-      'Name is required',
-    );
+    expect(input.showError()).toBeTruthy();
+    expect(input.errorMessage()).toBe('Name is required');
   });
 
-  it('should log form value when submitted with valid data', () => {
-    const consoleSpy = jest.spyOn(console, 'log');
-    const inputElement = fixture.debugElement.query(
-      By.directive(InputComponent),
-    );
-    inputElement.componentInstance.onInput('John Doe');
+  it('should set user name when submitted with valid data', () => {
+    const input = getInputInstance();
+    input.onInput('John Doe');
     fixture.detectChanges();
 
-    const form = fixture.debugElement.query(By.css('form'));
+    const form = getFormElement();
     form.triggerEventHandler('submit', null);
 
-    expect(consoleSpy).toHaveBeenCalledWith({ name: 'John Doe' });
+    expect(userStore.name()).toBe('John Doe');
   });
+
+  it('should navigate to dashboard when submitted with valid data', async () => {
+    const input = getInputInstance();
+    input.onInput('John Doe');
+    fixture.detectChanges();
+
+    const form = getFormElement();
+    form.triggerEventHandler('submit', null);
+
+    fixture.detectChanges();
+
+    await fixture.whenStable();
+
+    expect(router.url).toEqual('/dashboard');
+  });
+
+  function getButtonElement() {
+    return fixture.debugElement.query(By.directive(ButtonComponent));
+  }
+
+  function getButtonInstance() {
+    return getButtonElement().componentInstance;
+  }
+
+  function getInputElement() {
+    return fixture.debugElement.query(By.directive(InputComponent));
+  }
+
+  function getInputInstance() {
+    return getInputElement().componentInstance;
+  }
+
+  function getFormElement() {
+    return fixture.debugElement.query(By.css('form'));
+  }
 });

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -9,6 +9,8 @@ import {
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { InputComponent } from '../../../../ui/components/input/input.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
+import { UserStore } from '../../../../core/user/user.store';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'fit-welcome',
@@ -26,6 +28,9 @@ import { ButtonComponent } from '../../../../ui/components/button/button.compone
 export class WelcomeComponent {
   welcomeForm: FormGroup;
 
+  router = inject(Router);
+  userStore = inject(UserStore);
+
   constructor(private fb: FormBuilder) {
     this.welcomeForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -34,7 +39,8 @@ export class WelcomeComponent {
 
   onSubmit() {
     if (this.welcomeForm.valid) {
-      console.log(this.welcomeForm.value);
+      this.userStore.setName(this.welcomeForm.value.name);
+      this.router.navigate(['/dashboard']);
     }
   }
 

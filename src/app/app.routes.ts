@@ -1,23 +1,8 @@
-import { Router, Routes } from '@angular/router';
-import { inject } from '@angular/core';
-
-// TODO: Implement a proper identity guard
-const userExistsGuard = () => {
-  const userExists = localStorage.getItem('user') !== null;
-  if (!userExists) {
-    return inject(Router).navigate(['/welcome']);
-  }
-  return true;
-};
-
-// TODO: Implement a proper identity guard
-const userNotExistsGuard = () => {
-  const userExists = localStorage.getItem('user') !== null;
-  if (userExists) {
-    return inject(Router).navigate(['/dashboard']);
-  }
-  return true;
-};
+import { Routes } from '@angular/router';
+import {
+  userSetupCompletedGuard,
+  userSetupRequiredGuard,
+} from './core/user/user.guards';
 
 export const routes: Routes = [
   {
@@ -31,7 +16,7 @@ export const routes: Routes = [
       import('./features/landing/components/welcome/welcome.component').then(
         (m) => m.WelcomeComponent,
       ),
-    canMatch: [userNotExistsGuard],
+    canMatch: [userSetupRequiredGuard],
   },
   {
     path: 'dashboard',
@@ -39,7 +24,7 @@ export const routes: Routes = [
       import(
         './features/dashboard/components/dashboard-page/dashboard-page.component'
       ).then((m) => m.DashboardPageComponent),
-    canMatch: [userExistsGuard],
+    canMatch: [userSetupCompletedGuard],
   },
   {
     path: 'page-not-found',
