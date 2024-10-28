@@ -9,13 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UserStore } from '../../../../core/user/user.store';
 
 import { Router, provideRouter } from '@angular/router';
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'fit-dummy',
-  template: '',
-})
-class DummyComponent {}
+import { DummyComponent } from '../../../../../tests/dummy-component';
 
 describe('WelcomeComponent', () => {
   let component: WelcomeComponent;
@@ -35,7 +29,7 @@ describe('WelcomeComponent', () => {
       ],
       providers: [
         UserStore,
-        provideRouter([{ path: 'dashboard', component: DummyComponent }]),
+        provideRouter([{ path: 'app/dashboard', component: DummyComponent }]),
       ],
     }).compileComponents();
 
@@ -123,7 +117,7 @@ describe('WelcomeComponent', () => {
 
     await fixture.whenStable();
 
-    expect(router.url).toEqual('/dashboard');
+    expect(router.url).toEqual('/app/dashboard');
   });
 
   function getButtonElement() {

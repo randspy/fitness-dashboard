@@ -40,7 +40,7 @@ export class WelcomeComponent {
   onSubmit() {
     if (this.welcomeForm.valid) {
       this.userStore.setName(this.welcomeForm.value.name);
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/app/dashboard']);
     }
   }
 

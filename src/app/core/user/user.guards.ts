@@ -13,7 +13,7 @@ export const userSetupCompletedGuard = () => {
 export const userSetupRequiredGuard = () => {
   const userExists = inject(UserStore).name();
   if (userExists) {
-    return inject(Router).navigate(['/dashboard']);
+    return inject(Router).navigate(['/app/dashboard']);
   }
   return true;
 };

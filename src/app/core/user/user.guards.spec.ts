@@ -44,7 +44,7 @@ describe('User Guards', () => {
 
       TestBed.runInInjectionContext(userSetupRequiredGuard);
 
-      expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+      expect(router.navigate).toHaveBeenCalledWith(['/app/dashboard']);
     });
 
     it('should allow navigation when user does not exist', () => {

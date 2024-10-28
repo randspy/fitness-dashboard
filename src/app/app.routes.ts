@@ -3,11 +3,12 @@ import {
   userSetupCompletedGuard,
   userSetupRequiredGuard,
 } from './core/user/user.guards';
+import { MainLayoutComponent } from './layout/components/main-layout/main-layout.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'app/dashboard',
     pathMatch: 'full',
   },
   {
@@ -19,12 +20,18 @@ export const routes: Routes = [
     canMatch: [userSetupRequiredGuard],
   },
   {
-    path: 'dashboard',
-    loadComponent: () =>
-      import(
-        './features/dashboard/components/dashboard-page/dashboard-page.component'
-      ).then((m) => m.DashboardPageComponent),
-    canMatch: [userSetupCompletedGuard],
+    path: 'app',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import(
+            './features/dashboard/components/dashboard-page/dashboard-page.component'
+          ).then((m) => m.DashboardPageComponent),
+        canMatch: [userSetupCompletedGuard],
+      },
+    ],
   },
   {
     path: 'page-not-found',

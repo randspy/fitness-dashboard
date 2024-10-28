@@ -27,6 +27,8 @@ describe('PageNotFoundPageComponent', () => {
   it('should redirect to dashboard on link click', () => {
     const linkElement = fixture.debugElement.query(By.css('a'));
 
-    expect(linkElement.nativeElement.getAttribute('href')).toBe('/dashboard');
+    expect(linkElement.nativeElement.getAttribute('href')).toBe(
+      '/app/dashboard',
+    );
   });
 });
