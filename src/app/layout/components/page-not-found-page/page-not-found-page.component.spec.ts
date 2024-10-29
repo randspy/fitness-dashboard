@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageNotFoundPageComponent } from './page-not-found-page.component';
 import { provideRouter } from '@angular/router';
-import { LinkComponent } from '../../../../ui/components/link/link.component';
 import { By } from '@angular/platform-browser';
+import { LinkComponent } from '../../../ui/components/link/link.component';
 
 describe('PageNotFoundPageComponent', () => {
   let component: PageNotFoundPageComponent;

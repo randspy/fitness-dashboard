@@ -3,8 +3,6 @@ import {
   userSetupCompletedGuard,
   userSetupRequiredGuard,
 } from './core/user/user.guards';
-import { MainLayoutComponent } from './layout/components/main-layout/main-layout.component';
-
 export const routes: Routes = [
   {
     path: '',
@@ -21,7 +19,10 @@ export const routes: Routes = [
   },
   {
     path: 'app',
-    component: MainLayoutComponent,
+    loadComponent: () =>
+      import('./layout/components/main-layout/main-layout.component').then(
+        (m) => m.MainLayoutComponent,
+      ),
     children: [
       {
         path: 'dashboard',
@@ -37,7 +38,7 @@ export const routes: Routes = [
     path: 'page-not-found',
     loadComponent: () =>
       import(
-        './features/page-not-found/components/page-not-found-page/page-not-found-page.component'
+        './layout/components/page-not-found-page/page-not-found-page.component'
       ).then((m) => m.PageNotFoundPageComponent),
   },
   { path: '**', redirectTo: 'page-not-found' },
