@@ -32,6 +32,13 @@ export const routes: Routes = [
           ).then((m) => m.DashboardPageComponent),
         canMatch: [userSetupCompletedGuard],
       },
+      {
+        path: 'exercises',
+        loadComponent: () =>
+          import(
+            './features/exercises/components/exercise-page/exercise-page.component'
+          ).then((m) => m.ExercisePageComponent),
+      },
     ],
   },
   {
