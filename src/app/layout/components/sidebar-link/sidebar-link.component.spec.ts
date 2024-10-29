@@ -3,15 +3,14 @@ import { SidebarLinkComponent } from './sidebar-link.component';
 import { provideRouter, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { TooltipModule } from 'primeng/tooltip';
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { DummyComponent } from '../../../../tests/dummy-component';
 
 @Component({
   template: ` <fit-sidebar-link> Test content </fit-sidebar-link> `,
 })
 class TestComponent {
-  @ViewChild(SidebarLinkComponent, { static: false })
-  child!: SidebarLinkComponent;
+  child = viewChild<SidebarLinkComponent>(SidebarLinkComponent);
 }
 
 describe('SidebarLinkComponent', () => {

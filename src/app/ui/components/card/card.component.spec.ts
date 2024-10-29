@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardComponent } from './card.component';
 import { CardModule } from 'primeng/card';
@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
   template: ` <fit-card> Test content </fit-card> `,
 })
 class TestComponent {
-  @ViewChild(CardComponent, { static: false }) child!: CardComponent;
+  child = viewChild<CardComponent>(CardComponent);
 }
 
 describe('CardComponent', () => {
