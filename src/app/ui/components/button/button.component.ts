@@ -14,7 +14,6 @@ import { ButtonModule } from 'primeng/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
-  label = input<string>('');
   styleClass = input<string>('');
   type = input<string>('button');
   disabled = input(false);

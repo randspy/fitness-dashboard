@@ -1,8 +1,9 @@
 <p-button
-  label="{{ label() }}"
   [raised]="true"
   [styleClass]="styleClass()"
   [type]="type()"
   [disabled]="disabled()"
   (onClick)="onClick.emit()"
-/>
+>
+  <ng-content></ng-content>
+</p-button>

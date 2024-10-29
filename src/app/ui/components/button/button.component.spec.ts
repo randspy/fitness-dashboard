@@ -1,6 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ButtonComponent } from './button.component';
 import { By } from '@angular/platform-browser';
+import { Component, viewChild } from '@angular/core';
+
+@Component({
+  template: ` <fit-button>Test Button</fit-button> `,
+})
+class TestComponent {
+  child = viewChild<ButtonComponent>(ButtonComponent);
+}
 
 describe('ButtonComponent', () => {
   let component: ButtonComponent;
@@ -9,6 +17,7 @@ describe('ButtonComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ButtonComponent],
+      declarations: [TestComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ButtonComponent);
@@ -21,8 +30,7 @@ describe('ButtonComponent', () => {
   });
 
   it('should render button with correct label', () => {
-    fixture.componentRef.setInput('label', 'Test Button');
-    fixture.detectChanges();
+    const fixture = TestBed.createComponent(TestComponent);
 
     const buttonElement = fixture.debugElement.query(By.css('button'));
     expect(buttonElement.nativeElement.textContent.trim()).toBe('Test Button');
