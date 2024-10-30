@@ -78,4 +78,14 @@ describe('ButtonComponent', () => {
 
     expect(clickSpy).toHaveBeenCalled();
   });
+
+  it('should set severity correctly', () => {
+    fixture.componentRef.setInput('severity', 'secondary');
+    fixture.detectChanges();
+
+    const buttonElement = fixture.debugElement.query(By.css('button'));
+    expect(
+      buttonElement.nativeElement.classList.contains('p-button-secondary'),
+    ).toBe(true);
+  });
 });
