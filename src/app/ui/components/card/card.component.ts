@@ -10,4 +10,5 @@ import { CardModule } from 'primeng/card';
 })
 export class CardComponent {
   header = input<string>('');
+  styleClass = input<string>('');
 }

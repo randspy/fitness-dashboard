@@ -63,4 +63,13 @@ describe('CardComponent', () => {
     );
     expect(contentElement.nativeElement.innerHTML).toContain('Test content');
   });
+
+  it('should set styleClass when provided', () => {
+    fixture.componentRef.setInput('styleClass', 'test-class');
+
+    fixture.detectChanges();
+
+    const cardElement = fixture.debugElement.query(By.css('.test-class'));
+    expect(cardElement).toBeTruthy();
+  });
 });

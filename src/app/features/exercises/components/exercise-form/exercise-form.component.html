@@ -1,0 +1,25 @@
+<fit-card header="New Exercise" styleClass="">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mt-2 flex flex-col gap-2">
+      <fit-input
+        formControlName="name"
+        label="Name"
+        errorMessage="Name is required"
+        [showError]="isNameInvalid"
+      />
+      <fit-input formControlName="description" label="Description" />
+
+      <div class="flex justify-end">
+        <fit-button
+          type="button"
+          styleClass="mr-2"
+          (click)="onCancel()"
+          data-testid="cancel-button"
+        >
+          Cancel
+        </fit-button>
+        <fit-button type="submit" [disabled]="form.invalid">Save</fit-button>
+      </div>
+    </div>
+  </form>
+</fit-card>
