@@ -9,12 +9,14 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardComponent } from '../../../../ui/components/card/card.component';
+import { TextareaComponent } from '../../../../ui/components/textarea/textarea.component';
 
 @Component({
   selector: 'fit-exercise-form',
   standalone: true,
   imports: [
     InputComponent,
+    TextareaComponent,
     ReactiveFormsModule,
     ButtonComponent,
     CardComponent,
