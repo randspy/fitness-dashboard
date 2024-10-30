@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ButtonComponent } from '../../../../ui/components/button/button.component';
+import { LinkComponent } from '../../../../ui/components/link/link.component';
 
 @Component({
   selector: 'fit-exercise-page',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [LinkComponent],
   templateUrl: './exercise-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [

@@ -34,10 +34,10 @@ export const routes: Routes = [
       },
       {
         path: 'exercises',
-        loadComponent: () =>
-          import(
-            './features/exercises/components/exercise-page/exercise-page.component'
-          ).then((m) => m.ExercisePageComponent),
+        loadChildren: () =>
+          import('./features/exercises/exercises.routes').then(
+            (m) => m.exercisesRoutes,
+          ),
       },
     ],
   },
