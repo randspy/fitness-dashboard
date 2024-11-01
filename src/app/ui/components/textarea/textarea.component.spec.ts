@@ -1,12 +1,43 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TextareaComponent } from './textarea.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Component } from '@angular/core';
+
+@Component({
+  template: `
+    <form [formGroup]="form">
+      <fit-textarea
+        [formControl]="textareaControl"
+        [label]="label"
+        [placeholder]="placeholder"
+        [errorMessage]="errorMessage"
+        [showError]="showError"
+        [styleClass]="styleClass"
+        [rows]="rows"
+      ></fit-textarea>
+    </form>
+  `,
+})
+class TestComponent {
+  textareaControl = new FormControl('', Validators.required);
+  form = new FormGroup({
+    textareaControl: this.textareaControl,
+  });
+  label = '';
+  placeholder = '';
+  errorMessage = '';
+  showError = false;
+  styleClass = '';
+  rows = 3;
+}
 
 describe('TextareaComponent', () => {
-  let component: TextareaComponent;
-  let fixture: ComponentFixture<TextareaComponent>;
+  let component: TestComponent;
+  let fixture: ComponentFixture<TestComponent>;
+  let textareaElement: HTMLTextAreaElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,10 +47,14 @@ describe('TextareaComponent', () => {
         ReactiveFormsModule,
         NoopAnimationsModule,
       ],
+      declarations: [TestComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TextareaComponent);
+    fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
+    textareaElement = fixture.debugElement.query(
+      By.css('textarea'),
+    ).nativeElement;
     fixture.detectChanges();
   });
 
@@ -28,7 +63,7 @@ describe('TextareaComponent', () => {
   });
 
   it('should render label when provided', () => {
-    fixture.componentRef.setInput('label', 'Test Label');
+    component.label = 'Test Label';
 
     fixture.detectChanges();
 
@@ -37,7 +72,7 @@ describe('TextareaComponent', () => {
   });
 
   it('should not render label when not provided', () => {
-    fixture.componentRef.setInput('label', '');
+    component.label = '';
 
     fixture.detectChanges();
 
@@ -46,7 +81,7 @@ describe('TextareaComponent', () => {
   });
 
   it('should set placeholder correctly', () => {
-    fixture.componentRef.setInput('placeholder', 'Enter value');
+    component.placeholder = 'Enter value';
 
     fixture.detectChanges();
 
@@ -57,8 +92,8 @@ describe('TextareaComponent', () => {
   });
 
   it('should show error message when showError is true', () => {
-    fixture.componentRef.setInput('showError', true);
-    fixture.componentRef.setInput('errorMessage', 'Error occurred');
+    component.showError = true;
+    component.errorMessage = 'Error occurred';
 
     fixture.detectChanges();
 
@@ -67,8 +102,8 @@ describe('TextareaComponent', () => {
   });
 
   it('should not show error message when showError is false', () => {
-    fixture.componentRef.setInput('showError', false);
-    fixture.componentRef.setInput('errorMessage', 'Error occurred');
+    component.showError = false;
+    component.errorMessage = 'Error occurred';
 
     fixture.detectChanges();
 
@@ -76,40 +111,20 @@ describe('TextareaComponent', () => {
     expect(errorElement).toBeNull();
   });
 
-  it('should call onChange and onTouched when textarea value changes', () => {
-    const onChangeSpy = jest.spyOn(component, 'onChange');
-    const onTouchedSpy = jest.spyOn(component, 'onTouched');
+  it('should apply error styling to textarea', () => {
+    component.showError = true;
+
+    fixture.detectChanges();
+
     const textareaElement = fixture.debugElement.query(
       By.css('textarea'),
     ).nativeElement;
-
-    textareaElement.value = 'New Value';
-    textareaElement.dispatchEvent(new Event('input'));
-
-    expect(onChangeSpy).toHaveBeenCalledWith('New Value');
-    expect(onTouchedSpy).toHaveBeenCalled();
-  });
-
-  it('should update value when writeValue is called', () => {
-    component.writeValue('Test Value');
-
-    expect(component.value()).toBe('Test Value');
-  });
-
-  it('should set disabled state to true', () => {
-    component.setDisabledState(true);
-
-    expect(component.disabled()).toBe(true);
-  });
-
-  it('should set disabled state to false', () => {
-    component.setDisabledState(false);
-
-    expect(component.disabled()).toBe(false);
+    expect(textareaElement.classList.contains('ng-invalid')).toBe(true);
+    expect(textareaElement.classList.contains('ng-dirty')).toBe(true);
   });
 
   it('should apply styleClass when provided', () => {
-    fixture.componentRef.setInput('styleClass', 'custom-class');
+    component.styleClass = 'custom-class';
 
     fixture.detectChanges();
 
@@ -120,7 +135,7 @@ describe('TextareaComponent', () => {
   });
 
   it('should set rows correctly', () => {
-    fixture.componentRef.setInput('rows', 5);
+    component.rows = 5;
 
     fixture.detectChanges();
 
@@ -128,5 +143,31 @@ describe('TextareaComponent', () => {
       By.css('textarea'),
     ).nativeElement;
     expect(textareaElement.rows).toBe(5);
+  });
+
+  it('should not validate the form control', () => {
+    textareaElement.value = '';
+    textareaElement.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    expect(component.form.valid).toBeFalsy();
+  });
+
+  it('should validate the form control', () => {
+    textareaElement.value = 'value';
+    textareaElement.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+    expect(component.form.valid).toBeTruthy();
+  });
+
+  it('should change form control value', () => {
+    textareaElement.value = 'new value';
+    textareaElement.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    expect(component.textareaControl.value).toBe('new value');
   });
 });

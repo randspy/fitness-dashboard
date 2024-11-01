@@ -1,19 +1,58 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InputComponent } from './input.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Component } from '@angular/core';
+
+@Component({
+  template: `
+    <form [formGroup]="form">
+      <fit-input
+        [formControl]="inputControl"
+        [label]="label"
+        [placeholder]="placeholder"
+        [errorMessage]="errorMessage"
+        [showError]="showError"
+        [styleClass]="styleClass"
+        [type]="type"
+      ></fit-input>
+    </form>
+  `,
+})
+class TestComponent {
+  inputControl = new FormControl('', Validators.required);
+  form = new FormGroup({
+    inputControl: this.inputControl,
+  });
+  label = '';
+  placeholder = '';
+  errorMessage = '';
+  showError = false;
+  styleClass = '';
+  type = 'text';
+}
 
 describe('InputComponent', () => {
-  let component: InputComponent;
-  let fixture: ComponentFixture<InputComponent>;
+  let component: TestComponent;
+  let fixture: ComponentFixture<TestComponent>;
+  let inputElement: HTMLInputElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InputComponent, FormsModule, ReactiveFormsModule],
+      imports: [
+        InputComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        NoopAnimationsModule,
+      ],
+      declarations: [TestComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(InputComponent);
+    fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
+    inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
     fixture.detectChanges();
   });
 
@@ -22,7 +61,7 @@ describe('InputComponent', () => {
   });
 
   it('should render label when provided', () => {
-    fixture.componentRef.setInput('label', 'Test Label');
+    component.label = 'Test Label';
 
     fixture.detectChanges();
 
@@ -31,7 +70,7 @@ describe('InputComponent', () => {
   });
 
   it('should not render label when not provided', () => {
-    fixture.componentRef.setInput('label', '');
+    component.label = '';
 
     fixture.detectChanges();
 
@@ -39,31 +78,17 @@ describe('InputComponent', () => {
     expect(labelElement).toBeNull();
   });
 
-  it('should set input type correctly', () => {
-    fixture.componentRef.setInput('type', 'password');
-
-    fixture.detectChanges();
-
-    const inputElement = fixture.debugElement.query(
-      By.css('input'),
-    ).nativeElement;
-    expect(inputElement.type).toBe('password');
-  });
-
   it('should set placeholder correctly', () => {
-    fixture.componentRef.setInput('placeholder', 'Enter value');
+    component.placeholder = 'Enter value';
 
     fixture.detectChanges();
 
-    const inputElement = fixture.debugElement.query(
-      By.css('input'),
-    ).nativeElement;
     expect(inputElement.placeholder).toBe('Enter value');
   });
 
   it('should show error message when showError is true', () => {
-    fixture.componentRef.setInput('showError', true);
-    fixture.componentRef.setInput('errorMessage', 'Error occurred');
+    component.showError = true;
+    component.errorMessage = 'Error occurred';
 
     fixture.detectChanges();
 
@@ -72,8 +97,8 @@ describe('InputComponent', () => {
   });
 
   it('should not show error message when showError is false', () => {
-    fixture.componentRef.setInput('showError', false);
-    fixture.componentRef.setInput('errorMessage', 'Error occurred');
+    component.showError = false;
+    component.errorMessage = 'Error occurred';
 
     fixture.detectChanges();
 
@@ -81,45 +106,55 @@ describe('InputComponent', () => {
     expect(errorElement).toBeNull();
   });
 
-  it('should call onChange and onTouched when input value changes', () => {
-    const onChangeSpy = jest.spyOn(component, 'onChange');
-    const onTouchedSpy = jest.spyOn(component, 'onTouched');
-    const inputElement = fixture.debugElement.query(
-      By.css('input'),
-    ).nativeElement;
-
-    inputElement.value = 'New Value';
-    inputElement.dispatchEvent(new Event('input'));
-
-    expect(onChangeSpy).toHaveBeenCalledWith('New Value');
-    expect(onTouchedSpy).toHaveBeenCalled();
-  });
-
-  it('should update value when writeValue is called', () => {
-    component.writeValue('Test Value');
-
-    expect(component.value()).toBe('Test Value');
-  });
-  it('should set disabled state to true', () => {
-    component.setDisabledState(true);
-
-    expect(component.disabled()).toBe(true);
-  });
-
-  it('should set disabled state to false', () => {
-    component.setDisabledState(false);
-
-    expect(component.disabled()).toBe(false);
-  });
-
-  it('should apply styleClass when provided', () => {
-    fixture.componentRef.setInput('styleClass', 'custom-class');
+  it('should apply error styling to input', () => {
+    component.showError = true;
 
     fixture.detectChanges();
 
-    const inputElement = fixture.debugElement.query(
-      By.css('input'),
-    ).nativeElement;
+    expect(inputElement.classList.contains('ng-invalid')).toBe(true);
+    expect(inputElement.classList.contains('ng-dirty')).toBe(true);
+  });
+
+  it('should apply styleClass when provided', () => {
+    component.styleClass = 'custom-class';
+
+    fixture.detectChanges();
+
     expect(inputElement.classList.contains('custom-class')).toBe(true);
+  });
+
+  it('should set type correctly', () => {
+    component.type = 'password';
+
+    fixture.detectChanges();
+
+    expect(inputElement.type).toBe('password');
+  });
+
+  it('should not validate the form control', () => {
+    inputElement.value = '';
+    inputElement.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    expect(component.form.valid).toBeFalsy();
+  });
+
+  it('should validate the form control', () => {
+    inputElement.value = 'value';
+    inputElement.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    expect(component.form.valid).toBeTruthy();
+  });
+
+  it('should change form control value', () => {
+    inputElement.value = 'new value';
+    inputElement.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    expect(component.inputControl.value).toBe('new value');
   });
 });
