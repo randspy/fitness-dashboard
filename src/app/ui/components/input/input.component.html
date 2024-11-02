@@ -1,12 +1,11 @@
 <div class="flex flex-col gap-1">
   @if (label()) {
-    <label [for]="label()" class="text-foreground text-sm">
+    <label [for]="label()" class="text-sm text-foreground">
       {{ label() }}
     </label>
   }
   <input
     pInputText
-    [id]="label()"
     [type]="type()"
     [placeholder]="placeholder()"
     [ngModel]="value()"
@@ -16,7 +15,7 @@
   />
   <div class="h-5">
     @if (showError() && errorMessage()) {
-      <p class="text-error text-sm">{{ errorMessage() }}</p>
+      <p class="text-sm text-error">{{ errorMessage() }}</p>
     }
   </div>
 </div>
