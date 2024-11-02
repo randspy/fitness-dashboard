@@ -1,40 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExerciseFormComponent } from './exercise-form.component';
-import { provideRouter, Router, ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ConfirmationService } from 'primeng/api';
 
 describe('ExerciseFormComponent', () => {
   let component: ExerciseFormComponent;
   let fixture: ComponentFixture<ExerciseFormComponent>;
-  let router: Router;
-  let route: ActivatedRoute;
 
+  let nameInputElement: HTMLInputElement;
+  let descriptionInputElement: HTMLTextAreaElement;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ExerciseFormComponent, NoopAnimationsModule],
-      providers: [
-        provideRouter([
-          {
-            path: 'app/exercises',
-            component: ExerciseFormComponent,
-          },
-        ]),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              url: [{ path: 'app' }, { path: 'exercises' }, { path: 'new' }],
-            },
-          },
-        },
-      ],
+      providers: [ConfirmationService],
     }).compileComponents();
 
-    router = TestBed.inject(Router);
-    route = TestBed.inject(ActivatedRoute);
     fixture = TestBed.createComponent(ExerciseFormComponent);
     component = fixture.componentInstance;
+
+    nameInputElement = fixture.debugElement.query(By.css('input.p-inputtext'))
+      .nativeElement as HTMLInputElement;
+    descriptionInputElement = fixture.debugElement.query(
+      By.css('textarea.p-textarea'),
+    ).nativeElement as HTMLTextAreaElement;
     fixture.detectChanges();
   });
 
@@ -42,65 +31,70 @@ describe('ExerciseFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show error message when input is dirty and empty', () => {
-    const input = fixture.debugElement.query(By.css('fit-input'));
-
-    input.componentInstance.onInput('Push-ups');
-    fixture.detectChanges();
-
-    input.componentInstance.onInput('');
-    fixture.detectChanges();
-
-    expect(input.componentInstance.showError()).toBeTruthy();
-    expect(input.componentInstance.errorMessage()).toBe('Name is required');
-  });
-
   it('should enable save button when form is filled correctly', () => {
-    const input = fixture.debugElement.query(By.css('fit-input'));
     const saveButton = fixture.debugElement.query(
       By.css('button[type="submit"]'),
     );
 
-    input.componentInstance.onInput('Push-ups');
+    nameInputElement.value = 'Push-ups';
+    nameInputElement.dispatchEvent(new Event('input'));
     fixture.detectChanges();
 
     expect(saveButton.properties['disabled']).toBeFalsy();
   });
 
-  it('should navigate back when cancel is clicked', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+  it('should emit cancel event when cancel button is clicked', () => {
+    const cancelSpy = jest.spyOn(component.cancel, 'emit');
     const cancelButton = fixture.debugElement.query(
       By.css('[data-testid="cancel-button"]'),
     );
 
     cancelButton.triggerEventHandler('click', null);
 
-    expect(navigateSpy).toHaveBeenCalledWith(['../'], { relativeTo: route });
+    expect(cancelSpy).toHaveBeenCalled();
   });
 
-  it('should save and navigate when form is submitted with valid data', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const input = fixture.debugElement.query(By.css('fit-input'));
+  it('should save and navigate when form is submitted with valid data', async () => {
+    const saveSpy = jest.spyOn(component.save, 'emit');
     const form = fixture.debugElement.query(By.css('form'));
 
-    input.componentInstance.onInput('Push-ups');
+    nameInputElement.value = 'Push-ups';
+    nameInputElement.dispatchEvent(new Event('input'));
+
+    descriptionInputElement.value = 'Description';
+    descriptionInputElement.dispatchEvent(new Event('input'));
+
     fixture.detectChanges();
+
+    await fixture.whenStable();
 
     form.triggerEventHandler('submit', null);
 
-    expect(navigateSpy).toHaveBeenCalledWith(['../'], { relativeTo: route });
+    expect(saveSpy).toHaveBeenCalledWith({
+      name: 'Push-ups',
+      description: 'Description',
+    });
   });
 
-  it('should not navigate when form is submitted with invalid data', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const input = fixture.debugElement.query(By.css('fit-input'));
-    const form = fixture.debugElement.query(By.css('form'));
+  describe('canDeactivate', () => {
+    it('should return true when form is pristine', () => {
+      expect(component.canDeactivate()).toBeTruthy();
+    });
 
-    input.componentInstance.onInput('');
-    fixture.detectChanges();
+    it('should return true when form is dirty but has not changed', () => {
+      nameInputElement.value = '';
+      nameInputElement.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
 
-    form.triggerEventHandler('submit', null);
+      expect(component.canDeactivate()).toBeTruthy();
+    });
 
-    expect(navigateSpy).not.toHaveBeenCalled();
+    it('should return false when form is dirty and has changed', () => {
+      nameInputElement.value = 'Push-ups';
+      nameInputElement.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+
+      expect(component.canDeactivate()).toBeFalsy();
+    });
   });
 });
