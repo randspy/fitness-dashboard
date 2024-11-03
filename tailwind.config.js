@@ -18,6 +18,9 @@ module.exports = {
         accent: 'hsl(var(--accent))',
         error: 'hsl(var(--error))',
       },
+      spacing: {
+        128: '32rem',
+      },
     },
   },
   plugins: [require('tailwindcss-primeui')],

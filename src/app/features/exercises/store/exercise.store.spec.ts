@@ -122,4 +122,14 @@ describe('ExerciseStore', () => {
 
     expect(store.exercises()).toEqual(testExercises);
   });
+
+  it('should reset state', () => {
+    store.addExercise({
+      name: 'Push-ups',
+      description: 'Basic push-ups',
+    });
+
+    store.reset();
+    expect(store.exercises()).toEqual([]);
+  });
 });

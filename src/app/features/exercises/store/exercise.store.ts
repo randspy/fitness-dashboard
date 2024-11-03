@@ -1,4 +1,10 @@
-import { signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { updateState, withDevtools } from '@angular-architects/ngrx-toolkit';
 import { effect } from '@angular/core';
 import { Exercise } from '../domain/exercise.model';
@@ -7,7 +13,7 @@ interface ExercisesState {
   exercises: Exercise[];
 }
 
-const initialState: ExercisesState = {
+export const initialState: ExercisesState = {
   exercises: [],
 };
 
@@ -41,6 +47,9 @@ export const ExerciseStore = signalStore(
           e.id === id ? { ...e, ...exercise } : e,
         ),
       }));
+    },
+    reset() {
+      patchState(store, initialState);
     },
   })),
   withHooks((store) => ({
