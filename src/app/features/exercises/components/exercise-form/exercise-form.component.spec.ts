@@ -71,6 +71,7 @@ describe('ExerciseFormComponent', () => {
     form.triggerEventHandler('submit', null);
 
     expect(saveSpy).toHaveBeenCalledWith({
+      id: expect.any(String),
       name: 'Push-ups',
       description: 'Description',
     });
@@ -95,6 +96,34 @@ describe('ExerciseFormComponent', () => {
       fixture.detectChanges();
 
       expect(component.canDeactivate()).toBeFalsy();
+    });
+  });
+
+  it('should keep the state from the initial state if not changed', async () => {
+    const saveSpy = jest.spyOn(component.save, 'emit');
+    const form = fixture.debugElement.query(By.css('form'));
+
+    fixture.componentRef.setInput('initialState', {
+      id: '1-2-3-4-5',
+      name: 'Chin-ups',
+      description: 'Story about chin-ups',
+    });
+
+    fixture.detectChanges();
+
+    nameInputElement.value = 'Push-ups';
+    nameInputElement.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    await fixture.whenStable();
+
+    form.triggerEventHandler('submit', null);
+
+    expect(saveSpy).toHaveBeenCalledWith({
+      id: '1-2-3-4-5',
+      name: 'Push-ups',
+      description: 'Story about chin-ups',
     });
   });
 });

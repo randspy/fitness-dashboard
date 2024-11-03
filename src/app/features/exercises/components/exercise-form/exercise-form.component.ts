@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   input,
   output,
@@ -47,11 +48,29 @@ export class ExerciseFormComponent {
       name: [this.initialState().name, [Validators.required]],
       description: [this.initialState().description],
     });
+
+    effect(
+      () => {
+        this.form.patchValue(
+          {
+            name: this.initialState().name,
+            description: this.initialState().description,
+          },
+          { emitEvent: false },
+        );
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   onSubmit() {
     if (this.form.valid) {
-      this.save.emit(this.form.value);
+      const exercise: Exercise = {
+        id: this.initialState().id,
+        name: this.form.value.name,
+        description: this.form.value.description,
+      };
+      this.save.emit(exercise);
       this.form.reset();
     }
   }

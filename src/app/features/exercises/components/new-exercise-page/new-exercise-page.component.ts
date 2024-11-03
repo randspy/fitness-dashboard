@@ -10,6 +10,7 @@ import { Exercise } from '../../domain/exercise.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ExerciseStore } from '../../store/exercise.store';
 
 @Component({
   selector: 'fit-new-exercise-page',
@@ -32,6 +33,7 @@ export class NewExercisePageComponent {
 
   child = viewChild.required<ExerciseFormComponent>(ExerciseFormComponent);
   confirmationService = inject(ConfirmationService);
+  exerciseStore = inject(ExerciseStore);
 
   canDeactivate(): Observable<boolean> | boolean {
     if (this.child().canDeactivate()) {
@@ -54,9 +56,8 @@ export class NewExercisePageComponent {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save(exercise: Exercise) {
-    //TODO: add to store
+    this.exerciseStore.addExercise(exercise);
     this.navigateToParent();
   }
 
@@ -65,7 +66,6 @@ export class NewExercisePageComponent {
   }
 
   navigateToParent() {
-    console.log('test');
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 }
