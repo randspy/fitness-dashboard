@@ -48,6 +48,12 @@ export const ExerciseStore = signalStore(
         ),
       }));
     },
+    setExercises(exercises: Exercise[]) {
+      updateState(store, 'setExercises', (state) => ({
+        ...state,
+        exercises: [...exercises],
+      }));
+    },
     reset() {
       patchState(store, initialState);
     },

@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { Router } from '@angular/router';
+import { DraggableListComponent } from '../../../../ui/components/draggable-list/draggable-list.component';
 
 describe('ExerciseListComponent', () => {
   let component: ExerciseListComponent;
@@ -60,5 +61,29 @@ describe('ExerciseListComponent', () => {
     );
     expect(exerciseElements.length).toBe(1);
     expect(exerciseElements[0].nativeElement.textContent).toBe(exercise.name);
+  });
+
+  it('should reorder exercises when dragging is completed', () => {
+    const initialExercises = [
+      { id: '1', name: 'Push-ups', description: 'Basic push-ups' },
+      { id: '2', name: 'Squats', description: 'Basic squats' },
+      { id: '3', name: 'Pull-ups', description: 'Basic pull-ups' },
+    ];
+    const reorderedExercises = [
+      { id: '2', name: 'Squats', description: 'Basic squats' },
+      { id: '1', name: 'Push-ups', description: 'Basic push-ups' },
+      { id: '3', name: 'Pull-ups', description: 'Basic pull-ups' },
+    ];
+
+    exerciseStore.setExercises(initialExercises);
+    fixture.detectChanges();
+
+    const draggableList = fixture.debugElement.query(
+      By.directive(DraggableListComponent),
+    );
+    draggableList.triggerEventHandler('itemsChanged', reorderedExercises);
+    fixture.detectChanges();
+
+    expect(exerciseStore.exercises()).toEqual(reorderedExercises);
   });
 });

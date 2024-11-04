@@ -1,0 +1,15 @@
+@for (item of items(); track item.id) {
+  <div
+    class="cursor-pointer"
+    data-testid="draggable-item"
+    pDraggable
+    (onDragStart)="dragStart(item)"
+    pDroppable
+    (onDrop)="drop($index)"
+  >
+    <ng-container
+      *ngTemplateOutlet="contentTemplate(); context: { $implicit: item }"
+    >
+    </ng-container>
+  </div>
+}

@@ -3,11 +3,17 @@
     <h2 class="text-lg font-bold">No exercises</h2>
   </div>
 } @else {
-  <div class="md:w-128 flex w-full flex-col gap-4">
-    @for (exercise of exercises(); track exercise.id) {
-      <fit-card data-testid="exercise-item">
-        <h3>{{ exercise.name }}</h3>
-      </fit-card>
-    }
+  <div class="flex w-full flex-col gap-4 md:w-128">
+    <fit-draggable-list
+      [items]="exercises()"
+      (itemsChanged)="onReorder($event)"
+      [contentTemplate]="contentTemplate"
+    >
+      <ng-template #contentTemplate let-exercise>
+        <fit-card data-testid="exercise-item" styleClass="mb-2">
+          <h3>{{ exercise.name }}</h3>
+        </fit-card>
+      </ng-template>
+    </fit-draggable-list>
   </div>
 }
