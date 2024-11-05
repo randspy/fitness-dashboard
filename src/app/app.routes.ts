@@ -39,6 +39,13 @@ export const routes: Routes = [
             (m) => m.exercisesRoutes,
           ),
       },
+      {
+        path: 'sessions',
+        loadChildren: () =>
+          import('./features/sessions/sessions.routes').then(
+            (m) => m.sessionsRoutes,
+          ),
+      },
     ],
   },
   {

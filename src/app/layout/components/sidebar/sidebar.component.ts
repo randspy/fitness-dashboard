@@ -58,9 +58,9 @@ export class SidebarComponent {
       routerLink: '/app/exercises',
     },
     {
-      label: 'Workouts',
+      label: 'Sessions',
       icon: 'lucideLandPlot',
-      routerLink: '/app/workouts',
+      routerLink: '/app/sessions',
     },
   ];
 
