@@ -44,6 +44,13 @@ import {
       lucideSettings,
     }),
   ],
+  styles: [
+    `
+      :host {
+        @apply z-10 h-14 md:h-dvh md:w-20;
+      }
+    `,
+  ],
 })
 export class SidebarComponent {
   centralGroup: SidebarLinkItem[] = [
