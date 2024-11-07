@@ -7,7 +7,6 @@ import {
 import {
   FormArray,
   FormBuilder,
-  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -16,6 +15,7 @@ import { CardComponent } from '../../../../ui/components/card/card.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { InputComponent } from '../../../../ui/components/input/input.component';
 import { Session } from '../../domain/session.model';
+import { markFormAsTouched } from '../../../../core/shared/mark-as-touched';
 
 @Component({
   selector: 'fit-session-form',
@@ -124,18 +124,8 @@ export class SessionFormComponent {
     if (this.form.valid) {
       this.save.emit(this.form.value as Session);
     } else {
-      this.markFormAsTouched(this.form);
+      markFormAsTouched(this.form);
     }
-  }
-
-  private markFormAsTouched(formGroup: FormGroup | FormArray) {
-    Object.values(formGroup.controls).forEach((control) => {
-      if (control instanceof FormGroup || control instanceof FormArray) {
-        this.markFormAsTouched(control);
-      } else {
-        control.markAsTouched();
-      }
-    });
   }
 
   onCancel() {

@@ -8,8 +8,6 @@ describe('ExerciseFormComponent', () => {
   let component: ExerciseFormComponent;
   let fixture: ComponentFixture<ExerciseFormComponent>;
 
-  let nameInputElement: HTMLInputElement;
-  let descriptionInputElement: HTMLTextAreaElement;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ExerciseFormComponent, NoopAnimationsModule],
@@ -19,11 +17,6 @@ describe('ExerciseFormComponent', () => {
     fixture = TestBed.createComponent(ExerciseFormComponent);
     component = fixture.componentInstance;
 
-    nameInputElement = fixture.debugElement.query(By.css('input.p-inputtext'))
-      .nativeElement as HTMLInputElement;
-    descriptionInputElement = fixture.debugElement.query(
-      By.css('textarea.p-textarea'),
-    ).nativeElement as HTMLTextAreaElement;
     fixture.detectChanges();
   });
 
@@ -31,16 +24,18 @@ describe('ExerciseFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should enable save button when form is filled correctly', () => {
-    const saveButton = fixture.debugElement.query(
-      By.css('button[type="submit"]'),
-    );
+  it('should display error message when name is invalid', () => {
+    const form = fixture.debugElement.query(By.css('form'));
+    form.triggerEventHandler('submit', null);
 
-    nameInputElement.value = 'Push-ups';
-    nameInputElement.dispatchEvent(new Event('input'));
     fixture.detectChanges();
 
-    expect(saveButton.properties['disabled']).toBeFalsy();
+    expect(nameInputElement().classList.contains('ng-invalid')).toBeTruthy();
+    expect(nameInputElement().classList.contains('ng-touched')).toBeTruthy();
+
+    expect(errorMessageElement(nameInputElement().parentElement)).toBe(
+      'Name is required',
+    );
   });
 
   it('should emit cancel event when cancel button is clicked', () => {
@@ -58,11 +53,11 @@ describe('ExerciseFormComponent', () => {
     const saveSpy = jest.spyOn(component.save, 'emit');
     const form = fixture.debugElement.query(By.css('form'));
 
-    nameInputElement.value = 'Push-ups';
-    nameInputElement.dispatchEvent(new Event('input'));
+    nameInputElement().value = 'Push-ups';
+    nameInputElement().dispatchEvent(new Event('input'));
 
-    descriptionInputElement.value = 'Description';
-    descriptionInputElement.dispatchEvent(new Event('input'));
+    descriptionInputElement().value = 'Description';
+    descriptionInputElement().dispatchEvent(new Event('input'));
 
     fixture.detectChanges();
 
@@ -83,16 +78,16 @@ describe('ExerciseFormComponent', () => {
     });
 
     it('should return true when form is dirty but has not changed', () => {
-      nameInputElement.value = '';
-      nameInputElement.dispatchEvent(new Event('input'));
+      nameInputElement().value = '';
+      nameInputElement().dispatchEvent(new Event('input'));
       fixture.detectChanges();
 
       expect(component.canDeactivate()).toBeTruthy();
     });
 
     it('should return false when form is dirty and has changed', () => {
-      nameInputElement.value = 'Push-ups';
-      nameInputElement.dispatchEvent(new Event('input'));
+      nameInputElement().value = 'Push-ups';
+      nameInputElement().dispatchEvent(new Event('input'));
       fixture.detectChanges();
 
       expect(component.canDeactivate()).toBeFalsy();
@@ -111,8 +106,8 @@ describe('ExerciseFormComponent', () => {
 
     fixture.detectChanges();
 
-    nameInputElement.value = 'Push-ups';
-    nameInputElement.dispatchEvent(new Event('input'));
+    nameInputElement().value = 'Push-ups';
+    nameInputElement().dispatchEvent(new Event('input'));
 
     fixture.detectChanges();
 
@@ -126,4 +121,13 @@ describe('ExerciseFormComponent', () => {
       description: 'Story about chin-ups',
     });
   });
+
+  const nameInputElement = () =>
+    fixture.debugElement.query(By.css('input.p-inputtext')).nativeElement;
+
+  const descriptionInputElement = () =>
+    fixture.debugElement.query(By.css('textarea.p-textarea')).nativeElement;
+
+  const errorMessageElement = (element: HTMLElement) =>
+    element.querySelector('.text-error')?.textContent;
 });
