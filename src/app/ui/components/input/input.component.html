@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-1">
   @if (label()) {
-    <label [for]="label()" class="text-sm text-foreground">
+    <label [for]="inputId()" class="text-sm text-foreground">
       {{ label() }}
     </label>
   }
@@ -8,9 +8,12 @@
     pInputText
     [type]="type()"
     [placeholder]="placeholder()"
+    [id]="inputId()"
     [ngModel]="value()"
     (ngModelChange)="onInput($event)"
-    [ngClass]="{ 'ng-invalid ng-dirty': showError() }"
+    [class.ng-invalid]="showError()"
+    [class.ng-touched]="showError()"
+    [class.ng-dirty]="showError()"
     [ngClass]="styleClass()"
   />
   <div class="h-5">
