@@ -1,15 +1,18 @@
 <div class="flex flex-col gap-1">
   @if (label()) {
-    <label [for]="label()" class="text-sm text-foreground">
+    <label [for]="inputId()" class="text-sm text-foreground">
       {{ label() }}
     </label>
   }
   <textarea
     pInputTextarea
+    [id]="inputId()"
     [placeholder]="placeholder()"
     [ngModel]="value()"
     (ngModelChange)="onInput($event)"
-    [ngClass]="{ 'ng-invalid ng-dirty': showError() }"
+    [class.ng-invalid]="showError()"
+    [class.ng-dirty]="showError()"
+    [class.ng-touched]="showError()"
     [ngClass]="styleClass()"
     [rows]="rows()"
   ></textarea>

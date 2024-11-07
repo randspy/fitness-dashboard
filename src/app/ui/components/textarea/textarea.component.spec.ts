@@ -37,7 +37,6 @@ class TestComponent {
 describe('TextareaComponent', () => {
   let component: TestComponent;
   let fixture: ComponentFixture<TestComponent>;
-  let textareaElement: HTMLTextAreaElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -52,9 +51,7 @@ describe('TextareaComponent', () => {
 
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
-    textareaElement = fixture.debugElement.query(
-      By.css('textarea'),
-    ).nativeElement;
+
     fixture.detectChanges();
   });
 
@@ -62,13 +59,20 @@ describe('TextareaComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should set input id', () => {
+    component.label = 'Test Label';
+    fixture.detectChanges();
+
+    expect(textareaElement().id).toEqual('test-uuid');
+    expect(labelQuery().attributes['for']).toBe('test-uuid');
+  });
+
   it('should render label when provided', () => {
     component.label = 'Test Label';
 
     fixture.detectChanges();
 
-    const labelElement = fixture.debugElement.query(By.css('label'));
-    expect(labelElement.nativeElement.textContent).toContain('Test Label');
+    expect(labelElement().textContent).toContain('Test Label');
   });
 
   it('should not render label when not provided', () => {
@@ -76,8 +80,7 @@ describe('TextareaComponent', () => {
 
     fixture.detectChanges();
 
-    const labelElement = fixture.debugElement.query(By.css('label'));
-    expect(labelElement).toBeNull();
+    expect(labelQuery()).toBeNull();
   });
 
   it('should set placeholder correctly', () => {
@@ -85,10 +88,7 @@ describe('TextareaComponent', () => {
 
     fixture.detectChanges();
 
-    const textareaElement = fixture.debugElement.query(
-      By.css('textarea'),
-    ).nativeElement;
-    expect(textareaElement.placeholder).toBe('Enter value');
+    expect(textareaElement().placeholder).toBe('Enter value');
   });
 
   it('should show error message when showError is true', () => {
@@ -97,8 +97,7 @@ describe('TextareaComponent', () => {
 
     fixture.detectChanges();
 
-    const errorElement = fixture.debugElement.query(By.css('p'));
-    expect(errorElement.nativeElement.textContent).toContain('Error occurred');
+    expect(errorMessageElement().textContent).toContain('Error occurred');
   });
 
   it('should not show error message when showError is false', () => {
@@ -107,8 +106,7 @@ describe('TextareaComponent', () => {
 
     fixture.detectChanges();
 
-    const errorElement = fixture.debugElement.query(By.css('p'));
-    expect(errorElement).toBeNull();
+    expect(errorMessageQuery()).toBeNull();
   });
 
   it('should apply error styling to textarea', () => {
@@ -116,11 +114,9 @@ describe('TextareaComponent', () => {
 
     fixture.detectChanges();
 
-    const textareaElement = fixture.debugElement.query(
-      By.css('textarea'),
-    ).nativeElement;
-    expect(textareaElement.classList.contains('ng-invalid')).toBe(true);
-    expect(textareaElement.classList.contains('ng-dirty')).toBe(true);
+    expect(textareaElement().classList.contains('ng-invalid')).toBe(true);
+    expect(textareaElement().classList.contains('ng-dirty')).toBe(true);
+    expect(textareaElement().classList.contains('ng-touched')).toBe(true);
   });
 
   it('should apply styleClass when provided', () => {
@@ -128,10 +124,7 @@ describe('TextareaComponent', () => {
 
     fixture.detectChanges();
 
-    const textareaElement = fixture.debugElement.query(
-      By.css('textarea'),
-    ).nativeElement;
-    expect(textareaElement.classList.contains('custom-class')).toBe(true);
+    expect(textareaElement().classList.contains('custom-class')).toBe(true);
   });
 
   it('should set rows correctly', () => {
@@ -139,15 +132,12 @@ describe('TextareaComponent', () => {
 
     fixture.detectChanges();
 
-    const textareaElement = fixture.debugElement.query(
-      By.css('textarea'),
-    ).nativeElement;
-    expect(textareaElement.rows).toBe(5);
+    expect(textareaElement().rows).toBe(5);
   });
 
   it('should not validate the form control', () => {
-    textareaElement.value = '';
-    textareaElement.dispatchEvent(new Event('input'));
+    textareaElement().value = '';
+    textareaElement().dispatchEvent(new Event('input'));
 
     fixture.detectChanges();
 
@@ -155,19 +145,30 @@ describe('TextareaComponent', () => {
   });
 
   it('should validate the form control', () => {
-    textareaElement.value = 'value';
-    textareaElement.dispatchEvent(new Event('input'));
+    textareaElement().value = 'value';
+    textareaElement().dispatchEvent(new Event('input'));
 
     fixture.detectChanges();
     expect(component.form.valid).toBeTruthy();
   });
 
   it('should change form control value', () => {
-    textareaElement.value = 'new value';
-    textareaElement.dispatchEvent(new Event('input'));
+    textareaElement().value = 'new value';
+    textareaElement().dispatchEvent(new Event('input'));
 
     fixture.detectChanges();
 
     expect(component.textareaControl.value).toBe('new value');
   });
+
+  const labelQuery = () => fixture.debugElement.query(By.css('label'));
+
+  const labelElement = () => labelQuery().nativeElement;
+
+  const textareaElement = () =>
+    fixture.debugElement.query(By.css('textarea')).nativeElement;
+
+  const errorMessageQuery = () => fixture.debugElement.query(By.css('p'));
+
+  const errorMessageElement = () => errorMessageQuery().nativeElement;
 });
