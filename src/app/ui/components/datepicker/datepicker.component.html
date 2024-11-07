@@ -1,0 +1,24 @@
+<div class="flex flex-col gap-1">
+  @if (label()) {
+    <label [for]="inputId()" class="text-sm text-foreground">
+      {{ label() }}
+    </label>
+  }
+  <p-datepicker
+    [ngModel]="value()"
+    [inputId]="inputId()"
+    (ngModelChange)="onDateChange($event)"
+    [class.ng-invalid]="showError()"
+    [class.ng-touched]="showError()"
+    [class.ng-dirty]="showError()"
+    [dateFormat]="dateFormat()"
+    [placeholder]="placeholder()"
+    [showIcon]="true"
+    [showButtonBar]="true"
+  />
+  <div class="h-5">
+    @if (showError() && errorMessage()) {
+      <p class="text-sm text-error">{{ errorMessage() }}</p>
+    }
+  </div>
+</div>
