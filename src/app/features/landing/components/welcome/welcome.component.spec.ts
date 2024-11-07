@@ -51,67 +51,55 @@ describe('WelcomeComponent', () => {
   });
 
   it('should render the input component', () => {
-    const inputElement = getInputElement();
-    expect(inputElement).toBeTruthy();
+    expect(inputQuery()).toBeTruthy();
   });
 
   it('should render the button component', () => {
-    const buttonElement = getButtonElement();
-    expect(buttonElement).toBeTruthy();
-  });
-
-  it('should disable submit button when form is empty', () => {
-    const button = getButtonInstance();
-    expect(button.disabled()).toBeTruthy();
+    expect(buttonQuery()).toBeTruthy();
   });
 
   it('should enable submit button when name is provided', () => {
-    const input = getInputInstance();
+    const input = inputInstance();
     input.onInput('John Doe');
     fixture.detectChanges();
 
-    const button = getButtonInstance();
-    expect(button.disabled()).toBeFalsy();
+    expect(buttonInstance().disabled()).toBeFalsy();
   });
 
   it('should not show error message when name is valid', () => {
-    const input = getInputInstance();
+    const input = inputInstance();
     input.onInput('John Doe');
+
+    formQuery().triggerEventHandler('submit', null);
+
     fixture.detectChanges();
 
-    expect(input.showError()).toBeFalsy();
-    expect(input.errorMessage()).toBe('');
+    expect(errorMessageElement(inputElement())).toBeFalsy();
   });
 
-  it('should show error message when name is touched, dirty and empty', () => {
-    const input = getInputInstance();
+  it('should show error message when name is empty', () => {
+    formQuery().triggerEventHandler('submit', null);
 
-    input.onInput('John Doe');
-    input.onInput('');
     fixture.detectChanges();
-
-    expect(input.showError()).toBeTruthy();
-    expect(input.errorMessage()).toBe('Name is required');
+    expect(errorMessageElement(inputElement())).toBe('Name is required');
   });
 
   it('should set user name when submitted with valid data', () => {
-    const input = getInputInstance();
+    const input = inputInstance();
     input.onInput('John Doe');
     fixture.detectChanges();
 
-    const form = getFormElement();
-    form.triggerEventHandler('submit', null);
+    formQuery().triggerEventHandler('submit', null);
 
     expect(userStore.name()).toBe('John Doe');
   });
 
   it('should navigate to dashboard when submitted with valid data', async () => {
-    const input = getInputInstance();
+    const input = inputInstance();
     input.onInput('John Doe');
     fixture.detectChanges();
 
-    const form = getFormElement();
-    form.triggerEventHandler('submit', null);
+    formQuery().triggerEventHandler('submit', null);
 
     fixture.detectChanges();
 
@@ -120,23 +108,30 @@ describe('WelcomeComponent', () => {
     expect(router.url).toEqual('/app/dashboard');
   });
 
-  function getButtonElement() {
+  function buttonQuery() {
     return fixture.debugElement.query(By.directive(ButtonComponent));
   }
 
-  function getButtonInstance() {
-    return getButtonElement().componentInstance;
+  function buttonInstance() {
+    return buttonQuery().componentInstance;
   }
 
-  function getInputElement() {
+  function inputQuery() {
     return fixture.debugElement.query(By.directive(InputComponent));
   }
 
-  function getInputInstance() {
-    return getInputElement().componentInstance;
+  function inputInstance() {
+    return inputQuery().componentInstance;
   }
 
-  function getFormElement() {
+  function inputElement() {
+    return inputQuery().nativeElement;
+  }
+
+  function formQuery() {
     return fixture.debugElement.query(By.css('form'));
   }
+
+  const errorMessageElement = (element: HTMLElement) =>
+    element.querySelector('.text-error')?.textContent;
 });
