@@ -23,6 +23,7 @@ export const routes: Routes = [
       import('./layout/components/main-layout/main-layout.component').then(
         (m) => m.MainLayoutComponent,
       ),
+    canMatch: [userSetupCompletedGuard],
     children: [
       {
         path: 'dashboard',
@@ -30,7 +31,6 @@ export const routes: Routes = [
           import(
             './features/dashboard/components/dashboard-page/dashboard-page.component'
           ).then((m) => m.DashboardPageComponent),
-        canMatch: [userSetupCompletedGuard],
       },
       {
         path: 'exercises',
