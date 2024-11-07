@@ -1,0 +1,135 @@
+<fit-card
+  header="Log your session"
+  styleClass="rounded-none md:rounded-xl max-w-5xl mx-auto"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mt-2 flex flex-col gap-2">
+      <div class="flex items-center justify-between gap-2">
+        <fit-datepicker
+          formControlName="date"
+          label="Session date"
+          [showError]="isDateInvalid()"
+          errorMessage="Date is required"
+        />
+      </div>
+      <div formArrayName="exercises">
+        @for (
+          exercise of exercises.controls;
+          let exerciseIndex = $index;
+          track exercise.value.id
+        ) {
+          <div
+            formGroupName="{{ exerciseIndex }}"
+            [attr.data-testid]="'exercise-' + exerciseIndex"
+            class="mb-5 flex flex-col gap-5 rounded-md bg-gray-100 p-5"
+          >
+            <div class="flex flex-col gap-2 md:flex-row">
+              <fit-input
+                formControlName="name"
+                type="text"
+                label="Exercise name"
+                [showError]="isExerciseNameInvalid(exerciseIndex)"
+                errorMessage="Exercise name is required"
+              />
+              <fit-button
+                class="w-full self-center md:w-auto"
+                styleClass="w-full md:w-auto"
+                type="button"
+                severity="secondary"
+                (click)="removeExercise(exerciseIndex)"
+                [attr.data-testid]="'remove-exercise-button-' + exerciseIndex"
+              >
+                Remove
+              </fit-button>
+              <fit-button
+                class="w-full self-center"
+                styleClass="w-full md:w-auto"
+                type="button"
+                (click)="addSet(exerciseIndex)"
+                [attr.data-testid]="'add-set-button-' + exerciseIndex"
+                styleClass="bg-accent border-accent focus:outline-accent w-full md:w-auto"
+                >Add set</fit-button
+              >
+            </div>
+            <div formArrayName="sets">
+              @for (
+                set of getSets(exerciseIndex).controls;
+                let setIndex = $index;
+                track set.value.id
+              ) {
+                <div
+                  formGroupName="{{ setIndex }}"
+                  [attr.data-testid]="'set-' + setIndex"
+                  class="flex flex-col gap-2 md:flex-row"
+                >
+                  <p class="mr-4 self-center">Set {{ setIndex + 1 }}</p>
+
+                  <fit-input
+                    formControlName="repetitions"
+                    type="number"
+                    label="Repetitions"
+                    [showError]="
+                      isSetInvalid(exerciseIndex, setIndex, 'repetitions')
+                    "
+                    [errorMessage]="
+                      getSetErrorMessage(exerciseIndex, setIndex, 'repetitions')
+                    "
+                  />
+                  <fit-input
+                    formControlName="weight"
+                    type="number"
+                    label="Weight"
+                    [showError]="
+                      isSetInvalid(exerciseIndex, setIndex, 'weight')
+                    "
+                    [errorMessage]="
+                      getSetErrorMessage(exerciseIndex, setIndex, 'weight')
+                    "
+                  />
+                  <fit-button
+                    class="w-full self-center md:w-auto"
+                    styleClass="w-full md:w-auto"
+                    type="button"
+                    severity="secondary"
+                    (click)="removeSet(exerciseIndex, setIndex)"
+                    [attr.data-testid]="
+                      'remove-set-button-' + exerciseIndex + '-' + setIndex
+                    "
+                  >
+                    Remove
+                  </fit-button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2 md:flex-row">
+      <fit-button
+        type="button"
+        (click)="addExercise()"
+        styleClass="bg-accent border-accent focus:outline-accent w-full md:w-auto"
+        class="mr-auto w-full md:w-auto"
+        [attr.data-testid]="'add-exercise-button'"
+        >Add exercise</fit-button
+      >
+      <fit-button
+        type="button"
+        (click)="onCancel()"
+        severity="secondary"
+        class="order-3 w-full md:order-none md:w-auto"
+        styleClass="w-full md:w-auto"
+        [attr.data-testid]="'cancel-button'"
+        >Cancel</fit-button
+      >
+      <fit-button
+        type="submit"
+        styleClass="w-full md:w-auto"
+        class="w-full md:w-auto"
+        >Save</fit-button
+      >
+    </div>
+  </form>
+</fit-card>
