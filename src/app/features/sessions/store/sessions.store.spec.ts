@@ -33,6 +33,7 @@ describe('SessionStore', () => {
 
     it('should add session with generated id', () => {
       const newSession = {
+        name: 'Test session',
         id: crypto.randomUUID(),
         date: new Date(),
         exercises: [],
@@ -48,6 +49,7 @@ describe('SessionStore', () => {
     it('should remove session by id', () => {
       const session = {
         id: '1',
+        name: 'Test session',
         date: new Date(),
         exercises: [],
       };
@@ -62,6 +64,7 @@ describe('SessionStore', () => {
     it('should update session', () => {
       const session = {
         id: '1',
+        name: 'Test session',
         date: new Date(),
         exercises: [],
       };
@@ -81,6 +84,7 @@ describe('SessionStore', () => {
     it('should persist sessions to localStorage when state changes', fakeAsync(() => {
       const session = {
         id: '1',
+        name: 'Test session',
         date: new Date(),
         exercises: [
           {
@@ -104,6 +108,7 @@ describe('SessionStore', () => {
     it('should not update non-existent session', () => {
       const session = {
         id: '1',
+        name: 'Test session',
         date: new Date(),
         exercises: [],
       };
@@ -122,6 +127,7 @@ describe('SessionStore', () => {
     const testSessions = [
       {
         id: '1',
+        name: 'Test session',
         date: new Date(),
         exercises: [{ id: '1', name: 'Push-ups', sets: [] }],
       },
@@ -136,6 +142,7 @@ describe('SessionStore', () => {
   it('should reset state', () => {
     store.addSession({
       id: '1',
+      name: 'Test session',
       date: new Date(),
       exercises: [],
     });
@@ -145,9 +152,11 @@ describe('SessionStore', () => {
   });
 
   it('should set sessions', () => {
-    store.setSessions([{ id: '1', date: new Date(), exercises: [] }]);
-    expect(store.sessions()).toEqual([
-      { id: '1', date: new Date(), exercises: [] },
-    ]);
+    const sessions = [
+      { id: '1', name: 'Test session', date: new Date(), exercises: [] },
+    ];
+
+    store.setSessions(sessions);
+    expect(store.sessions()).toEqual(sessions);
   });
 });

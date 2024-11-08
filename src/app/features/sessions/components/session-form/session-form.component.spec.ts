@@ -40,6 +40,14 @@ describe('SessionFormComponent', () => {
 
     expect(formattedActualDate).toBe(expectedDate);
   });
+
+  it('should change session name', () => {
+    changeSessionNameInput('Test session');
+    fixture.detectChanges();
+
+    expect(sessionNameInputElement().value).toBe('Test session');
+  });
+
   it('should change date', async () => {
     changeDateInput(new Date('01/01/2024'));
     fixture.detectChanges();
@@ -134,6 +142,7 @@ describe('SessionFormComponent', () => {
   it('should emit save event with valid form data', () => {
     const saveSpy = jest.spyOn(component.save, 'emit');
 
+    changeSessionNameInput('Test session');
     changeExerciseNameInput(0, 'Push-ups');
     saveButton().triggerEventHandler('submit', null);
 
@@ -142,6 +151,7 @@ describe('SessionFormComponent', () => {
     expect(saveSpy).toHaveBeenCalledWith({
       date: expect.any(Date),
       id: 'test-uuid',
+      name: 'Test session',
       exercises: [
         {
           id: 'test-uuid',
@@ -153,7 +163,19 @@ describe('SessionFormComponent', () => {
   });
 
   describe('validation', () => {
-    it('should show errors for date', async () => {
+    it('should show error for session name', () => {
+      saveButton().triggerEventHandler('submit', null);
+      fixture.detectChanges();
+
+      const sessionNameInput = sessionNameInputElement();
+      expect(sessionNameInput.classList.contains('ng-invalid')).toBe(true);
+      expect(sessionNameInput.classList.contains('ng-touched')).toBe(true);
+      expect(errorMessageElement(sessionNameInput.parentElement)).toBe(
+        'Session name is required',
+      );
+    });
+
+    it('should show error for date', () => {
       changeDateInput(null);
       saveButton().triggerEventHandler('submit', null);
 
@@ -167,11 +189,9 @@ describe('SessionFormComponent', () => {
       expect(errorMessageElement(datePicker)).toBe('Date is required');
     });
 
-    it('should show errors for exercise name', async () => {
+    it('should show error for exercise name', () => {
       saveButton().triggerEventHandler('submit', null);
       fixture.detectChanges();
-
-      await fixture.whenStable();
 
       const exerciseNameInput = exerciseNameInputElement(exerciseElements()[0]);
       expect(exerciseNameInput.classList.contains('ng-invalid')).toBe(true);
@@ -181,11 +201,10 @@ describe('SessionFormComponent', () => {
       );
     });
 
-    it('should show error for missing repetitions', async () => {
+    it('should show error for missing repetitions', () => {
       changeRepetitionsInput(0, 0, '');
 
       fixture.detectChanges();
-      await fixture.whenStable();
 
       const repetitionsInput = repetitionInputElement(
         setElementsQuery(exerciseElements()[0])[0],
@@ -198,10 +217,9 @@ describe('SessionFormComponent', () => {
       );
     });
 
-    it('should show error for invalid repetitions', async () => {
+    it('should show error for invalid repetitions', () => {
       changeRepetitionsInput(0, 0, '0');
       fixture.detectChanges();
-      await fixture.whenStable();
 
       const repetitionsInput = repetitionInputElement(
         setElementsQuery(exerciseElements()[0])[0],
@@ -214,10 +232,9 @@ describe('SessionFormComponent', () => {
       );
     });
 
-    it('should show error for invalid weight', async () => {
+    it('should show error for invalid weight', () => {
       changeWeightInput(0, 0, '');
       fixture.detectChanges();
-      await fixture.whenStable();
 
       const weightInput = weightInputElement(
         setElementsQuery(exerciseElements()[0])[0],
@@ -230,10 +247,9 @@ describe('SessionFormComponent', () => {
       );
     });
 
-    it('should show error for invalid weight', async () => {
+    it('should show error for invalid weight', () => {
       changeWeightInput(0, 0, '-1');
       fixture.detectChanges();
-      await fixture.whenStable();
 
       const weightInput = weightInputElement(
         setElementsQuery(exerciseElements()[0])[0],
@@ -272,6 +288,10 @@ describe('SessionFormComponent', () => {
       expect(component.canDeactivate()).toBeFalsy();
     });
   });
+
+  const sessionNameInputElement = () =>
+    fixture.debugElement.query(By.css('[formControlName="name"] input'))
+      .nativeElement;
 
   const exerciseElements = () =>
     fixture.debugElement.queryAll(By.css('div[data-testid^="exercise"]'));
@@ -360,5 +380,11 @@ describe('SessionFormComponent', () => {
     // changing input in the template didn't work
     const formControl = component.form.get('date');
     formControl?.setValue(date);
+  };
+
+  const changeSessionNameInput = (value: string) => {
+    const sessionNameInput = sessionNameInputElement();
+    sessionNameInput.value = value;
+    sessionNameInput.dispatchEvent(new Event('input'));
   };
 });

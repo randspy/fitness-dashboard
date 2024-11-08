@@ -41,6 +41,7 @@ export class SessionFormComponent implements OnInit {
 
   form = this.formBuilder.group({
     id: [crypto.randomUUID(), { nonNullable: true }],
+    name: ['', Validators.required],
     date: [new Date(), Validators.required],
     exercises: this.formBuilder.array([this.generateExercise()]),
   });
@@ -80,6 +81,11 @@ export class SessionFormComponent implements OnInit {
   isDateInvalid(): boolean {
     const dateControl = this.form.get('date');
     return !!(dateControl?.invalid && dateControl?.touched);
+  }
+
+  isSessionNameInvalid(): boolean {
+    const nameControl = this.form.get('name');
+    return !!(nameControl?.invalid && nameControl?.touched);
   }
 
   isExerciseNameInvalid(index: number): boolean {
