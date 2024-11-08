@@ -1,8 +1,10 @@
 import {
+  signal,
   ChangeDetectionStrategy,
   Component,
   inject,
   output,
+  OnInit,
 } from '@angular/core';
 import {
   FormArray,
@@ -10,6 +12,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { isEqual } from 'lodash';
 import { DatepickerComponent } from '../../../../ui/components/datepicker/datepicker.component';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
@@ -30,16 +33,21 @@ import { markFormAsTouched } from '../../../../core/shared/mark-as-touched';
   templateUrl: './session-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SessionFormComponent {
+export class SessionFormComponent implements OnInit {
   formBuilder = inject(FormBuilder);
   save = output<Session>();
   cancel = output<void>();
+  initialFormValue = signal<Session | null>(null);
 
   form = this.formBuilder.group({
-    id: [crypto.randomUUID()],
+    id: [crypto.randomUUID(), { nonNullable: true }],
     date: [new Date(), Validators.required],
     exercises: this.formBuilder.array([this.generateExercise()]),
   });
+
+  ngOnInit() {
+    this.initialFormValue.set(this.form.value as Session);
+  }
 
   generateExercise() {
     return this.formBuilder.group({
@@ -123,6 +131,7 @@ export class SessionFormComponent {
   onSubmit() {
     if (this.form.valid) {
       this.save.emit(this.form.value as Session);
+      this.form.reset();
     } else {
       markFormAsTouched(this.form);
     }
@@ -130,5 +139,13 @@ export class SessionFormComponent {
 
   onCancel() {
     this.cancel.emit();
+  }
+
+  canDeactivate(): boolean {
+    return !(this.form.dirty && this.hasFormChanged());
+  }
+
+  hasFormChanged(): boolean {
+    return !isEqual(this.initialFormValue(), this.form.value);
   }
 }

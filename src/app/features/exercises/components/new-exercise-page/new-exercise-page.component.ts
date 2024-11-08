@@ -5,12 +5,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { ExerciseFormComponent } from '../exercise-form/exercise-form.component';
-import { Observable, Observer } from 'rxjs';
 import { Exercise } from '../../domain/exercise.model';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ExerciseStore } from '../../store/exercise.store';
+import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
 
 @Component({
   selector: 'fit-new-exercise-page',
@@ -27,34 +26,9 @@ import { ExerciseStore } from '../../store/exercise.store';
     `,
   ],
 })
-export class NewExercisePageComponent {
-  router = inject(Router);
-  route = inject(ActivatedRoute);
-
+export class NewExercisePageComponent extends BaseFormPageComponent<ExerciseFormComponent> {
   child = viewChild.required<ExerciseFormComponent>(ExerciseFormComponent);
-  confirmationService = inject(ConfirmationService);
   exerciseStore = inject(ExerciseStore);
-
-  canDeactivate(): Observable<boolean> | boolean {
-    if (this.child().canDeactivate()) {
-      return true;
-    }
-
-    return new Observable<boolean>((observer: Observer<boolean>) => {
-      this.confirmationService.confirm({
-        header: 'You have unsaved changes',
-        message: 'Are you sure you want to leave this page?',
-        accept: () => {
-          observer.next(true);
-          observer.complete();
-        },
-        reject: () => {
-          observer.next(false);
-          observer.complete();
-        },
-      });
-    });
-  }
 
   save(exercise: Exercise) {
     this.exerciseStore.addExercise(exercise);
@@ -63,9 +37,5 @@ export class NewExercisePageComponent {
 
   cancel() {
     this.navigateToParent();
-  }
-
-  navigateToParent() {
-    this.router.navigate(['../'], { relativeTo: this.route });
   }
 }

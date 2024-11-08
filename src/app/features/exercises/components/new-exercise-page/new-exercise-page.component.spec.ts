@@ -36,7 +36,8 @@ describe('NewExercisePageComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks(); // Clear all mocks
+    localStorage.clear();
+    jest.clearAllMocks();
   });
 
   it('should create', () => {

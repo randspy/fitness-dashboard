@@ -7,22 +7,17 @@ import {
 
 import {
   CanComponentDeactivate,
-  unsavedChangesGuardGuard,
-} from './unsaved-changes-guard.guard';
+  unsavedChangesGuard,
+} from './unsaved-changes.guard';
 
-describe('unsavedChangesGuardGuard', () => {
+describe('unsavedChangesGuard', () => {
   const currentRoute = {} as ActivatedRouteSnapshot;
   const currentState = {} as RouterStateSnapshot;
   const nextState = {} as RouterStateSnapshot;
 
   const executeGuard: CanDeactivateFn<CanComponentDeactivate> = (component) =>
     TestBed.runInInjectionContext(() =>
-      unsavedChangesGuardGuard(
-        component,
-        currentRoute,
-        currentState,
-        nextState,
-      ),
+      unsavedChangesGuard(component, currentRoute, currentState, nextState),
     );
 
   beforeEach(() => {

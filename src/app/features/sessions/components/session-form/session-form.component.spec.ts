@@ -53,7 +53,7 @@ describe('SessionFormComponent', () => {
     const exercises = exerciseElements();
     expect(exercises.length).toBe(1);
 
-    const exerciseNameInput = nameInputElement(exercises[0]);
+    const exerciseNameInput = exerciseNameInputElement(exercises[0]);
     expect(exerciseNameInput.value).toBe('');
 
     const sets = setElementsQuery(exercises[0]);
@@ -75,7 +75,7 @@ describe('SessionFormComponent', () => {
     const exercises = exerciseElements();
     expect(exercises.length).toBe(2);
 
-    const exerciseNameInput = nameInputElement(exercises[1]);
+    const exerciseNameInput = exerciseNameInputElement(exercises[1]);
     expect(exerciseNameInput.value).toBe('');
 
     const sets = setElementsQuery(exercises[1]);
@@ -173,7 +173,7 @@ describe('SessionFormComponent', () => {
 
       await fixture.whenStable();
 
-      const exerciseNameInput = nameInputElement(exerciseElements()[0]);
+      const exerciseNameInput = exerciseNameInputElement(exerciseElements()[0]);
       expect(exerciseNameInput.classList.contains('ng-invalid')).toBe(true);
       expect(exerciseNameInput.classList.contains('ng-touched')).toBe(true);
       expect(errorMessageElement(exerciseNameInput.parentElement)).toBe(
@@ -247,10 +247,36 @@ describe('SessionFormComponent', () => {
     });
   });
 
+  describe('canDeactivate', () => {
+    it('should return true when form is pristine', () => {
+      expect(component.canDeactivate()).toBeTruthy();
+    });
+
+    it('should return true when form is dirty but has not changed', () => {
+      exerciseNameInputElement(exerciseElements()[0]).value = '';
+      exerciseNameInputElement(exerciseElements()[0]).dispatchEvent(
+        new Event('input'),
+      );
+      fixture.detectChanges();
+
+      expect(component.canDeactivate()).toBeTruthy();
+    });
+
+    it('should return false when form is dirty and has changed', () => {
+      exerciseNameInputElement(exerciseElements()[0]).value = 'Push-ups';
+      exerciseNameInputElement(exerciseElements()[0]).dispatchEvent(
+        new Event('input'),
+      );
+      fixture.detectChanges();
+
+      expect(component.canDeactivate()).toBeFalsy();
+    });
+  });
+
   const exerciseElements = () =>
     fixture.debugElement.queryAll(By.css('div[data-testid^="exercise"]'));
 
-  const nameInputElement = (exerciseElement: DebugElement) =>
+  const exerciseNameInputElement = (exerciseElement: DebugElement) =>
     exerciseElement.query(By.css('[formControlName="name"] input'))
       .nativeElement;
 
@@ -323,7 +349,7 @@ describe('SessionFormComponent', () => {
   };
 
   const changeExerciseNameInput = (exerciseIndex: number, value: string) => {
-    const exerciseNameInput = nameInputElement(
+    const exerciseNameInput = exerciseNameInputElement(
       exerciseElements()[exerciseIndex],
     );
     exerciseNameInput.value = value;
