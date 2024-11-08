@@ -5,6 +5,7 @@
     </label>
   }
   <p-datepicker
+    [styleClass]="styleClass()"
     [ngModel]="value()"
     [inputId]="inputId()"
     (ngModelChange)="onDateChange($event)"

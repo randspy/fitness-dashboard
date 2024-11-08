@@ -19,6 +19,7 @@ import { Component } from '@angular/core';
         [label]="label"
         [errorMessage]="errorMessage"
         [showError]="showError"
+        [styleClass]="styleClass"
       ></fit-datepicker>
     </form>
   `,
@@ -33,6 +34,7 @@ class TestComponent {
   label = '';
   errorMessage = '';
   showError = false;
+  styleClass = '';
 }
 
 describe('DatepickerComponent', () => {
@@ -163,6 +165,14 @@ describe('DatepickerComponent', () => {
     fixture.detectChanges();
 
     expect(inputElement().getAttribute('placeholder')).toBe('dd/mm/yyyy');
+  });
+
+  it('should apply styleClass', () => {
+    component.styleClass = 'test-class';
+    fixture.detectChanges();
+
+    const span = datepickerElement().querySelector('span');
+    expect(span.classList.contains('test-class')).toBe(true);
   });
 
   const labelQuery = () => {
