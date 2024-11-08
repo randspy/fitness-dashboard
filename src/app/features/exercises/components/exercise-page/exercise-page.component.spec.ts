@@ -27,4 +27,10 @@ describe('ExercisePageComponent', () => {
     expect(link).toBeTruthy();
     expect(link.getAttribute('link')).toBe('new');
   });
+
+  it('should have a exercise list', () => {
+    const exerciseList =
+      fixture.nativeElement.querySelector('fit-exercise-list');
+    expect(exerciseList).toBeTruthy();
+  });
 });

@@ -22,9 +22,14 @@ describe('SessionPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a link to the new exercise page', () => {
+  it('should have a link to the new session page', () => {
     const link = fixture.nativeElement.querySelector('fit-link');
     expect(link).toBeTruthy();
     expect(link.getAttribute('link')).toBe('new');
+  });
+
+  it('should have a exercise list', () => {
+    const sessionList = fixture.nativeElement.querySelector('fit-session-list');
+    expect(sessionList).toBeTruthy();
   });
 });
