@@ -23,22 +23,11 @@ describe('SessionFormComponent', () => {
   });
 
   it('should initialize with today date', () => {
-    const today = new Date();
-    const expectedDate = today.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
+    const today = new Date(new Date().setHours(0, 0, 0, 0));
 
-    const dateInput = dateInputElement();
-    const actualDate = new Date(dateInput.value);
-    const formattedActualDate = actualDate.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-
-    expect(formattedActualDate).toBe(expectedDate);
+    // only way to check that the date is set to today's date at 00:00:00
+    // as the datepicker only contains the date without the time
+    expect(component.form.get('date')?.value).toEqual(today);
   });
 
   it('should change session name', () => {

@@ -42,7 +42,7 @@ export class SessionFormComponent implements OnInit {
   form = this.formBuilder.group({
     id: [crypto.randomUUID(), { nonNullable: true }],
     name: ['', Validators.required],
-    date: [new Date(), Validators.required],
+    date: [new Date(new Date().setHours(0, 0, 0, 0)), Validators.required],
     exercises: this.formBuilder.array([this.generateExercise()]),
   });
 
