@@ -46,6 +46,13 @@ export const routes: Routes = [
             (m) => m.sessionsRoutes,
           ),
       },
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('./features/settings/settings.router').then(
+            (m) => m.settingsRoutes,
+          ),
+      },
     ],
   },
   {
