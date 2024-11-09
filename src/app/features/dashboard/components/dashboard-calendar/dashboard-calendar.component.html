@@ -1,0 +1,4 @@
+<fit-calendar
+  [dates]="dashboardCalendarService.sessionsDates()"
+  (monthChanged)="dashboardCalendarService.setSelectedMonth($event)"
+></fit-calendar>

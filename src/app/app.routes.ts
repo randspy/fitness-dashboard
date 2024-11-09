@@ -27,10 +27,10 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadComponent: () =>
-          import(
-            './features/dashboard/components/dashboard-page/dashboard-page.component'
-          ).then((m) => m.DashboardPageComponent),
+        loadChildren: () =>
+          import('./features/dashboard/dashboard.routes').then(
+            (m) => m.dashboardRoutes,
+          ),
       },
       {
         path: 'exercises',
