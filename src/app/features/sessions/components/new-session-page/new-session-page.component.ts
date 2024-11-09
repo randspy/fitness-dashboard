@@ -5,8 +5,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { SessionFormComponent } from '../session-form/session-form.component';
-import { SessionStore } from '../../store/sessions.store';
-import { Session } from '../../domain/session.model';
+import { SessionStore } from '../../../../core/sessions/store/sessions.store';
+import { Session } from '../../../../core/sessions/domain/session.model';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';

@@ -3,5 +3,5 @@
     <h1 class="text-2xl font-bold md:text-3xl">Sessions</h1>
     <fit-link link="new">Add Sessions</fit-link>
   </div>
-  <fit-session-list />
+  <fit-session-list [sessions]="sessionStore.sessions()" />
 </div>

@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LinkComponent } from '../../../../ui/components/link/link.component';
-import { SessionListComponent } from '../session-list/session-list.component';
+import { SessionListComponent } from '../../../../core/sessions/components/session-list/session-list.component';
+import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 
 @Component({
   selector: 'fit-session-page',
@@ -16,4 +17,6 @@ import { SessionListComponent } from '../session-list/session-list.component';
     `,
   ],
 })
-export class SessionPageComponent {}
+export class SessionPageComponent {
+  sessionStore = inject(SessionStore);
+}

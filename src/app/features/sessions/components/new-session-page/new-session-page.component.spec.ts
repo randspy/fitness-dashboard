@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewSessionPageComponent } from './new-session-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionStore } from '../../store/sessions.store';
+import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { By } from '@angular/platform-browser';
 
 describe('NewSessionPageComponent', () => {

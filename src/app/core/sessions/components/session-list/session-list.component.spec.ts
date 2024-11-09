@@ -2,28 +2,22 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SessionListComponent } from './session-list.component';
 import { By } from '@angular/platform-browser';
-import { SessionStore } from '../../store/sessions.store';
 import { Session } from '../../domain/session.model';
 import { DatePipe } from '@angular/common';
 
 describe('SessionListComponent', () => {
   let component: SessionListComponent;
   let fixture: ComponentFixture<SessionListComponent>;
-  let sessionStore: InstanceType<typeof SessionStore>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SessionListComponent, DatePipe],
     }).compileComponents();
 
-    sessionStore = TestBed.inject(SessionStore);
     fixture = TestBed.createComponent(SessionListComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('sessions', []);
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    sessionStore.reset();
   });
 
   it('should create', () => {
@@ -45,7 +39,8 @@ describe('SessionListComponent', () => {
       date: new Date('2024-03-14T12:00:00Z'),
       exercises: [],
     };
-    sessionStore.addSession(session);
+
+    fixture.componentRef.setInput('sessions', [session]);
     fixture.detectChanges();
 
     const sessionElements = fixture.debugElement.queryAll(
@@ -73,8 +68,7 @@ describe('SessionListComponent', () => {
       date: new Date('2024-03-13T12:00:00Z'),
       exercises: [],
     };
-    sessionStore.addSession(session1);
-    sessionStore.addSession(session2);
+    fixture.componentRef.setInput('sessions', [session1, session2]);
     fixture.detectChanges();
 
     const sessionElements = fixture.debugElement.queryAll(

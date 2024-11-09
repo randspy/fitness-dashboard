@@ -7,7 +7,7 @@ import {
 } from '@ngrx/signals';
 import { updateState, withDevtools } from '@angular-architects/ngrx-toolkit';
 import { effect } from '@angular/core';
-import { Session } from '../domain/session.model';
+import { Session } from '../../../core/sessions/domain/session.model';
 
 interface SessionsState {
   sessions: Session[];
