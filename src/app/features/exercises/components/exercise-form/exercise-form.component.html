@@ -1,4 +1,7 @@
-<fit-card header="New Exercise" styleClass="">
+<fit-card
+  header="New Exercise"
+  styleClass="rounded-none md:rounded-xl max-w-5xl mx-auto"
+>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="mt-2 flex flex-col gap-2">
       <fit-input

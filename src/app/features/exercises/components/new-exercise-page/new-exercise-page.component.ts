@@ -21,7 +21,7 @@ import { BaseFormPageComponent } from '../../../../core/shared/components/base-f
   styles: [
     `
       :host {
-        @apply flex flex-grow flex-col items-center justify-center p-4 md:p-20;
+        @apply flex flex-grow flex-col items-center md:justify-center;
       }
     `,
   ],

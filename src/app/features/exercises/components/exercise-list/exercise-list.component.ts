@@ -19,7 +19,7 @@ import { DraggableListComponent } from '../../../../ui/components/draggable-list
   styles: [
     `
       :host {
-        @apply mt-6 flex flex-grow flex-col items-center md:mt-0 md:justify-center;
+        @apply w-full lg:w-192;
       }
     `,
   ],
