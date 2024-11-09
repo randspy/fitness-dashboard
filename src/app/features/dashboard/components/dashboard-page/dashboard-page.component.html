@@ -1,15 +1,13 @@
-<div class="flex h-full flex-grow flex-col gap-8 p-4 md:p-20">
-  <div class="flex items-center justify-between">
-    <h1 class="text-2xl font-bold md:text-3xl">Dashboard</h1>
-  </div>
-  <div class="flex flex-col gap-8 xl:mr-auto xl:flex-row xl:gap-4">
-    <div>
-      <fit-dashboard-calendar />
-    </div>
+<fit-page-skeleton title="Dashboard">
+  <div
+    content
+    class="flex w-full flex-col gap-8 xl:mr-auto xl:flex-row xl:gap-4"
+  >
+    <fit-dashboard-calendar />
     <div class="flex flex-grow">
       <fit-session-list
         [sessions]="dashboardCalendarService.selectedMonthSessions()"
       />
     </div>
   </div>
-</div>
+</fit-page-skeleton>

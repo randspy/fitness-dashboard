@@ -1,9 +1,4 @@
-<div class="flex h-full flex-grow flex-col gap-8 p-4 md:gap-16 md:p-20">
-  <div class="flex items-center justify-between gap-1">
-    <h1 class="text-2xl font-bold md:text-3xl">Exercises</h1>
-    <fit-link link="new">Add Exercise</fit-link>
-  </div>
-  <div class="flex flex-grow justify-center">
-    <fit-exercise-list />
-  </div>
-</div>
+<fit-page-skeleton title="Exercises">
+  <fit-link link="new" actions>Add Exercise</fit-link>
+  <fit-exercise-list content />
+</fit-page-skeleton>
