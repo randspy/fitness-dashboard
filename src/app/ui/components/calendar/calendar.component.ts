@@ -23,6 +23,10 @@ import {
           pointer-events: none;
         }
       }
+
+      ::ng-deep .p-datepicker .p-datepicker-panel {
+        border-radius: 12px;
+      }
     `,
   ],
 })
