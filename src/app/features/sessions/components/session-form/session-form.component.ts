@@ -18,7 +18,6 @@ import { CardComponent } from '../../../../ui/components/card/card.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { InputComponent } from '../../../../ui/components/input/input.component';
 import { Session } from '../../../../core/sessions/domain/session.model';
-import { markFormAsTouched } from '../../../../core/shared/mark-as-touched';
 
 @Component({
   selector: 'fit-session-form',
@@ -139,7 +138,7 @@ export class SessionFormComponent implements OnInit {
       this.save.emit(this.form.value as Session);
       this.form.reset();
     } else {
-      markFormAsTouched(this.form);
+      this.form.markAllAsTouched();
     }
   }
 

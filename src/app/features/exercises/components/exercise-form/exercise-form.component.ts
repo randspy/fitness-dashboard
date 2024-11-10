@@ -19,7 +19,6 @@ import { TextareaComponent } from '../../../../ui/components/textarea/textarea.c
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Exercise, initialExercise } from '../../domain/exercise.model';
-import { markFormAsTouched } from '../../../../core/shared/mark-as-touched';
 
 @Component({
   selector: 'fit-exercise-form',
@@ -74,7 +73,7 @@ export class ExerciseFormComponent {
       this.save.emit(exercise);
       this.form.reset();
     } else {
-      markFormAsTouched(this.form);
+      this.form.markAllAsTouched();
     }
   }
 
