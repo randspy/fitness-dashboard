@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserStore } from './user.store';
+import { UserStore } from '../store/user.store';
 
 export const userSetupCompletedGuard = () => {
   const userExists = inject(UserStore).name();

@@ -8,7 +8,7 @@ import { DashboardCalendarService } from '../../services/dashboard-calendar.serv
 import { SessionListComponent } from '../../../../core/sessions/components/session-list/session-list.component';
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { generateSession } from '../../../../../../setup-jest';
-import { UserStore } from '../../../../core/user/user.store';
+import { UserStore } from '../../../../core/user/store/user.store';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;

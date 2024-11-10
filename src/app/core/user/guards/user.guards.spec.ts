@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { UserStore } from './user.store';
+import { UserStore } from '../store/user.store';
 import { userSetupCompletedGuard, userSetupRequiredGuard } from './user.guards';
 
 describe('User Guards', () => {

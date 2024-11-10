@@ -9,7 +9,7 @@ import {
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { InputComponent } from '../../../../ui/components/input/input.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
-import { UserStore } from '../../../../core/user/user.store';
+import { UserStore } from '../../../../core/user/store/user.store';
 import { Router } from '@angular/router';
 
 @Component({

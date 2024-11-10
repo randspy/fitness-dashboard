@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import {
   userSetupCompletedGuard,
   userSetupRequiredGuard,
-} from './core/user/user.guards';
+} from './core/user/guards/user.guards';
 export const routes: Routes = [
   {
     path: '',

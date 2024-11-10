@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { PageSkeletonComponent } from '../../../../ui/components/page-skeleton/page-skeleton.component';
-import { UserStore } from '../../../../core/user/user.store';
+import { UserStore } from '../../../../core/user/store/user.store';
 import { InputComponent } from '../../../../ui/components/input/input.component';
 import {
   FormsModule,

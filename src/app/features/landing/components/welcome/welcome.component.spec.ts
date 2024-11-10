@@ -6,7 +6,7 @@ import { InputComponent } from '../../../../ui/components/input/input.component'
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UserStore } from '../../../../core/user/user.store';
+import { UserStore } from '../../../../core/user/store/user.store';
 
 import { Router, provideRouter } from '@angular/router';
 import { DummyComponent } from '../../../../../tests/dummy-component';

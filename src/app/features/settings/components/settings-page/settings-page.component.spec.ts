@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SettingsPageComponent } from './settings-page.component';
-import { UserStore } from '../../../../core/user/user.store';
+import { UserStore } from '../../../../core/user/store/user.store';
 
 describe('SettingsPageComponent', () => {
   let component: SettingsPageComponent;
