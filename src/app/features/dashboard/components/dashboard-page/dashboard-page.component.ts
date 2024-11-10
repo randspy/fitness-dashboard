@@ -3,6 +3,7 @@ import { DashboardCalendarComponent } from '../../components/dashboard-calendar/
 import { SessionListComponent } from '../../../../core/sessions/components/session-list/session-list.component';
 import { DashboardCalendarService } from '../../services/dashboard-calendar.service';
 import { PageSkeletonComponent } from '../../../../ui/components/page-skeleton/page-skeleton.component';
+import { UserStore } from '../../../../core/user/user.store';
 
 @Component({
   selector: 'fit-dashboard-page',
@@ -24,4 +25,5 @@ import { PageSkeletonComponent } from '../../../../ui/components/page-skeleton/p
 })
 export class DashboardPageComponent {
   dashboardCalendarService = inject(DashboardCalendarService);
+  userStore = inject(UserStore);
 }

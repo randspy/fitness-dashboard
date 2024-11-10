@@ -1,13 +1,15 @@
 <fit-page-skeleton title="Dashboard">
-  <div
-    content
-    class="flex w-full flex-col gap-8 xl:mr-auto xl:flex-row xl:gap-4"
-  >
-    <fit-dashboard-calendar />
-    <div class="flex flex-grow">
-      <fit-session-list
-        [sessions]="dashboardCalendarService.selectedMonthSessions()"
-      />
+  <div content class="flex w-full flex-col gap-8 xl:gap-4">
+    <h2 class="text-xl font-bold">
+      Hello {{ userStore.name() }}, how was your training?
+    </h2>
+    <div class="flex w-full flex-col gap-8 xl:flex-row xl:gap-4">
+      <fit-dashboard-calendar />
+      <div class="flex flex-grow">
+        <fit-session-list
+          [sessions]="dashboardCalendarService.selectedMonthSessions()"
+        />
+      </div>
     </div>
   </div>
 </fit-page-skeleton>

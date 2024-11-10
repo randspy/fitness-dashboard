@@ -8,12 +8,14 @@ import { DashboardCalendarService } from '../../services/dashboard-calendar.serv
 import { SessionListComponent } from '../../../../core/sessions/components/session-list/session-list.component';
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { generateSession } from '../../../../../../setup-jest';
+import { UserStore } from '../../../../core/user/user.store';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
   let fixture: ComponentFixture<DashboardPageComponent>;
   let sessionStore: InstanceType<typeof SessionStore>;
   let dashboardCalendarService: DashboardCalendarService;
+  let userStore: InstanceType<typeof UserStore>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -21,11 +23,17 @@ describe('DashboardPageComponent', () => {
       providers: [DashboardCalendarService],
     }).compileComponents();
 
+    userStore = TestBed.inject(UserStore);
     sessionStore = TestBed.inject(SessionStore);
     dashboardCalendarService = TestBed.inject(DashboardCalendarService);
     fixture = TestBed.createComponent(DashboardPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    userStore.reset();
+    sessionStore.reset();
   });
 
   it('should create', () => {
@@ -67,5 +75,15 @@ describe('DashboardPageComponent', () => {
     expect(sessionList.componentInstance.sessions()).toEqual([
       sessionStore.sessions()[0],
     ]);
+  });
+
+  it('should show the user name', () => {
+    userStore.setName('John Doe');
+
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain(
+      'Hello John Doe, how was your training?',
+    );
   });
 });
