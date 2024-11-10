@@ -18,6 +18,7 @@ interface TestFormComponent {
 
 @Component({
   standalone: true,
+  imports: [ReactiveFormsModule],
   providers: [ConfirmationService],
   template: `
     <form [formGroup]="form" (ngSubmit)="onSubmit()">

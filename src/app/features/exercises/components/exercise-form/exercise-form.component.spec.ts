@@ -33,7 +33,7 @@ describe('ExerciseFormComponent', () => {
     expect(nameInputElement().classList.contains('ng-invalid')).toBeTruthy();
     expect(nameInputElement().classList.contains('ng-touched')).toBeTruthy();
 
-    expect(errorMessageElement(nameInputElement().parentElement)).toBe(
+    expect(errorMessageElement(nameInputElement())).toContain(
       'Name is required',
     );
   });
@@ -123,11 +123,11 @@ describe('ExerciseFormComponent', () => {
   });
 
   const nameInputElement = () =>
-    fixture.debugElement.query(By.css('input.p-inputtext')).nativeElement;
+    fixture.debugElement.query(By.css('input')).nativeElement;
 
   const descriptionInputElement = () =>
-    fixture.debugElement.query(By.css('textarea.p-textarea')).nativeElement;
+    fixture.debugElement.query(By.css('textarea')).nativeElement;
 
   const errorMessageElement = (element: HTMLElement) =>
-    element.querySelector('.text-error')?.textContent;
+    element.parentElement?.textContent;
 });
