@@ -88,4 +88,24 @@ describe('ButtonComponent', () => {
       buttonElement.nativeElement.classList.contains('p-button-secondary'),
     ).toBe(true);
   });
+
+  it('should render text button when text is true', () => {
+    fixture.componentRef.setInput('text', true);
+    fixture.detectChanges();
+
+    const buttonElement = fixture.debugElement.query(By.css('button'));
+    expect(
+      buttonElement.nativeElement.classList.contains('p-button-text'),
+    ).toBe(true);
+  });
+
+  it('should render raised button when raised is true', () => {
+    fixture.componentRef.setInput('raised', true);
+    fixture.detectChanges();
+
+    const buttonElement = fixture.debugElement.query(By.css('button'));
+    expect(
+      buttonElement.nativeElement.classList.contains('p-button-raised'),
+    ).toBe(true);
+  });
 });

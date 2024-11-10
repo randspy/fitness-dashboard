@@ -1,9 +1,10 @@
 <p-button
-  [raised]="true"
+  [raised]="raised()"
   [styleClass]="styleClass()"
   [type]="type()"
   [disabled]="disabled()"
   [severity]="severity()"
+  [text]="text()"
   (onClick)="onClick.emit()"
 >
   <ng-content></ng-content>

@@ -1,4 +1,8 @@
 <fit-page-skeleton title="Sessions">
   <fit-link link="new" actions>Add Sessions</fit-link>
-  <fit-session-list [sessions]="sessionStore.sessions()" content />
+  <fit-session-list
+    [sessions]="sessionStore.sessions()"
+    [displayActions]="true"
+    content
+  />
 </fit-page-skeleton>

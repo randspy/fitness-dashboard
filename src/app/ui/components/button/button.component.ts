@@ -18,6 +18,8 @@ export class ButtonComponent {
   type = input<string>('button');
   disabled = input(false);
   onClick = output<void>();
+  text = input<boolean>(false);
+  raised = input<boolean>(true);
   severity = input<
     | 'success'
     | 'info'

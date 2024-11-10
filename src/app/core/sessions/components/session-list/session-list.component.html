@@ -11,8 +11,20 @@
           <p class="text-sm text-gray-500">
             {{ session.date | date }}
           </p>
+          @if (displayActions()) {
+            <fit-button
+              [text]="true"
+              [raised]="false"
+              class="ml-auto"
+              (onClick)="confirmDeleteSession(session.id)"
+              data-testid="delete-button"
+            >
+              <ng-icon name="lucideTrash"></ng-icon>
+            </fit-button>
+          }
         </div>
       </fit-card>
     }
   </div>
 }
+<p-confirmDialog />

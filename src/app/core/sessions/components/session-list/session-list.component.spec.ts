@@ -1,27 +1,47 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ConfirmationService } from 'primeng/api';
 
 import { SessionListComponent } from './session-list.component';
 import { By } from '@angular/platform-browser';
 import { Session } from '../../domain/session.model';
 import { DatePipe } from '@angular/common';
+import { generateSession } from '../../../../../../setup-jest';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SessionStore } from '../../store/sessions.store';
+import { Subject } from 'rxjs';
 
 describe('SessionListComponent', () => {
-  let component: SessionListComponent;
   let fixture: ComponentFixture<SessionListComponent>;
+  let confirmationService: ConfirmationService;
+  let sessionStore: InstanceType<typeof SessionStore>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SessionListComponent, DatePipe],
-    }).compileComponents();
+    const mockConfirmationService = {
+      requireConfirmation$: new Subject(),
+      confirm: jest.fn(),
+    };
 
+    await TestBed.configureTestingModule({
+      imports: [SessionListComponent, NoopAnimationsModule],
+    })
+      .overrideProvider(ConfirmationService, {
+        useValue: mockConfirmationService,
+      })
+      .compileComponents();
+
+    sessionStore = TestBed.inject(SessionStore);
     fixture = TestBed.createComponent(SessionListComponent);
-    component = fixture.componentInstance;
+
+    confirmationService =
+      fixture.debugElement.injector.get(ConfirmationService);
+
     fixture.componentRef.setInput('sessions', []);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    sessionStore.reset();
+    localStorage.clear();
   });
 
   it('should display empty state when no sessions', () => {
@@ -33,12 +53,9 @@ describe('SessionListComponent', () => {
   });
 
   it('should display sessions when available', () => {
-    const session: Session = {
+    const session: Session = generateSession({
       id: '1',
-      name: 'Push-ups',
-      date: new Date('2024-03-14T12:00:00Z'),
-      exercises: [],
-    };
+    });
 
     fixture.componentRef.setInput('sessions', [session]);
     fixture.detectChanges();
@@ -56,18 +73,13 @@ describe('SessionListComponent', () => {
   });
 
   it('should display sessions in descending order', () => {
-    const session1: Session = {
+    const session1: Session = generateSession({
       id: '1',
-      name: 'Push-ups',
-      date: new Date('2024-03-08T12:00:00Z'),
-      exercises: [],
-    };
-    const session2: Session = {
+    });
+    const session2: Session = generateSession({
       id: '2',
-      name: 'Pull-ups',
-      date: new Date('2024-03-13T12:00:00Z'),
-      exercises: [],
-    };
+    });
+
     fixture.componentRef.setInput('sessions', [session1, session2]);
     fixture.detectChanges();
 
@@ -81,5 +93,51 @@ describe('SessionListComponent', () => {
     expect(sessionElements[1].nativeElement.textContent).toContain(
       session1.name,
     );
+  });
+
+  it('should display the delete modal', () => {
+    const session: Session = generateSession({
+      id: '1',
+    });
+
+    sessionStore.setSessions([session]);
+    fixture.componentRef.setInput('sessions', [session]);
+    fixture.componentRef.setInput('displayActions', true);
+    fixture.detectChanges();
+
+    const deleteButton = fixture.debugElement.query(
+      By.css('[data-testid="delete-button"]'),
+    );
+
+    deleteButton.triggerEventHandler('onClick', null);
+    fixture.detectChanges();
+
+    expect(confirmationService.confirm).toHaveBeenCalled();
+  });
+
+  it('should remove session when confirmed', () => {
+    const session: Session = generateSession({
+      id: '1',
+    });
+
+    sessionStore.setSessions([session]);
+    fixture.componentRef.setInput('sessions', [session]);
+    fixture.componentRef.setInput('displayActions', true);
+    fixture.detectChanges();
+
+    const deleteButton = fixture.debugElement.query(
+      By.css('[data-testid="delete-button"]'),
+    );
+
+    deleteButton.triggerEventHandler('onClick', null);
+    fixture.detectChanges();
+
+    const confirmArgs = (confirmationService.confirm as jest.Mock).mock
+      .calls[0][0];
+    confirmArgs.accept();
+
+    fixture.detectChanges();
+
+    expect(sessionStore.sessions()).toEqual([]);
   });
 });
