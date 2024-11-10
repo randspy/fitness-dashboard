@@ -11,7 +11,6 @@ import {
   lucideSettings,
   lucideHouse,
 } from '@ng-icons/lucide';
-import { NgIf } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { PopoverModule } from 'primeng/popover';
 import {
@@ -29,7 +28,6 @@ import {
     TooltipModule,
     TieredMenuModule,
     ButtonModule,
-    NgIf,
     PopoverModule,
     SidebarLinkComponent,
   ],

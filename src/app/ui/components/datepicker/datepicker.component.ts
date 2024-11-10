@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +16,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 @Component({
   selector: 'fit-datepicker',
   standalone: true,
-  imports: [DatePickerModule, FormsModule, ReactiveFormsModule, NgClass],
+  imports: [DatePickerModule, FormsModule, ReactiveFormsModule],
   templateUrl: './datepicker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
