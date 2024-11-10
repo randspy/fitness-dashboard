@@ -18,6 +18,9 @@ export const UserStore = signalStore(
     setName(name: string) {
       updateState(store, 'setName', (state) => ({ ...state, name }));
     },
+    reset() {
+      updateState(store, 'reset', () => initialState);
+    },
   })),
   withHooks((store) => ({
     onInit() {
