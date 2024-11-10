@@ -121,6 +121,27 @@ describe('SessionStore', () => {
 
       expect(store.sessions()).toEqual(initialSessions);
     });
+
+    it('should reset state', () => {
+      store.addSession({
+        id: '1',
+        name: 'Test session',
+        date: new Date(),
+        exercises: [],
+      });
+
+      store.reset();
+      expect(store.sessions()).toEqual([]);
+    });
+
+    it('should set sessions', () => {
+      const sessions = [
+        { id: '1', name: 'Test session', date: new Date(), exercises: [] },
+      ];
+
+      store.setSessions(sessions);
+      expect(store.sessions()).toEqual(sessions);
+    });
   });
 
   it('should load sessions from localStorage on init', () => {
@@ -137,26 +158,5 @@ describe('SessionStore', () => {
     store = TestBed.inject(SessionStore);
 
     expect(store.sessions()).toEqual(testSessions);
-  });
-
-  it('should reset state', () => {
-    store.addSession({
-      id: '1',
-      name: 'Test session',
-      date: new Date(),
-      exercises: [],
-    });
-
-    store.reset();
-    expect(store.sessions()).toEqual([]);
-  });
-
-  it('should set sessions', () => {
-    const sessions = [
-      { id: '1', name: 'Test session', date: new Date(), exercises: [] },
-    ];
-
-    store.setSessions(sessions);
-    expect(store.sessions()).toEqual(sessions);
   });
 });
