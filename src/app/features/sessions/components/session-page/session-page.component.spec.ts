@@ -6,11 +6,14 @@ import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { Session } from '../../../../core/sessions/domain/session.model';
 import { By } from '@angular/platform-browser';
 import { SessionListComponent } from '../../../../core/sessions/components/session-list/session-list.component';
-
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 describe('SessionPageComponent', () => {
   let component: SessionPageComponent;
   let fixture: ComponentFixture<SessionPageComponent>;
   let sessionStore: InstanceType<typeof SessionStore>;
+  let loader: HarnessLoader;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -20,6 +23,7 @@ describe('SessionPageComponent', () => {
 
     sessionStore = TestBed.inject(SessionStore);
     fixture = TestBed.createComponent(SessionPageComponent);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -32,10 +36,10 @@ describe('SessionPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a link to the new session page', () => {
-    const link = fixture.nativeElement.querySelector('fit-link');
+  it('should have a link to the new session page', async () => {
+    const link = await loader.getHarness(LinkComponentHarness);
     expect(link).toBeTruthy();
-    expect(link.getAttribute('link')).toBe('new');
+    expect(await link.getLink()).toBe('new');
   });
 
   it('should have a exercise list', () => {
