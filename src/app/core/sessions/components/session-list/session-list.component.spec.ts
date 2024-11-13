@@ -9,11 +9,16 @@ import { generateSession } from '../../../../../../setup-jest';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SessionStore } from '../../store/sessions.store';
 import { Subject } from 'rxjs';
+import { provideRouter } from '@angular/router';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 
 describe('SessionListComponent', () => {
   let fixture: ComponentFixture<SessionListComponent>;
   let confirmationService: ConfirmationService;
   let sessionStore: InstanceType<typeof SessionStore>;
+  let loader: HarnessLoader;
 
   beforeEach(async () => {
     const mockConfirmationService = {
@@ -23,6 +28,7 @@ describe('SessionListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [SessionListComponent, NoopAnimationsModule],
+      providers: [provideRouter([])],
     })
       .overrideProvider(ConfirmationService, {
         useValue: mockConfirmationService,
@@ -31,7 +37,7 @@ describe('SessionListComponent', () => {
 
     sessionStore = TestBed.inject(SessionStore);
     fixture = TestBed.createComponent(SessionListComponent);
-
+    loader = TestbedHarnessEnvironment.loader(fixture);
     confirmationService =
       fixture.debugElement.injector.get(ConfirmationService);
 
@@ -139,5 +145,19 @@ describe('SessionListComponent', () => {
     fixture.detectChanges();
 
     expect(sessionStore.sessions()).toEqual([]);
+  });
+
+  it('should navigate to the session page when a session is clicked', async () => {
+    const session: Session = generateSession({
+      id: '1',
+    });
+    sessionStore.setSessions([session]);
+    fixture.componentRef.setInput('sessions', [session]);
+    fixture.componentRef.setInput('displayActions', true);
+    fixture.detectChanges();
+
+    const link = await loader.getHarness(LinkComponentHarness);
+    expect(link).toBeTruthy();
+    expect(await link.getLink()).toBe('1');
   });
 });

@@ -10,12 +10,13 @@ import { CardComponent } from '../../../../ui/components/card/card.component';
 import { DatePipe } from '@angular/common';
 import { Session } from '../../domain/session.model';
 import { provideIcons } from '@ng-icons/core';
-import { lucideTrash } from '@ng-icons/lucide';
+import { lucidePencil, lucideTrash } from '@ng-icons/lucide';
 import { NgIconComponent } from '@ng-icons/core';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { SessionStore } from '../../store/sessions.store';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { LinkComponent } from '../../../../ui/components/link/link.component';
 
 @Component({
   selector: 'fit-session-list',
@@ -26,12 +27,14 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ButtonComponent,
     NgIconComponent,
     ConfirmDialogModule,
+    LinkComponent,
   ],
   templateUrl: './session-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     provideIcons({
       lucideTrash,
+      lucidePencil,
     }),
     ConfirmationService,
   ],
@@ -53,7 +56,7 @@ export class SessionListComponent {
   sessionListIsEmpty = computed(() => this.sessions().length === 0);
 
   sessionsByDate = computed(() => {
-    return this.sessions().sort((a, b) => {
+    return this.sessions().toSorted((a, b) => {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
   });

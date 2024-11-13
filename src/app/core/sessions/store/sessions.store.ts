@@ -22,6 +22,9 @@ export const SessionStore = signalStore(
   withDevtools('sessions'),
   withState(initialState),
   withMethods((store) => ({
+    getSessionById(id: string) {
+      return store.sessions().find((session) => session.id === id);
+    },
     addSession(session: Session) {
       updateState(store, 'addSession', (state) => ({
         ...state,

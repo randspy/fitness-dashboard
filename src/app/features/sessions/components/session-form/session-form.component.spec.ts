@@ -3,6 +3,7 @@ import { SessionFormComponent } from './session-form.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { cloneDeep } from 'lodash';
 
 describe('SessionFormComponent', () => {
   let component: SessionFormComponent;
@@ -15,266 +16,312 @@ describe('SessionFormComponent', () => {
 
     fixture = TestBed.createComponent(SessionFormComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize with today date', () => {
-    const today = new Date(new Date().setHours(0, 0, 0, 0));
-
-    // only way to check that the date is set to today's date at 00:00:00
-    // as the datepicker only contains the date without the time
-    expect(component.form.get('date')?.value).toEqual(today);
-  });
-
-  it('should change session name', () => {
-    changeSessionNameInput('Test session');
-    fixture.detectChanges();
-
-    expect(sessionNameInputElement().value).toBe('Test session');
-  });
-
-  it('should change date', async () => {
-    changeDateInput(new Date('01/01/2024'));
-    fixture.detectChanges();
-
-    await fixture.whenStable();
-
-    expect(dateInputElement().value).toBe('01/01/2024');
-  });
-
-  it('should initialize with one exercise and one set', () => {
-    const exercises = exerciseElements();
-    expect(exercises.length).toBe(1);
-
-    const exerciseNameInput = exerciseNameInputElement(exercises[0]);
-    expect(exerciseNameInput.value).toBe('');
-
-    const sets = setElementsQuery(exercises[0]);
-    expect(sets.length).toBe(1);
-
-    const repetitionsInput = repetitionInputElement(sets[0]);
-    expect(repetitionsInput.value).toBe('1');
-
-    const weightInput = weightInputElement(sets[0]);
-    expect(weightInput.value).toBe('0');
-  });
-
-  it('should add new exercise', async () => {
-    addExerciseButton().triggerEventHandler('click', null);
-
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    const exercises = exerciseElements();
-    expect(exercises.length).toBe(2);
-
-    const exerciseNameInput = exerciseNameInputElement(exercises[1]);
-    expect(exerciseNameInput.value).toBe('');
-
-    const sets = setElementsQuery(exercises[1]);
-    expect(sets.length).toBe(1);
-
-    const repetitionsInput = repetitionInputElement(sets[0]);
-    expect(repetitionsInput.value).toBe('1');
-
-    const weightInput = weightInputElement(sets[0]);
-    expect(weightInput.value).toBe('0');
-  });
-
-  it('should remove exercise', () => {
-    removeExerciseButton(0).triggerEventHandler('click', null);
-    fixture.detectChanges();
-
-    const exercises = exerciseElements();
-    expect(exercises.length).toBe(0);
-  });
-
-  it('should add new set to exercise', async () => {
-    addSetButton(0).triggerEventHandler('click', null);
-
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    const exercises = exerciseElements();
-    const sets = setElementsQuery(exercises[0]);
-
-    expect(sets.length).toBe(2);
-
-    const repetitionsInput = repetitionInputElement(sets[1]);
-    expect(repetitionsInput.value).toBe('1');
-
-    const weightInput = weightInputElement(sets[1]);
-    expect(weightInput.value).toBe('0');
-  });
-
-  it('should remove set from exercise', () => {
-    removeSetButton(0, 0).triggerEventHandler('click', null);
-
-    fixture.detectChanges();
-
-    const sets = setElementsQuery(exerciseElements()[0]);
-    expect(sets.length).toBe(0);
-  });
-
-  it('should emit cancel event', () => {
-    const cancelSpy = jest.spyOn(component.cancel, 'emit');
-
-    cancelButton().triggerEventHandler('click', null);
-
-    expect(cancelSpy).toHaveBeenCalled();
-  });
-
-  it('should emit save event with valid form data', () => {
-    const saveSpy = jest.spyOn(component.save, 'emit');
-
-    changeSessionNameInput('Test session');
-    changeExerciseNameInput(0, 'Push-ups');
-    saveButton().triggerEventHandler('submit', null);
-
-    fixture.detectChanges();
-
-    expect(saveSpy).toHaveBeenCalledWith({
-      date: expect.any(Date),
-      id: 'test-uuid',
-      name: 'Test session',
-      exercises: [
-        {
-          id: 'test-uuid',
-          name: 'Push-ups',
-          sets: [{ id: 'test-uuid', repetitions: 1, weight: 0 }],
-        },
-      ],
+  describe('new session', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
     });
-  });
 
-  describe('validation', () => {
-    it('should show error for session name', () => {
-      saveButton().triggerEventHandler('submit', null);
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('should initialize with today date', () => {
+      const today = new Date(new Date().setHours(0, 0, 0, 0));
+
+      // only way to check that the date is set to today's date at 00:00:00
+      // as the datepicker only contains the date without the time
+      expect(component.form.get('date')?.value).toEqual(today);
+    });
+
+    it('should change session name', () => {
+      changeSessionNameInput('Test session');
       fixture.detectChanges();
 
-      const sessionNameInput = sessionNameInputElement();
-      expect(sessionNameInput.classList.contains('ng-invalid')).toBe(true);
-      expect(sessionNameInput.classList.contains('ng-touched')).toBe(true);
-      expect(errorMessageElement(sessionNameInput.parentElement)).toBe(
-        'Session name is required',
-      );
+      expect(sessionNameInputElement().value).toBe('Test session');
     });
 
-    it('should show error for date', () => {
-      changeDateInput(null);
+    it('should change date', async () => {
+      changeDateInput(new Date('01/01/2024'));
+      fixture.detectChanges();
+
+      await fixture.whenStable();
+
+      expect(dateInputElement().value).toBe('01/01/2024');
+    });
+
+    it('should initialize with one exercise and one set', () => {
+      const exercises = exerciseElements();
+      expect(exercises.length).toBe(1);
+
+      const exerciseNameInput = exerciseNameInputElement(exercises[0]);
+      expect(exerciseNameInput.value).toBe('');
+
+      const sets = setElementsQuery(exercises[0]);
+      expect(sets.length).toBe(1);
+
+      const repetitionsInput = repetitionInputElement(sets[0]);
+      expect(repetitionsInput.value).toBe('1');
+
+      const weightInput = weightInputElement(sets[0]);
+      expect(weightInput.value).toBe('0');
+    });
+
+    it('should add new exercise', async () => {
+      addExerciseButton().triggerEventHandler('click', null);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const exercises = exerciseElements();
+      expect(exercises.length).toBe(2);
+
+      const exerciseNameInput = exerciseNameInputElement(exercises[1]);
+      expect(exerciseNameInput.value).toBe('');
+
+      const sets = setElementsQuery(exercises[1]);
+      expect(sets.length).toBe(1);
+
+      const repetitionsInput = repetitionInputElement(sets[0]);
+      expect(repetitionsInput.value).toBe('1');
+
+      const weightInput = weightInputElement(sets[0]);
+      expect(weightInput.value).toBe('0');
+    });
+
+    it('should remove exercise', () => {
+      removeExerciseButton(0).triggerEventHandler('click', null);
+      fixture.detectChanges();
+
+      const exercises = exerciseElements();
+      expect(exercises.length).toBe(0);
+    });
+
+    it('should add new set to exercise', async () => {
+      addSetButton(0).triggerEventHandler('click', null);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const exercises = exerciseElements();
+      const sets = setElementsQuery(exercises[0]);
+
+      expect(sets.length).toBe(2);
+
+      const repetitionsInput = repetitionInputElement(sets[1]);
+      expect(repetitionsInput.value).toBe('1');
+
+      const weightInput = weightInputElement(sets[1]);
+      expect(weightInput.value).toBe('0');
+    });
+
+    it('should remove set from exercise', () => {
+      removeSetButton(0, 0).triggerEventHandler('click', null);
+
+      fixture.detectChanges();
+
+      const sets = setElementsQuery(exerciseElements()[0]);
+      expect(sets.length).toBe(0);
+    });
+
+    it('should emit cancel event', () => {
+      const cancelSpy = jest.spyOn(component.cancel, 'emit');
+
+      cancelButton().triggerEventHandler('click', null);
+
+      expect(cancelSpy).toHaveBeenCalled();
+    });
+
+    it('should emit save event with valid form data', () => {
+      const saveSpy = jest.spyOn(component.save, 'emit');
+
+      changeSessionNameInput('Test session');
+      changeExerciseNameInput(0, 'Push-ups');
       saveButton().triggerEventHandler('submit', null);
 
       fixture.detectChanges();
 
-      const datePicker = datepickerElement();
-
-      expect(datePicker.classList.contains('ng-invalid')).toBe(true);
-      expect(datePicker.classList.contains('ng-touched')).toBe(true);
-
-      expect(errorMessageElement(datePicker)).toBe('Date is required');
+      expect(saveSpy).toHaveBeenCalledWith({
+        date: expect.any(Date),
+        id: 'test-uuid',
+        name: 'Test session',
+        exercises: [
+          {
+            id: 'test-uuid',
+            name: 'Push-ups',
+            sets: [{ id: 'test-uuid', repetitions: 1, weight: 0 }],
+          },
+        ],
+      });
     });
 
-    it('should show error for exercise name', () => {
-      saveButton().triggerEventHandler('submit', null);
-      fixture.detectChanges();
+    describe('validation', () => {
+      it('should show error for session name', () => {
+        saveButton().triggerEventHandler('submit', null);
+        fixture.detectChanges();
 
-      const exerciseNameInput = exerciseNameInputElement(exerciseElements()[0]);
-      expect(exerciseNameInput.classList.contains('ng-invalid')).toBe(true);
-      expect(exerciseNameInput.classList.contains('ng-touched')).toBe(true);
-      expect(errorMessageElement(exerciseNameInput.parentElement)).toBe(
-        'Exercise name is required',
-      );
+        const sessionNameInput = sessionNameInputElement();
+        expect(sessionNameInput.classList.contains('ng-invalid')).toBe(true);
+        expect(sessionNameInput.classList.contains('ng-touched')).toBe(true);
+        expect(errorMessageElement(sessionNameInput.parentElement)).toBe(
+          'Session name is required',
+        );
+      });
+
+      it('should show error for date', () => {
+        changeDateInput(null);
+        saveButton().triggerEventHandler('submit', null);
+
+        fixture.detectChanges();
+
+        const datePicker = datepickerElement();
+
+        expect(datePicker.classList.contains('ng-invalid')).toBe(true);
+        expect(datePicker.classList.contains('ng-touched')).toBe(true);
+
+        expect(errorMessageElement(datePicker)).toBe('Date is required');
+      });
+
+      it('should show error for exercise name', () => {
+        saveButton().triggerEventHandler('submit', null);
+        fixture.detectChanges();
+
+        const exerciseNameInput = exerciseNameInputElement(
+          exerciseElements()[0],
+        );
+        expect(exerciseNameInput.classList.contains('ng-invalid')).toBe(true);
+        expect(exerciseNameInput.classList.contains('ng-touched')).toBe(true);
+        expect(errorMessageElement(exerciseNameInput.parentElement)).toBe(
+          'Exercise name is required',
+        );
+      });
+
+      it('should show error for missing repetitions', () => {
+        changeRepetitionsInput(0, 0, '');
+
+        fixture.detectChanges();
+
+        const repetitionsInput = repetitionInputElement(
+          setElementsQuery(exerciseElements()[0])[0],
+        );
+
+        expect(repetitionsInput.classList.contains('ng-invalid')).toBe(true);
+        expect(repetitionsInput.classList.contains('ng-touched')).toBe(true);
+        expect(errorMessageElement(repetitionsInput.parentElement)).toBe(
+          'Repetitions is required',
+        );
+      });
+
+      it('should show error for invalid repetitions', () => {
+        changeRepetitionsInput(0, 0, '0');
+        fixture.detectChanges();
+
+        const repetitionsInput = repetitionInputElement(
+          setElementsQuery(exerciseElements()[0])[0],
+        );
+
+        expect(repetitionsInput.classList.contains('ng-invalid')).toBe(true);
+        expect(repetitionsInput.classList.contains('ng-touched')).toBe(true);
+        expect(errorMessageElement(repetitionsInput.parentElement)).toBe(
+          'Repetitions must be at least 1',
+        );
+      });
+
+      it('should show error for invalid weight', () => {
+        changeWeightInput(0, 0, '');
+        fixture.detectChanges();
+
+        const weightInput = weightInputElement(
+          setElementsQuery(exerciseElements()[0])[0],
+        );
+
+        expect(weightInput.classList.contains('ng-invalid')).toBe(true);
+        expect(weightInput.classList.contains('ng-touched')).toBe(true);
+        expect(errorMessageElement(weightInput.parentElement)).toBe(
+          'Weight is required',
+        );
+      });
+
+      it('should show error for invalid weight', () => {
+        changeWeightInput(0, 0, '-1');
+        fixture.detectChanges();
+
+        const weightInput = weightInputElement(
+          setElementsQuery(exerciseElements()[0])[0],
+        );
+
+        expect(weightInput.classList.contains('ng-invalid')).toBe(true);
+        expect(weightInput.classList.contains('ng-touched')).toBe(true);
+        expect(errorMessageElement(weightInput.parentElement)).toBe(
+          'Weight must be at least 0',
+        );
+      });
     });
 
-    it('should show error for missing repetitions', () => {
-      changeRepetitionsInput(0, 0, '');
+    describe('canDeactivate', () => {
+      it('should return true when form is pristine', () => {
+        expect(component.canDeactivate()).toBeTruthy();
+      });
 
-      fixture.detectChanges();
+      it('should return true when form is dirty but has not changed', () => {
+        exerciseNameInputElement(exerciseElements()[0]).value = '';
+        exerciseNameInputElement(exerciseElements()[0]).dispatchEvent(
+          new Event('input'),
+        );
+        fixture.detectChanges();
 
-      const repetitionsInput = repetitionInputElement(
-        setElementsQuery(exerciseElements()[0])[0],
-      );
+        expect(component.canDeactivate()).toBeTruthy();
+      });
 
-      expect(repetitionsInput.classList.contains('ng-invalid')).toBe(true);
-      expect(repetitionsInput.classList.contains('ng-touched')).toBe(true);
-      expect(errorMessageElement(repetitionsInput.parentElement)).toBe(
-        'Repetitions is required',
-      );
-    });
+      it('should return false when form is dirty and has changed', () => {
+        exerciseNameInputElement(exerciseElements()[0]).value = 'Push-ups';
+        exerciseNameInputElement(exerciseElements()[0]).dispatchEvent(
+          new Event('input'),
+        );
+        fixture.detectChanges();
 
-    it('should show error for invalid repetitions', () => {
-      changeRepetitionsInput(0, 0, '0');
-      fixture.detectChanges();
-
-      const repetitionsInput = repetitionInputElement(
-        setElementsQuery(exerciseElements()[0])[0],
-      );
-
-      expect(repetitionsInput.classList.contains('ng-invalid')).toBe(true);
-      expect(repetitionsInput.classList.contains('ng-touched')).toBe(true);
-      expect(errorMessageElement(repetitionsInput.parentElement)).toBe(
-        'Repetitions must be at least 1',
-      );
-    });
-
-    it('should show error for invalid weight', () => {
-      changeWeightInput(0, 0, '');
-      fixture.detectChanges();
-
-      const weightInput = weightInputElement(
-        setElementsQuery(exerciseElements()[0])[0],
-      );
-
-      expect(weightInput.classList.contains('ng-invalid')).toBe(true);
-      expect(weightInput.classList.contains('ng-touched')).toBe(true);
-      expect(errorMessageElement(weightInput.parentElement)).toBe(
-        'Weight is required',
-      );
-    });
-
-    it('should show error for invalid weight', () => {
-      changeWeightInput(0, 0, '-1');
-      fixture.detectChanges();
-
-      const weightInput = weightInputElement(
-        setElementsQuery(exerciseElements()[0])[0],
-      );
-
-      expect(weightInput.classList.contains('ng-invalid')).toBe(true);
-      expect(weightInput.classList.contains('ng-touched')).toBe(true);
-      expect(errorMessageElement(weightInput.parentElement)).toBe(
-        'Weight must be at least 0',
-      );
+        expect(component.canDeactivate()).toBeFalsy();
+      });
     });
   });
 
-  describe('canDeactivate', () => {
-    it('should return true when form is pristine', () => {
-      expect(component.canDeactivate()).toBeTruthy();
-    });
+  describe('edit session', () => {
+    it('should update existing session', () => {
+      const session = {
+        id: 'session-1',
+        name: 'Session',
+        date: new Date(),
+        exercises: [
+          {
+            id: 'exercise-1',
+            name: 'Push-ups',
+            sets: [
+              { id: 'set-1', repetitions: 3, weight: 4 },
+              { id: 'set-2', repetitions: 5, weight: 6 },
+            ],
+          },
+          {
+            id: 'exercise-2',
+            name: 'Pull-ups',
+            sets: [{ id: 'set-3', repetitions: 7, weight: 8 }],
+          },
+        ],
+      };
 
-    it('should return true when form is dirty but has not changed', () => {
-      exerciseNameInputElement(exerciseElements()[0]).value = '';
-      exerciseNameInputElement(exerciseElements()[0]).dispatchEvent(
-        new Event('input'),
-      );
+      fixture.componentRef.setInput('session', session);
       fixture.detectChanges();
 
-      expect(component.canDeactivate()).toBeTruthy();
-    });
+      const saveSpy = jest.spyOn(component.save, 'emit');
 
-    it('should return false when form is dirty and has changed', () => {
-      exerciseNameInputElement(exerciseElements()[0]).value = 'Push-ups';
-      exerciseNameInputElement(exerciseElements()[0]).dispatchEvent(
-        new Event('input'),
-      );
+      changeSessionNameInput('Test session');
+      saveButton().triggerEventHandler('submit', null);
+
       fixture.detectChanges();
 
-      expect(component.canDeactivate()).toBeFalsy();
+      const result = { ...cloneDeep(session), name: 'Test session' };
+
+      expect(saveSpy).toHaveBeenCalledWith(result);
     });
   });
 

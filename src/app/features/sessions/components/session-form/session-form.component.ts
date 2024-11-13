@@ -5,6 +5,7 @@ import {
   inject,
   output,
   OnInit,
+  input,
 } from '@angular/core';
 import {
   FormArray,
@@ -36,22 +37,64 @@ export class SessionFormComponent implements OnInit {
   formBuilder = inject(FormBuilder);
   save = output<Session>();
   cancel = output<void>();
-  initialFormValue = signal<Session | null>(null);
+  session = input<Session | undefined>();
+  notModifiedFormValue = signal<Session | undefined>(undefined);
 
   form = this.formBuilder.group({
-    id: [crypto.randomUUID(), { nonNullable: true }],
+    id: [crypto.randomUUID() as string],
     name: ['', Validators.required],
     date: [new Date(new Date().setHours(0, 0, 0, 0)), Validators.required],
     exercises: this.formBuilder.array([this.generateExercise()]),
   });
 
   ngOnInit() {
-    this.initialFormValue.set(this.form.value as Session);
+    const session = this.session();
+    if (session) {
+      this.rebuildForm(session);
+    }
+
+    this.notModifiedFormValue.set(
+      session ? session : (this.form.value as Session),
+    );
+  }
+
+  private rebuildForm(session: Session) {
+    (this.form.get('exercises') as FormArray).clear();
+
+    session.exercises.forEach((exercise) => {
+      const exerciseGroup = this.formBuilder.group({
+        id: [exercise.id],
+        name: [exercise.name, Validators.required],
+        sets: this.formBuilder.array([]),
+      });
+
+      const setsArray = exerciseGroup.get('sets') as FormArray;
+      exercise.sets.forEach((set) => {
+        setsArray.push(
+          this.formBuilder.group({
+            id: [set.id],
+            repetitions: [
+              set.repetitions,
+              [Validators.required, Validators.min(1)],
+            ],
+            weight: [set.weight, [Validators.required, Validators.min(0)]],
+          }),
+        );
+      });
+
+      (this.form.get('exercises') as FormArray).push(exerciseGroup);
+    });
+
+    this.form.patchValue({
+      id: session.id,
+      name: session.name,
+      date: new Date(session.date),
+    });
   }
 
   generateExercise() {
     return this.formBuilder.group({
-      id: [crypto.randomUUID()],
+      id: [crypto.randomUUID() as string],
       name: ['', Validators.required],
       sets: this.formBuilder.array([this.generateSet()]),
     });
@@ -59,7 +102,7 @@ export class SessionFormComponent implements OnInit {
 
   generateSet() {
     return this.formBuilder.group({
-      id: [crypto.randomUUID()],
+      id: [crypto.randomUUID() as string],
       repetitions: [1, [Validators.required, Validators.min(1)]],
       weight: [0, [Validators.required, Validators.min(0)]],
     });
@@ -151,6 +194,6 @@ export class SessionFormComponent implements OnInit {
   }
 
   hasFormChanged(): boolean {
-    return !isEqual(this.initialFormValue(), this.form.value);
+    return !isEqual(this.notModifiedFormValue(), this.form.value);
   }
 }

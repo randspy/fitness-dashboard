@@ -1,0 +1,8 @@
+<div class="md:mx-5 md:my-16">
+  <fit-session-form
+    (save)="onSubmit($event)"
+    (cancel)="onCancel()"
+    [session]="session()"
+  />
+  <p-confirmDialog></p-confirmDialog>
+</div>

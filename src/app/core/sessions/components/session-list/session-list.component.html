@@ -12,10 +12,12 @@
             {{ session.date | date }}
           </p>
           @if (displayActions()) {
+            <fit-link [link]="session.id" class="ml-auto"
+              ><ng-icon name="lucidePencil"></ng-icon
+            ></fit-link>
+
             <fit-button
-              [text]="true"
-              [raised]="false"
-              class="ml-auto"
+              severity="warn"
               (onClick)="confirmDeleteSession(session.id)"
               data-testid="delete-button"
             >

@@ -1,5 +1,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { SessionStore } from './sessions.store';
+import { generateSession } from '../../../../../setup-jest';
 
 describe('SessionStore', () => {
   let store: InstanceType<typeof SessionStore>;
@@ -141,6 +142,14 @@ describe('SessionStore', () => {
 
       store.setSessions(sessions);
       expect(store.sessions()).toEqual(sessions);
+    });
+
+    it('should get session by id', () => {
+      const session = generateSession({ id: '2' });
+      store.setSessions([generateSession({ id: '1' }), session]);
+
+      const result = store.getSessionById('2');
+      expect(result).toEqual(session);
     });
   });
 
