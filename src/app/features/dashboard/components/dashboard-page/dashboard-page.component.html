@@ -5,7 +5,7 @@
     </h2>
     <div class="flex w-full flex-col gap-8 xl:flex-row xl:gap-4">
       <fit-dashboard-calendar />
-      <div class="flex flex-grow">
+      <div class="flex-grow">
         <fit-session-list
           [sessions]="dashboardCalendarService.selectedMonthSessions()"
         />
