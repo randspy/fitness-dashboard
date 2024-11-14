@@ -70,15 +70,13 @@ describe('WelcomeComponent', () => {
     const input = inputInstance();
     input.onInput('John Doe');
 
-    formQuery().triggerEventHandler('submit', null);
-
-    fixture.detectChanges();
+    submitForm();
 
     expect(errorMessageElement(inputElement())).toBeFalsy();
   });
 
   it('should show error message when name is empty', () => {
-    formQuery().triggerEventHandler('submit', null);
+    submitForm();
 
     fixture.detectChanges();
     expect(errorMessageElement(inputElement())).toBe('Name is required');
@@ -89,7 +87,7 @@ describe('WelcomeComponent', () => {
     input.onInput('John Doe');
     fixture.detectChanges();
 
-    formQuery().triggerEventHandler('submit', null);
+    submitForm();
 
     expect(userStore.name()).toBe('John Doe');
   });
@@ -99,7 +97,7 @@ describe('WelcomeComponent', () => {
     input.onInput('John Doe');
     fixture.detectChanges();
 
-    formQuery().triggerEventHandler('submit', null);
+    submitForm();
 
     fixture.detectChanges();
 
@@ -134,4 +132,6 @@ describe('WelcomeComponent', () => {
 
   const errorMessageElement = (element: HTMLElement) =>
     element.querySelector('.text-error')?.textContent;
+
+  const submitForm = () => formQuery().triggerEventHandler('submit', null);
 });

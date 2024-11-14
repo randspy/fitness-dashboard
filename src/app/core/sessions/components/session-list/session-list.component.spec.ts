@@ -13,6 +13,7 @@ import { provideRouter } from '@angular/router';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
+import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
 
 describe('SessionListComponent', () => {
   let fixture: ComponentFixture<SessionListComponent>;
@@ -66,9 +67,8 @@ describe('SessionListComponent', () => {
     fixture.componentRef.setInput('sessions', [session]);
     fixture.detectChanges();
 
-    const sessionElements = fixture.debugElement.queryAll(
-      By.css('[data-testid="session-item"]'),
-    );
+    const sessionElements = sessionsQuery();
+
     expect(sessionElements.length).toBe(1);
     expect(sessionElements[0].nativeElement.textContent).toContain(
       session.name,
@@ -89,9 +89,8 @@ describe('SessionListComponent', () => {
     fixture.componentRef.setInput('sessions', [session1, session2]);
     fixture.detectChanges();
 
-    const sessionElements = fixture.debugElement.queryAll(
-      By.css('[data-testid="session-item"]'),
-    );
+    const sessionElements = sessionsQuery();
+
     expect(sessionElements.length).toBe(2);
     expect(sessionElements[0].nativeElement.textContent).toContain(
       session2.name,
@@ -101,7 +100,7 @@ describe('SessionListComponent', () => {
     );
   });
 
-  it('should display the delete modal', () => {
+  it('should display the delete modal', async () => {
     const session: Session = generateSession({
       id: '1',
     });
@@ -111,17 +110,12 @@ describe('SessionListComponent', () => {
     fixture.componentRef.setInput('displayActions', true);
     fixture.detectChanges();
 
-    const deleteButton = fixture.debugElement.query(
-      By.css('[data-testid="delete-button"]'),
-    );
-
-    deleteButton.triggerEventHandler('onClick', null);
-    fixture.detectChanges();
+    await clickDeleteButton();
 
     expect(confirmationService.confirm).toHaveBeenCalled();
   });
 
-  it('should remove session when confirmed', () => {
+  it('should remove session when confirmed', async () => {
     const session: Session = generateSession({
       id: '1',
     });
@@ -131,18 +125,11 @@ describe('SessionListComponent', () => {
     fixture.componentRef.setInput('displayActions', true);
     fixture.detectChanges();
 
-    const deleteButton = fixture.debugElement.query(
-      By.css('[data-testid="delete-button"]'),
-    );
-
-    deleteButton.triggerEventHandler('onClick', null);
-    fixture.detectChanges();
+    await clickDeleteButton();
 
     const confirmArgs = (confirmationService.confirm as jest.Mock).mock
       .calls[0][0];
     confirmArgs.accept();
-
-    fixture.detectChanges();
 
     expect(sessionStore.sessions()).toEqual([]);
   });
@@ -160,4 +147,16 @@ describe('SessionListComponent', () => {
     expect(link).toBeTruthy();
     expect(await link.getLink()).toBe('1');
   });
+
+  const sessionsQuery = () =>
+    fixture.debugElement.queryAll(By.css('[data-testid="session-item"]'));
+
+  const clickDeleteButton = async () => {
+    const deleteButton = await loader.getHarness(
+      ButtonComponentHarness.with({
+        testId: 'delete-button',
+      }),
+    );
+    await deleteButton.click();
+  };
 });

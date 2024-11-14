@@ -4,10 +4,16 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { cloneDeep } from 'lodash';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
+import { InputComponentHarness } from '../../../../../tests/harness/ui/input.harness';
+import { DatepickerComponentHarness } from '../../../../../tests/harness/ui/datepicker.harness';
 
 describe('SessionFormComponent', () => {
   let component: SessionFormComponent;
   let fixture: ComponentFixture<SessionFormComponent>;
+  let loader: HarnessLoader;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,6 +21,7 @@ describe('SessionFormComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(SessionFormComponent);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
   });
 
@@ -35,112 +42,142 @@ describe('SessionFormComponent', () => {
       expect(component.form.get('date')?.value).toEqual(today);
     });
 
-    it('should change session name', () => {
+    it('should change session name', async () => {
       changeSessionNameInput('Test session');
       fixture.detectChanges();
+      await fixture.whenStable();
 
-      expect(sessionNameInputElement().value).toBe('Test session');
+      const sessionName = await sessionNameInput();
+      expect(await sessionName.getValue()).toBe('Test session');
     });
 
     it('should change date', async () => {
-      changeDateInput(new Date('01/01/2024'));
+      await changeDateInput(new Date('01/01/2024'));
       fixture.detectChanges();
 
       await fixture.whenStable();
 
-      expect(dateInputElement().value).toBe('01/01/2024');
+      const date = await loader.getHarness(DatepickerComponentHarness);
+      expect(await date.getValue()).toBe('01/01/2024');
     });
 
-    it('should initialize with one exercise and one set', () => {
+    it('should initialize with one exercise and one set', async () => {
       const exercises = exerciseElements();
       expect(exercises.length).toBe(1);
 
-      const exerciseNameInput = exerciseNameInputElement(exercises[0]);
-      expect(exerciseNameInput.value).toBe('');
+      const exerciseName = await exerciseNameInput(0);
+      expect(await exerciseName.getValue()).toBe('');
 
       const sets = setElementsQuery(exercises[0]);
       expect(sets.length).toBe(1);
 
-      const repetitionsInput = repetitionInputElement(sets[0]);
-      expect(repetitionsInput.value).toBe('1');
+      const repetitions = await repetitionsInput(0, 0);
+      expect(await repetitions.getValue()).toBe('1');
 
-      const weightInput = weightInputElement(sets[0]);
-      expect(weightInput.value).toBe('0');
+      const weight = await weightInput(0, 0);
+      expect(await weight.getValue()).toBe('0');
     });
 
     it('should add new exercise', async () => {
-      addExerciseButton().triggerEventHandler('click', null);
+      const addExerciseButton = await loader.getHarness(
+        ButtonComponentHarness.with({
+          testId: 'add-exercise-button',
+        }),
+      );
 
-      fixture.detectChanges();
-      await fixture.whenStable();
+      await addExerciseButton.click();
 
       const exercises = exerciseElements();
       expect(exercises.length).toBe(2);
 
-      const exerciseNameInput = exerciseNameInputElement(exercises[1]);
-      expect(exerciseNameInput.value).toBe('');
+      const input = await loader.getHarness(
+        InputComponentHarness.with({
+          within: {
+            selector: 'div[data-testid^="exercise"]',
+            index: 1,
+          },
+        }),
+      );
+
+      expect(await input.getValue()).toBe('');
 
       const sets = setElementsQuery(exercises[1]);
       expect(sets.length).toBe(1);
 
-      const repetitionsInput = repetitionInputElement(sets[0]);
-      expect(repetitionsInput.value).toBe('1');
+      const repetitions = await repetitionsInput(1, 0);
+      expect(await repetitions.getValue()).toBe('1');
 
-      const weightInput = weightInputElement(sets[0]);
-      expect(weightInput.value).toBe('0');
+      const weight = await weightInput(1, 0);
+      expect(await weight.getValue()).toBe('0');
     });
 
-    it('should remove exercise', () => {
-      removeExerciseButton(0).triggerEventHandler('click', null);
-      fixture.detectChanges();
+    it('should remove exercise', async () => {
+      const removeExerciseButton = await loader.getHarness(
+        ButtonComponentHarness.with({
+          testId: 'remove-exercise-button-0',
+        }),
+      );
+
+      await removeExerciseButton.click();
 
       const exercises = exerciseElements();
       expect(exercises.length).toBe(0);
     });
 
     it('should add new set to exercise', async () => {
-      addSetButton(0).triggerEventHandler('click', null);
+      const addSetButton = await loader.getHarness(
+        ButtonComponentHarness.with({
+          testId: 'add-set-button-0',
+        }),
+      );
 
-      fixture.detectChanges();
-      await fixture.whenStable();
+      await addSetButton.click();
 
       const exercises = exerciseElements();
       const sets = setElementsQuery(exercises[0]);
 
       expect(sets.length).toBe(2);
 
-      const repetitionsInput = repetitionInputElement(sets[1]);
-      expect(repetitionsInput.value).toBe('1');
+      const repetitions = await repetitionsInput(0, 1);
+      expect(await repetitions.getValue()).toBe('1');
 
-      const weightInput = weightInputElement(sets[1]);
-      expect(weightInput.value).toBe('0');
+      const weight = await weightInput(0, 1);
+      expect(await weight.getValue()).toBe('0');
     });
 
-    it('should remove set from exercise', () => {
-      removeSetButton(0, 0).triggerEventHandler('click', null);
+    it('should remove set from exercise', async () => {
+      const removeSetButton = await loader.getHarness(
+        ButtonComponentHarness.with({
+          testId: 'remove-set-button-0-0',
+        }),
+      );
 
-      fixture.detectChanges();
+      await removeSetButton.click();
 
       const sets = setElementsQuery(exerciseElements()[0]);
       expect(sets.length).toBe(0);
     });
 
-    it('should emit cancel event', () => {
+    it('should emit cancel event', async () => {
       const cancelSpy = jest.spyOn(component.cancel, 'emit');
+      const cancelButton = await loader.getHarness(
+        ButtonComponentHarness.with({
+          testId: 'cancel-button',
+        }),
+      );
 
-      cancelButton().triggerEventHandler('click', null);
+      await cancelButton.click();
 
       expect(cancelSpy).toHaveBeenCalled();
     });
 
-    it('should emit save event with valid form data', () => {
+    it('should emit save event with valid form data', async () => {
       const saveSpy = jest.spyOn(component.save, 'emit');
 
-      changeSessionNameInput('Test session');
-      changeExerciseNameInput(0, 'Push-ups');
-      saveButton().triggerEventHandler('submit', null);
+      await changeSessionNameInput('Test session');
+      await changeExerciseNameInput(0, 'Push-ups');
 
-      fixture.detectChanges();
+      saveForm();
 
       expect(saveSpy).toHaveBeenCalledWith({
         date: expect.any(Date),
@@ -157,103 +194,80 @@ describe('SessionFormComponent', () => {
     });
 
     describe('validation', () => {
-      it('should show error for session name', () => {
-        saveButton().triggerEventHandler('submit', null);
-        fixture.detectChanges();
+      it('should show error for session name', async () => {
+        saveForm();
 
-        const sessionNameInput = sessionNameInputElement();
-        expect(sessionNameInput.classList.contains('ng-invalid')).toBe(true);
-        expect(sessionNameInput.classList.contains('ng-touched')).toBe(true);
-        expect(errorMessageElement(sessionNameInput.parentElement)).toBe(
+        const sessionName = await sessionNameInput();
+        expect(await sessionName.isInvalid()).toBe(true);
+        expect(await sessionName.isTouched()).toBe(true);
+        expect(await sessionName.getErrorMessage()).toBe(
           'Session name is required',
         );
       });
 
-      it('should show error for date', () => {
+      it('should show error for date', async () => {
         changeDateInput(null);
-        saveButton().triggerEventHandler('submit', null);
+        saveForm();
 
-        fixture.detectChanges();
-
-        const datePicker = datepickerElement();
-
-        expect(datePicker.classList.contains('ng-invalid')).toBe(true);
-        expect(datePicker.classList.contains('ng-touched')).toBe(true);
-
-        expect(errorMessageElement(datePicker)).toBe('Date is required');
+        const datePicker = await datepickerInput();
+        expect(await datePicker.isInvalid()).toBe(true);
+        expect(await datePicker.isTouched()).toBe(true);
+        expect(await datePicker.getErrorMessage()).toBe('Date is required');
       });
 
-      it('should show error for exercise name', () => {
-        saveButton().triggerEventHandler('submit', null);
+      it('should show error for exercise name', async () => {
+        saveForm();
         fixture.detectChanges();
 
-        const exerciseNameInput = exerciseNameInputElement(
-          exerciseElements()[0],
-        );
-        expect(exerciseNameInput.classList.contains('ng-invalid')).toBe(true);
-        expect(exerciseNameInput.classList.contains('ng-touched')).toBe(true);
-        expect(errorMessageElement(exerciseNameInput.parentElement)).toBe(
+        const exerciseName = await exerciseNameInput(0);
+        expect(await exerciseName.isInvalid()).toBe(true);
+        expect(await exerciseName.isTouched()).toBe(true);
+        expect(await exerciseName.getErrorMessage()).toBe(
           'Exercise name is required',
         );
       });
 
-      it('should show error for missing repetitions', () => {
-        changeRepetitionsInput(0, 0, '');
+      it('should show error for missing repetitions', async () => {
+        await changeRepetitionsInput(0, 0, '');
 
-        fixture.detectChanges();
-
-        const repetitionsInput = repetitionInputElement(
-          setElementsQuery(exerciseElements()[0])[0],
-        );
-
-        expect(repetitionsInput.classList.contains('ng-invalid')).toBe(true);
-        expect(repetitionsInput.classList.contains('ng-touched')).toBe(true);
-        expect(errorMessageElement(repetitionsInput.parentElement)).toBe(
+        const repetitions = await repetitionsInput(0, 0);
+        expect(await repetitions.isInvalid()).toBe(true);
+        expect(await repetitions.isTouched()).toBe(true);
+        expect(await repetitions.getErrorMessage()).toBe(
           'Repetitions is required',
         );
       });
 
-      it('should show error for invalid repetitions', () => {
-        changeRepetitionsInput(0, 0, '0');
+      it('should show error for invalid repetitions', async () => {
+        await changeRepetitionsInput(0, 0, '0');
         fixture.detectChanges();
 
-        const repetitionsInput = repetitionInputElement(
-          setElementsQuery(exerciseElements()[0])[0],
-        );
-
-        expect(repetitionsInput.classList.contains('ng-invalid')).toBe(true);
-        expect(repetitionsInput.classList.contains('ng-touched')).toBe(true);
-        expect(errorMessageElement(repetitionsInput.parentElement)).toBe(
+        const repetitions = await repetitionsInput(0, 0);
+        expect(await repetitions.isInvalid()).toBe(true);
+        expect(await repetitions.isTouched()).toBe(true);
+        expect(await repetitions.getErrorMessage()).toBe(
           'Repetitions must be at least 1',
         );
       });
 
-      it('should show error for invalid weight', () => {
-        changeWeightInput(0, 0, '');
+      it('should show error for missing weight', async () => {
+        await changeWeightInput(0, 0, '');
         fixture.detectChanges();
 
-        const weightInput = weightInputElement(
-          setElementsQuery(exerciseElements()[0])[0],
-        );
-
-        expect(weightInput.classList.contains('ng-invalid')).toBe(true);
-        expect(weightInput.classList.contains('ng-touched')).toBe(true);
-        expect(errorMessageElement(weightInput.parentElement)).toBe(
-          'Weight is required',
-        );
+        const weight = await weightInput(0, 0);
+        expect(await weight.isInvalid()).toBe(true);
+        expect(await weight.isTouched()).toBe(true);
+        expect(await weight.getErrorMessage()).toBe('Weight is required');
       });
 
-      it('should show error for invalid weight', () => {
-        changeWeightInput(0, 0, '-1');
+      it('should show error for invalid weight', async () => {
+        await changeWeightInput(0, 0, '-1');
         fixture.detectChanges();
 
-        const weightInput = weightInputElement(
-          setElementsQuery(exerciseElements()[0])[0],
-        );
-
-        expect(weightInput.classList.contains('ng-invalid')).toBe(true);
-        expect(weightInput.classList.contains('ng-touched')).toBe(true);
-        expect(errorMessageElement(weightInput.parentElement)).toBe(
+        const weight = await weightInput(0, 0);
+        expect(await weight.isInvalid()).toBe(true);
+        expect(await weight.isTouched()).toBe(true);
+        expect(await weight.getErrorMessage()).toBe(
           'Weight must be at least 0',
         );
       });
@@ -264,22 +278,14 @@ describe('SessionFormComponent', () => {
         expect(component.canDeactivate()).toBeTruthy();
       });
 
-      it('should return true when form is dirty but has not changed', () => {
-        exerciseNameInputElement(exerciseElements()[0]).value = '';
-        exerciseNameInputElement(exerciseElements()[0]).dispatchEvent(
-          new Event('input'),
-        );
-        fixture.detectChanges();
+      it('should return true when form is dirty but has not changed', async () => {
+        await changeExerciseNameInput(0, '');
 
         expect(component.canDeactivate()).toBeTruthy();
       });
 
-      it('should return false when form is dirty and has changed', () => {
-        exerciseNameInputElement(exerciseElements()[0]).value = 'Push-ups';
-        exerciseNameInputElement(exerciseElements()[0]).dispatchEvent(
-          new Event('input'),
-        );
-        fixture.detectChanges();
+      it('should return false when form is dirty and has changed', async () => {
+        await changeExerciseNameInput(0, 'Push-ups');
 
         expect(component.canDeactivate()).toBeFalsy();
       });
@@ -287,7 +293,7 @@ describe('SessionFormComponent', () => {
   });
 
   describe('edit session', () => {
-    it('should update existing session', () => {
+    it('should update existing session', async () => {
       const session = {
         id: 'session-1',
         name: 'Session',
@@ -314,8 +320,9 @@ describe('SessionFormComponent', () => {
 
       const saveSpy = jest.spyOn(component.save, 'emit');
 
-      changeSessionNameInput('Test session');
-      saveButton().triggerEventHandler('submit', null);
+      await changeSessionNameInput('Test session');
+
+      saveForm();
 
       fixture.detectChanges();
 
@@ -325,102 +332,104 @@ describe('SessionFormComponent', () => {
     });
   });
 
-  const sessionNameInputElement = () =>
-    fixture.debugElement.query(By.css('[formControlName="name"] input'))
-      .nativeElement;
-
   const exerciseElements = () =>
     fixture.debugElement.queryAll(By.css('div[data-testid^="exercise"]'));
-
-  const exerciseNameInputElement = (exerciseElement: DebugElement) =>
-    exerciseElement.query(By.css('[formControlName="name"] input'))
-      .nativeElement;
 
   const setElementsQuery = (exerciseElement: DebugElement) =>
     exerciseElement.queryAll(By.css('div[data-testid^="set"]'));
 
-  const repetitionInputElement = (setElement: DebugElement) =>
-    setElement.query(By.css('[formControlName="repetitions"] input'))
-      .nativeElement;
+  const datepickerInput = async () =>
+    await loader.getHarness(DatepickerComponentHarness);
 
-  const weightInputElement = (setElement: DebugElement) =>
-    setElement.query(By.css('[formControlName="weight"] input')).nativeElement;
-
-  const datepickerElement = () =>
-    fixture.debugElement.query(By.css('[formControlName="date"]'))
-      .nativeElement;
-
-  const dateInputElement = () =>
-    fixture.debugElement.query(By.css('[formControlName="date"] input'))
-      .nativeElement;
-
-  const errorMessageElement = (element: HTMLElement) =>
-    element.querySelector('.text-error')?.textContent;
-
-  const addExerciseButton = () =>
-    fixture.debugElement.query(By.css('[data-testid="add-exercise-button"]'));
-
-  const removeExerciseButton = (exerciseIndex: number) =>
-    fixture.debugElement.query(
-      By.css(`[data-testid="remove-exercise-button-${exerciseIndex}"]`),
+  const repetitionsInput = async (exerciseIndex: number, setIndex: number) =>
+    await loader.getHarness(
+      InputComponentHarness.with({
+        within: {
+          selector: 'div[data-testid^="exercise"]',
+          index: exerciseIndex,
+          path: [
+            { selector: 'div[data-testid^="set"]', index: setIndex },
+            { selector: 'fit-input[formControlName="repetitions"]' },
+          ],
+        },
+      }),
     );
 
-  const addSetButton = (exerciseIndex: number) =>
-    fixture.debugElement.query(
-      By.css(`[data-testid="add-set-button-${exerciseIndex}"]`),
+  const weightInput = async (exerciseIndex: number, setIndex: number) =>
+    await loader.getHarness(
+      InputComponentHarness.with({
+        within: {
+          selector: 'div[data-testid^="exercise"]',
+          index: exerciseIndex,
+          path: [
+            { selector: 'div[data-testid^="set"]', index: setIndex },
+            { selector: 'fit-input[formControlName="weight"]' },
+          ],
+        },
+      }),
     );
 
-  const removeSetButton = (exerciseIndex: number, setIndex: number) =>
-    fixture.debugElement.query(
-      By.css(`[data-testid="remove-set-button-${exerciseIndex}-${setIndex}"]`),
+  const exerciseNameInput = async (index: number) =>
+    await loader.getHarness(
+      InputComponentHarness.with({
+        within: {
+          selector: 'div[data-testid^="exercise"]',
+          index,
+        },
+      }),
     );
 
-  const cancelButton = () =>
-    fixture.debugElement.query(By.css('[data-testid="cancel-button"]'));
+  const sessionNameInput = async () =>
+    await loader.getHarness(
+      InputComponentHarness.with({
+        formControlName: 'name',
+      }),
+    );
 
   const saveButton = () => fixture.debugElement.query(By.css('form'));
 
-  const changeRepetitionsInput = (
+  const saveForm = () => saveButton().triggerEventHandler('submit', null);
+
+  const changeRepetitionsInput = async (
     exerciseIndex: number,
     setIndex: number,
     value: string,
   ) => {
-    const repetitionsInput = repetitionInputElement(
-      setElementsQuery(exerciseElements()[exerciseIndex])[setIndex],
-    );
-    repetitionsInput.value = value;
-    repetitionsInput.dispatchEvent(new Event('input'));
+    const repetitions = await repetitionsInput(exerciseIndex, setIndex);
+    await repetitions.setValue(value);
   };
 
-  const changeWeightInput = (
+  const changeWeightInput = async (
     exerciseIndex: number,
     setIndex: number,
     value: string,
   ) => {
-    const weightInput = weightInputElement(
-      setElementsQuery(exerciseElements()[exerciseIndex])[setIndex],
-    );
-    weightInput.value = value;
-    weightInput.dispatchEvent(new Event('input'));
+    const weight = await weightInput(exerciseIndex, setIndex);
+    await weight.setValue(value);
   };
 
-  const changeExerciseNameInput = (exerciseIndex: number, value: string) => {
-    const exerciseNameInput = exerciseNameInputElement(
-      exerciseElements()[exerciseIndex],
-    );
-    exerciseNameInput.value = value;
-    exerciseNameInput.dispatchEvent(new Event('input'));
+  const changeExerciseNameInput = async (
+    exerciseIndex: number,
+    value: string,
+  ) => {
+    const exerciseName = await exerciseNameInput(exerciseIndex);
+    await exerciseName.setValue(value);
   };
 
-  const changeDateInput = (date: Date | null) => {
-    // changing input in the template didn't work
-    const formControl = component.form.get('date');
-    formControl?.setValue(date);
+  const changeDateInput = async (date: Date | null) => {
+    if (date) {
+      const datepicker = await datepickerInput();
+      await datepicker.setValue(date);
+    } else {
+      // changing input in the template didn't work
+      const dateControl = component.form.get('date');
+      dateControl?.setValue(null);
+      dateControl?.markAsTouched();
+    }
   };
 
-  const changeSessionNameInput = (value: string) => {
-    const sessionNameInput = sessionNameInputElement();
-    sessionNameInput.value = value;
-    sessionNameInput.dispatchEvent(new Event('input'));
+  const changeSessionNameInput = async (value: string) => {
+    const input = await sessionNameInput();
+    await input.setValue(value);
   };
 });

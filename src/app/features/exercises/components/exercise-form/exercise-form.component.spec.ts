@@ -3,10 +3,15 @@ import { ExerciseFormComponent } from './exercise-form.component';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationService } from 'primeng/api';
-
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
+import { InputComponentHarness } from '../../../../../tests/harness/ui/input.harness';
+import { TextareaComponentHarness } from '../../../../../tests/harness/ui/textarea.harness';
 describe('ExerciseFormComponent', () => {
   let component: ExerciseFormComponent;
   let fixture: ComponentFixture<ExerciseFormComponent>;
+  let loader: HarnessLoader;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,6 +20,7 @@ describe('ExerciseFormComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExerciseFormComponent);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
 
     fixture.detectChanges();
@@ -24,46 +30,32 @@ describe('ExerciseFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display error message when name is invalid', () => {
-    const form = fixture.debugElement.query(By.css('form'));
-    form.triggerEventHandler('submit', null);
+  it('should display error message when name is invalid', async () => {
+    clickSubmitButton();
 
     fixture.detectChanges();
 
-    expect(nameInputElement().classList.contains('ng-invalid')).toBeTruthy();
-    expect(nameInputElement().classList.contains('ng-touched')).toBeTruthy();
-
-    expect(errorMessageElement(nameInputElement())).toContain(
-      'Name is required',
-    );
+    const name = await nameInput();
+    expect(await name.isInvalid()).toBeTruthy();
+    expect(await name.isTouched()).toBeTruthy();
+    expect(await name.getErrorMessage()).toContain('Name is required');
   });
 
-  it('should emit cancel event when cancel button is clicked', () => {
+  it('should emit cancel event when cancel button is clicked', async () => {
     const cancelSpy = jest.spyOn(component.cancel, 'emit');
-    const cancelButton = fixture.debugElement.query(
-      By.css('[data-testid="cancel-button"]'),
-    );
 
-    cancelButton.triggerEventHandler('click', null);
+    await clickCancelButton();
 
     expect(cancelSpy).toHaveBeenCalled();
   });
 
   it('should save and navigate when form is submitted with valid data', async () => {
     const saveSpy = jest.spyOn(component.save, 'emit');
-    const form = fixture.debugElement.query(By.css('form'));
 
-    nameInputElement().value = 'Push-ups';
-    nameInputElement().dispatchEvent(new Event('input'));
+    await setName('Push-ups');
+    await setDescription('Description');
 
-    descriptionInputElement().value = 'Description';
-    descriptionInputElement().dispatchEvent(new Event('input'));
-
-    fixture.detectChanges();
-
-    await fixture.whenStable();
-
-    form.triggerEventHandler('submit', null);
+    clickSubmitButton();
 
     expect(saveSpy).toHaveBeenCalledWith({
       id: expect.any(String),
@@ -77,17 +69,16 @@ describe('ExerciseFormComponent', () => {
       expect(component.canDeactivate()).toBeTruthy();
     });
 
-    it('should return true when form is dirty but has not changed', () => {
-      nameInputElement().value = '';
-      nameInputElement().dispatchEvent(new Event('input'));
+    it('should return true when form is dirty but has not changed', async () => {
+      await setName('Push-ups');
+      await setName('');
       fixture.detectChanges();
 
       expect(component.canDeactivate()).toBeTruthy();
     });
 
-    it('should return false when form is dirty and has changed', () => {
-      nameInputElement().value = 'Push-ups';
-      nameInputElement().dispatchEvent(new Event('input'));
+    it('should return false when form is dirty and has changed', async () => {
+      await setName('Push-ups');
       fixture.detectChanges();
 
       expect(component.canDeactivate()).toBeFalsy();
@@ -96,7 +87,6 @@ describe('ExerciseFormComponent', () => {
 
   it('should keep the state from the initial state if not changed', async () => {
     const saveSpy = jest.spyOn(component.save, 'emit');
-    const form = fixture.debugElement.query(By.css('form'));
 
     fixture.componentRef.setInput('initialState', {
       id: '1-2-3-4-5',
@@ -106,14 +96,9 @@ describe('ExerciseFormComponent', () => {
 
     fixture.detectChanges();
 
-    nameInputElement().value = 'Push-ups';
-    nameInputElement().dispatchEvent(new Event('input'));
+    await setName('Push-ups');
 
-    fixture.detectChanges();
-
-    await fixture.whenStable();
-
-    form.triggerEventHandler('submit', null);
+    clickSubmitButton();
 
     expect(saveSpy).toHaveBeenCalledWith({
       id: '1-2-3-4-5',
@@ -122,12 +107,37 @@ describe('ExerciseFormComponent', () => {
     });
   });
 
-  const nameInputElement = () =>
-    fixture.debugElement.query(By.css('input')).nativeElement;
+  const nameInput = async () => await loader.getHarness(InputComponentHarness);
 
-  const descriptionInputElement = () =>
-    fixture.debugElement.query(By.css('textarea')).nativeElement;
+  const formQuery = () => fixture.debugElement.query(By.css('form'));
 
-  const errorMessageElement = (element: HTMLElement) =>
-    element.parentElement?.textContent;
+  const descriptionInput = async () =>
+    await loader.getHarness(TextareaComponentHarness);
+
+  const clickSubmitButton = () => {
+    const form = formQuery();
+    form.triggerEventHandler('submit', null);
+  };
+
+  const cancelButton = async () =>
+    await loader.getHarness(
+      ButtonComponentHarness.with({
+        testId: 'cancel-button',
+      }),
+    );
+
+  const clickCancelButton = async () => {
+    const cancel = await cancelButton();
+    await cancel.click();
+  };
+
+  const setName = async (value: string) => {
+    const name = await nameInput();
+    await name.setValue(value);
+  };
+
+  const setDescription = async (value: string) => {
+    const description = await descriptionInput();
+    await description.setValue(value);
+  };
 });

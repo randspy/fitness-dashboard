@@ -4,11 +4,6 @@ import {
   HarnessPredicate,
 } from '@angular/cdk/testing';
 
-export interface LinkHarnessFilters {
-  link?: string | RegExp;
-  text?: string | RegExp;
-}
-
 export class LinkComponentHarness extends ComponentHarness {
   static hostSelector = 'fit-link';
 
