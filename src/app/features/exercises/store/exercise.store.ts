@@ -1,12 +1,13 @@
 import {
   patchState,
   signalStore,
+  withComputed,
   withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
 import { updateState, withDevtools } from '@angular-architects/ngrx-toolkit';
-import { effect } from '@angular/core';
+import { computed, effect } from '@angular/core';
 import { Exercise } from '../domain/exercise.model';
 
 interface ExercisesState {
@@ -21,6 +22,9 @@ export const ExerciseStore = signalStore(
   { providedIn: 'root' },
   withDevtools('exercises'),
   withState(initialState),
+  withComputed((store) => ({
+    isEmpty: computed(() => store.exercises().length === 0),
+  })),
   withMethods((store) => ({
     addExercise(exercise: Omit<Exercise, 'id'>) {
       updateState(store, 'addExercise', (state) => ({

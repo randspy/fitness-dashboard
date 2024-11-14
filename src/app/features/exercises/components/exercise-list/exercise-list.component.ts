@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ExerciseStore } from '../../store/exercise.store';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { DragDropModule } from 'primeng/dragdrop';
@@ -47,10 +42,7 @@ export class ExerciseListComponent {
   confirmationService = inject(ConfirmationService);
 
   exercises = this.exerciseStore.exercises;
-
-  exerciseListIsEmpty = computed(
-    () => this.exerciseStore.exercises().length === 0,
-  );
+  exerciseListIsEmpty = this.exerciseStore.isEmpty;
 
   onReorder(exercises: Exercise[]) {
     this.exerciseStore.setExercises(exercises);
