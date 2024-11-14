@@ -6,13 +6,26 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { Router } from '@angular/router';
 import { DraggableListComponent } from '../../../../ui/components/draggable-list/draggable-list.component';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { Exercise } from '../../domain/exercise.model';
+import { ConfirmationService } from 'primeng/api';
+import { Subject } from 'rxjs';
 
 describe('ExerciseListComponent', () => {
   let component: ExerciseListComponent;
   let fixture: ComponentFixture<ExerciseListComponent>;
   let exerciseStore: InstanceType<typeof ExerciseStore>;
+  let confirmationService: ConfirmationService;
+  let loader: HarnessLoader;
 
   beforeEach(async () => {
+    const mockConfirmationService = {
+      requireConfirmation$: new Subject(),
+      confirm: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [ExerciseListComponent, NoopAnimationsModule],
       providers: [
@@ -24,11 +37,18 @@ describe('ExerciseListComponent', () => {
           },
         },
       ],
-    }).compileComponents();
+    })
+      .overrideProvider(ConfirmationService, {
+        useValue: mockConfirmationService,
+      })
+      .compileComponents();
 
     exerciseStore = TestBed.inject(ExerciseStore);
     fixture = TestBed.createComponent(ExerciseListComponent);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
+    confirmationService =
+      fixture.debugElement.injector.get(ConfirmationService);
     fixture.detectChanges();
   });
 
@@ -86,4 +106,47 @@ describe('ExerciseListComponent', () => {
 
     expect(exerciseStore.exercises()).toEqual(reorderedExercises);
   });
+
+  it('should display the delete modal', async () => {
+    const exercise: Exercise = {
+      id: '1',
+      name: 'Push-ups',
+      description: 'Basic push-ups',
+    };
+
+    exerciseStore.addExercise(exercise);
+    fixture.detectChanges();
+
+    await clickDeleteButton();
+
+    expect(confirmationService.confirm).toHaveBeenCalled();
+  });
+
+  it('should remove exercise when confirmed', async () => {
+    const exercise: Exercise = {
+      id: '1',
+      name: 'Push-ups',
+      description: 'Basic push-ups',
+    };
+
+    exerciseStore.addExercise(exercise);
+    fixture.detectChanges();
+
+    await clickDeleteButton();
+
+    const confirmArgs = (confirmationService.confirm as jest.Mock).mock
+      .calls[0][0];
+    confirmArgs.accept();
+
+    expect(exerciseStore.exercises()).toEqual([]);
+  });
+
+  const clickDeleteButton = async () => {
+    const deleteButton = await loader.getHarness(
+      ButtonComponentHarness.with({
+        testId: 'delete-button',
+      }),
+    );
+    await deleteButton.click();
+  };
 });

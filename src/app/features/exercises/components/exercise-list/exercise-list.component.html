@@ -11,9 +11,20 @@
     >
       <ng-template #contentTemplate let-exercise>
         <fit-card data-testid="exercise-item" styleClass="mb-2">
-          <h3 class="truncate text-lg font-bold">{{ exercise.name }}</h3>
+          <div class="flex items-center gap-2">
+            <h3 class="truncate text-lg font-bold">{{ exercise.name }}</h3>
+            <fit-button
+              class="ml-auto"
+              severity="warn"
+              (onClick)="confirmDeleteExercise(exercise.id)"
+              data-testid="delete-button"
+            >
+              <ng-icon name="lucideTrash"></ng-icon>
+            </fit-button>
+          </div>
         </fit-card>
       </ng-template>
     </fit-draggable-list>
   </div>
 }
+<p-confirmDialog />
