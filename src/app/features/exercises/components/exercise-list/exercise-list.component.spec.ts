@@ -4,7 +4,7 @@ import { ExerciseListComponent } from './exercise-list.component';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { DraggableListComponent } from '../../../../ui/components/draggable-list/draggable-list.component';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
@@ -12,6 +12,8 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Exercise } from '../../domain/exercise.model';
 import { ConfirmationService } from 'primeng/api';
 import { Subject } from 'rxjs';
+import { generateExercise } from '../../../../../../setup-jest';
+import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 
 describe('ExerciseListComponent', () => {
   let component: ExerciseListComponent;
@@ -28,15 +30,7 @@ describe('ExerciseListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [ExerciseListComponent, NoopAnimationsModule],
-      providers: [
-        ExerciseStore,
-        {
-          provide: Router,
-          useValue: {
-            navigate: jest.fn(),
-          },
-        },
-      ],
+      providers: [ExerciseStore, provideRouter([])],
     })
       .overrideProvider(ConfirmationService, {
         useValue: mockConfirmationService,
@@ -69,10 +63,10 @@ describe('ExerciseListComponent', () => {
   });
 
   it('should display exercises when available', () => {
-    const exercise = {
+    const exercise = generateExercise({
       name: 'Push-ups',
-      description: 'Basic push-ups',
-    };
+    });
+
     exerciseStore.addExercise(exercise);
     fixture.detectChanges();
 
@@ -139,6 +133,18 @@ describe('ExerciseListComponent', () => {
     confirmArgs.accept();
 
     expect(exerciseStore.exercises()).toEqual([]);
+  });
+
+  it('should navigate to edit page when pencil icon is clicked', async () => {
+    const exercise: Exercise = generateExercise({
+      id: '1',
+    });
+    exerciseStore.addExercise(exercise);
+    fixture.detectChanges();
+
+    const link = await loader.getHarness(LinkComponentHarness);
+    expect(link).toBeTruthy();
+    expect(await link.getLink()).toBe('1');
   });
 
   const clickDeleteButton = async () => {

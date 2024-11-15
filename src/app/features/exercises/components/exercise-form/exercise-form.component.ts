@@ -1,24 +1,21 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   input,
+  OnInit,
   output,
+  signal,
 } from '@angular/core';
 import { InputComponent } from '../../../../ui/components/input/input.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { TextareaComponent } from '../../../../ui/components/textarea/textarea.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Exercise, initialExercise } from '../../domain/exercise.model';
+import { Exercise } from '../../domain/exercise.model';
+import { isEqual } from 'lodash';
 
 @Component({
   selector: 'fit-exercise-form',
@@ -35,42 +32,36 @@ import { Exercise, initialExercise } from '../../domain/exercise.model';
   templateUrl: './exercise-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExerciseFormComponent {
+export class ExerciseFormComponent implements OnInit {
   confirmationService = inject(ConfirmationService);
-  initialState = input<Exercise>(initialExercise);
+  formBuilder = inject(FormBuilder);
+
+  exercise = input<Exercise | undefined>();
   save = output<Exercise>();
   cancel = output<void>();
 
-  form: FormGroup;
+  notModifiedFormValue = signal<Exercise | undefined>(undefined);
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      name: [this.initialState().name, [Validators.required]],
-      description: [this.initialState().description],
-    });
+  form = this.formBuilder.group({
+    id: [crypto.randomUUID() as string],
+    name: ['', [Validators.required]],
+    description: [''],
+  });
 
-    effect(
-      () => {
-        this.form.patchValue(
-          {
-            name: this.initialState().name,
-            description: this.initialState().description,
-          },
-          { emitEvent: false },
-        );
-      },
-      { allowSignalWrites: true },
+  ngOnInit() {
+    const exercise = this.exercise();
+    if (exercise) {
+      this.form.patchValue(exercise);
+    }
+
+    this.notModifiedFormValue.set(
+      exercise ? exercise : (this.form.value as Exercise),
     );
   }
 
   onSubmit() {
     if (this.form.valid) {
-      const exercise: Exercise = {
-        id: this.initialState().id,
-        name: this.form.value.name,
-        description: this.form.value.description,
-      };
-      this.save.emit(exercise);
+      this.save.emit(this.form.value as Exercise);
       this.form.reset();
     } else {
       this.form.markAllAsTouched();
@@ -90,9 +81,6 @@ export class ExerciseFormComponent {
   }
 
   hasFormChanged(): boolean {
-    return (
-      this.form.value.name !== this.initialState().name ||
-      this.form.value.description !== this.initialState().description
-    );
+    return !isEqual(this.notModifiedFormValue(), this.form.value);
   }
 }

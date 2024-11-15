@@ -22,88 +22,97 @@ describe('ExerciseFormComponent', () => {
     fixture = TestBed.createComponent(ExerciseFormComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
-
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should display error message when name is invalid', async () => {
-    clickSubmitButton();
-
-    fixture.detectChanges();
-
-    const name = await nameInput();
-    expect(await name.isInvalid()).toBeTruthy();
-    expect(await name.isTouched()).toBeTruthy();
-    expect(await name.getErrorMessage()).toContain('Name is required');
-  });
-
-  it('should emit cancel event when cancel button is clicked', async () => {
-    const cancelSpy = jest.spyOn(component.cancel, 'emit');
-
-    await clickCancelButton();
-
-    expect(cancelSpy).toHaveBeenCalled();
-  });
-
-  it('should save and navigate when form is submitted with valid data', async () => {
-    const saveSpy = jest.spyOn(component.save, 'emit');
-
-    await setName('Push-ups');
-    await setDescription('Description');
-
-    clickSubmitButton();
-
-    expect(saveSpy).toHaveBeenCalledWith({
-      id: expect.any(String),
-      name: 'Push-ups',
-      description: 'Description',
-    });
-  });
-
-  describe('canDeactivate', () => {
-    it('should return true when form is pristine', () => {
-      expect(component.canDeactivate()).toBeTruthy();
+  describe('new exercise', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
     });
 
-    it('should return true when form is dirty but has not changed', async () => {
-      await setName('Push-ups');
-      await setName('');
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('should display error message when name is invalid', async () => {
+      clickSubmitButton();
+
       fixture.detectChanges();
 
-      expect(component.canDeactivate()).toBeTruthy();
+      const name = await nameInput();
+      expect(await name.isInvalid()).toBeTruthy();
+      expect(await name.isTouched()).toBeTruthy();
+      expect(await name.getErrorMessage()).toContain('Name is required');
     });
 
-    it('should return false when form is dirty and has changed', async () => {
-      await setName('Push-ups');
-      fixture.detectChanges();
+    it('should emit cancel event when cancel button is clicked', async () => {
+      const cancelSpy = jest.spyOn(component.cancel, 'emit');
 
-      expect(component.canDeactivate()).toBeFalsy();
+      await clickCancelButton();
+
+      expect(cancelSpy).toHaveBeenCalled();
+    });
+
+    it('should save and navigate when form is submitted with valid data', async () => {
+      const saveSpy = jest.spyOn(component.save, 'emit');
+
+      await setName('Push-ups');
+      await setDescription('Description');
+
+      clickSubmitButton();
+
+      expect(saveSpy).toHaveBeenCalledWith({
+        id: expect.any(String),
+        name: 'Push-ups',
+        description: 'Description',
+      });
+    });
+
+    describe('canDeactivate', () => {
+      it('should return true when form is pristine', () => {
+        expect(component.canDeactivate()).toBeTruthy();
+      });
+
+      it('should return true when form is dirty but has not changed', async () => {
+        await setName('Push-ups');
+        await setName('');
+        fixture.detectChanges();
+
+        expect(component.canDeactivate()).toBeTruthy();
+      });
+
+      it('should return false when form is dirty and has changed', async () => {
+        await setName('Push-ups');
+        fixture.detectChanges();
+
+        expect(component.canDeactivate()).toBeFalsy();
+      });
     });
   });
 
-  it('should keep the state from the initial state if not changed', async () => {
-    const saveSpy = jest.spyOn(component.save, 'emit');
+  describe('edit exercise', () => {
+    it('should edit the exercise', async () => {
+      const saveSpy = jest.spyOn(component.save, 'emit');
 
-    fixture.componentRef.setInput('initialState', {
-      id: '1-2-3-4-5',
-      name: 'Chin-ups',
-      description: 'Story about chin-ups',
-    });
+      fixture.componentRef.setInput('exercise', {
+        id: '1-2-3-4-5',
+        name: 'Chin-ups',
+        description: 'Story about chin-ups',
+      });
 
-    fixture.detectChanges();
+      fixture.detectChanges();
 
-    await setName('Push-ups');
+      await fixture.whenStable();
 
-    clickSubmitButton();
+      await setName('Push-ups');
+      await setDescription('Story about push-ups');
 
-    expect(saveSpy).toHaveBeenCalledWith({
-      id: '1-2-3-4-5',
-      name: 'Push-ups',
-      description: 'Story about chin-ups',
+      clickSubmitButton();
+
+      expect(saveSpy).toHaveBeenCalledWith({
+        id: '1-2-3-4-5',
+        name: 'Push-ups',
+        description: 'Story about push-ups',
+      });
     });
   });
 

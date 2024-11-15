@@ -28,7 +28,7 @@ export const SessionStore = signalStore(
     addSession(session: Session) {
       updateState(store, 'addSession', (state) => ({
         ...state,
-        sessions: [...state.sessions, session],
+        sessions: [...state.sessions, { ...session }],
       }));
     },
     removeSession(id: string) {

@@ -1,0 +1,8 @@
+<div class="w-full md:w-96">
+  <fit-exercise-form
+    [exercise]="exercise()"
+    (save)="save($event)"
+    (cancel)="cancel()"
+  />
+  <p-confirmDialog />
+</div>

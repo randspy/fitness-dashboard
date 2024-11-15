@@ -6,9 +6,10 @@ import { Exercise } from '../../domain/exercise.model';
 import { DraggableListComponent } from '../../../../ui/components/draggable-list/draggable-list.component';
 import { ConfirmationService } from 'primeng/api';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { lucideTrash } from '@ng-icons/lucide';
+import { lucidePencil, lucideTrash } from '@ng-icons/lucide';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
+import { LinkComponent } from '../../../../ui/components/link/link.component';
 
 @Component({
   selector: 'fit-exercise-list',
@@ -20,6 +21,7 @@ import { ButtonComponent } from '../../../../ui/components/button/button.compone
     DraggableListComponent,
     ConfirmDialogModule,
     NgIconComponent,
+    LinkComponent,
   ],
   templateUrl: './exercise-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +29,7 @@ import { ButtonComponent } from '../../../../ui/components/button/button.compone
     ConfirmationService,
     provideIcons({
       lucideTrash,
+      lucidePencil,
     }),
   ],
   styles: [

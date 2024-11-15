@@ -26,16 +26,12 @@ export const ExerciseStore = signalStore(
     isEmpty: computed(() => store.exercises().length === 0),
   })),
   withMethods((store) => ({
-    addExercise(exercise: Omit<Exercise, 'id'>) {
+    getExerciseById: (id: string) =>
+      store.exercises().find((exercise) => exercise.id === id),
+    addExercise(exercise: Exercise) {
       updateState(store, 'addExercise', (state) => ({
         ...state,
-        exercises: [
-          ...state.exercises,
-          {
-            ...exercise,
-            id: crypto.randomUUID(),
-          },
-        ],
+        exercises: [...state.exercises, { ...exercise }],
       }));
     },
     removeExercise(id: string) {

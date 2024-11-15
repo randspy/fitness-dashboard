@@ -35,6 +35,7 @@ describe('ExerciseStore', () => {
       const id = '1-2-3-4-5';
       jest.spyOn(crypto, 'randomUUID').mockReturnValue(id);
       const newExercise = {
+        id,
         name: 'Push-ups',
         description: 'Basic push-ups',
       };
@@ -55,10 +56,7 @@ describe('ExerciseStore', () => {
         name: 'Push-ups',
         description: 'Basic push-ups',
       };
-      store.addExercise({
-        name: exercise.name,
-        description: exercise.description,
-      });
+      store.addExercise(exercise);
       const addedExercise = store.exercises()[0];
 
       store.removeExercise(addedExercise.id);
@@ -68,6 +66,7 @@ describe('ExerciseStore', () => {
 
     it('should update exercise', () => {
       const exercise = {
+        id: '1',
         name: 'Push-ups',
         description: 'Basic push-ups',
       };
@@ -84,6 +83,7 @@ describe('ExerciseStore', () => {
 
     it('should persist exercises to localStorage when state changes', fakeAsync(() => {
       const exercise = {
+        id: '1',
         name: 'Push-ups',
         description: 'Basic push-ups',
       };
@@ -100,6 +100,7 @@ describe('ExerciseStore', () => {
 
     it('should not update non-existent exercise', () => {
       const exercise = {
+        id: '1',
         name: 'Push-ups',
         description: 'Basic push-ups',
       };
@@ -113,6 +114,7 @@ describe('ExerciseStore', () => {
 
     it('should reset state', () => {
       store.addExercise({
+        id: '1',
         name: 'Push-ups',
         description: 'Basic push-ups',
       });
@@ -128,11 +130,33 @@ describe('ExerciseStore', () => {
 
       it('should return false if exercises array is not empty', () => {
         store.addExercise({
+          id: '1',
           name: 'Push-ups',
           description: 'Basic push-ups',
         });
 
         expect(store.isEmpty()).toBe(false);
+      });
+    });
+
+    it('should get exercise by id', () => {
+      store.setExercises([
+        {
+          id: '1',
+          name: 'Push-ups',
+          description: 'Basic push-ups',
+        },
+        {
+          id: '2',
+          name: 'Pull-ups',
+          description: 'Basic pull-ups',
+        },
+      ]);
+
+      expect(store.getExerciseById('2')).toEqual({
+        id: '2',
+        name: 'Pull-ups',
+        description: 'Basic pull-ups',
       });
     });
   });
