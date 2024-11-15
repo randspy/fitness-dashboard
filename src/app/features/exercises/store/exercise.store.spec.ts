@@ -110,6 +110,31 @@ describe('ExerciseStore', () => {
 
       expect(store.exercises()).toEqual(initialExercises);
     });
+
+    it('should reset state', () => {
+      store.addExercise({
+        name: 'Push-ups',
+        description: 'Basic push-ups',
+      });
+
+      store.reset();
+      expect(store.exercises()).toEqual([]);
+    });
+
+    describe('With computed', () => {
+      it('should return true if exercises array is empty', () => {
+        expect(store.isEmpty()).toBe(true);
+      });
+
+      it('should return false if exercises array is not empty', () => {
+        store.addExercise({
+          name: 'Push-ups',
+          description: 'Basic push-ups',
+        });
+
+        expect(store.isEmpty()).toBe(false);
+      });
+    });
   });
 
   it('should load exercises from localStorage on init', () => {
@@ -121,30 +146,5 @@ describe('ExerciseStore', () => {
     store = TestBed.inject(ExerciseStore);
 
     expect(store.exercises()).toEqual(testExercises);
-  });
-
-  it('should reset state', () => {
-    store.addExercise({
-      name: 'Push-ups',
-      description: 'Basic push-ups',
-    });
-
-    store.reset();
-    expect(store.exercises()).toEqual([]);
-  });
-
-  describe('With computed', () => {
-    it('should return true if exercises array is empty', () => {
-      expect(store.isEmpty()).toBe(true);
-    });
-
-    it('should return false if exercises array is not empty', () => {
-      store.addExercise({
-        name: 'Push-ups',
-        description: 'Basic push-ups',
-      });
-
-      expect(store.isEmpty()).toBe(false);
-    });
   });
 });
