@@ -35,9 +35,12 @@ import { Session } from '../../../../core/sessions/domain/session.model';
 })
 export class SessionFormComponent implements OnInit {
   formBuilder = inject(FormBuilder);
+
+  header = input<string>('');
+  session = input<Session | undefined>();
   save = output<Session>();
   cancel = output<void>();
-  session = input<Session | undefined>();
+
   notModifiedFormValue = signal<Session | undefined>(undefined);
 
   form = this.formBuilder.group({

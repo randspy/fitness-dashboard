@@ -36,6 +36,7 @@ export class ExerciseFormComponent implements OnInit {
   confirmationService = inject(ConfirmationService);
   formBuilder = inject(FormBuilder);
 
+  header = input<string>('');
   exercise = input<Exercise | undefined>();
   save = output<Exercise>();
   cancel = output<void>();

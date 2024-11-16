@@ -8,6 +8,8 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
 import { InputComponentHarness } from '../../../../../tests/harness/ui/input.harness';
 import { TextareaComponentHarness } from '../../../../../tests/harness/ui/textarea.harness';
+import { CardComponentHarness } from '../../../../../tests/harness/ui/card.harness';
+
 describe('ExerciseFormComponent', () => {
   let component: ExerciseFormComponent;
   let fixture: ComponentFixture<ExerciseFormComponent>;
@@ -86,6 +88,14 @@ describe('ExerciseFormComponent', () => {
 
         expect(component.canDeactivate()).toBeFalsy();
       });
+    });
+
+    it('should set form header to "Custom Header"', async () => {
+      fixture.componentRef.setInput('header', 'Custom Header');
+      fixture.detectChanges();
+
+      const card = await loader.getHarness(CardComponentHarness);
+      expect(await card.getHeaderText()).toBe('Custom Header');
     });
   });
 

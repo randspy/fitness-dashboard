@@ -1,5 +1,5 @@
 <fit-card
-  header="New Exercise"
+  [header]="header()"
   styleClass="rounded-none md:rounded-xl max-w-5xl mx-auto"
 >
   <form [formGroup]="form" (ngSubmit)="onSubmit()">

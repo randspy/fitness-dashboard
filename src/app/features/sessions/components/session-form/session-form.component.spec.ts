@@ -1,14 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SessionFormComponent } from './session-form.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-import { cloneDeep } from 'lodash';
-import { HarnessLoader } from '@angular/cdk/testing';
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+
 import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
-import { InputComponentHarness } from '../../../../../tests/harness/ui/input.harness';
+import { By } from '@angular/platform-browser';
+import { CardComponentHarness } from '../../../../../tests/harness/ui/card.harness';
 import { DatepickerComponentHarness } from '../../../../../tests/harness/ui/datepicker.harness';
+import { DebugElement } from '@angular/core';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { InputComponentHarness } from '../../../../../tests/harness/ui/input.harness';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SessionFormComponent } from './session-form.component';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { cloneDeep } from 'lodash';
 
 describe('SessionFormComponent', () => {
   let component: SessionFormComponent;
@@ -289,6 +291,14 @@ describe('SessionFormComponent', () => {
 
         expect(component.canDeactivate()).toBeFalsy();
       });
+    });
+
+    it('should set form header to "Custom Session"', async () => {
+      fixture.componentRef.setInput('header', 'Custom Header');
+      fixture.detectChanges();
+
+      const card = await loader.getHarness(CardComponentHarness);
+      expect(await card.getHeaderText()).toBe('Custom Header');
     });
   });
 
