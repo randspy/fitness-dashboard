@@ -1,6 +1,10 @@
 <fit-page-skeleton title="Settings">
   <div content>
-    <fit-card header="Hello {{ this.userStore.name() }}. Change your name?">
+    <fit-card
+      header="Hello {{
+        this.userStore.name()
+      }}. Would you like to change your name?"
+    >
       <form
         [formGroup]="form"
         (ngSubmit)="onSubmit()"

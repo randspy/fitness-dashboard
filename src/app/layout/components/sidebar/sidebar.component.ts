@@ -17,6 +17,7 @@ import {
   SidebarLinkComponent,
   SidebarLinkItem,
 } from '../sidebar-link/sidebar-link.component';
+import { ButtonComponent } from '../../../ui/components/button/button.component';
 
 @Component({
   selector: 'fit-sidebar',
@@ -30,6 +31,7 @@ import {
     ButtonModule,
     PopoverModule,
     SidebarLinkComponent,
+    ButtonComponent,
   ],
   templateUrl: './sidebar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

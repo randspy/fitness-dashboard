@@ -30,13 +30,13 @@
   <h1 class="text-1xl ml-4 mr-auto font-bold text-primary-foreground">
     Workout Tracker
   </h1>
-  <p-button
+  <fit-button
     (click)="menu.toggle($event)"
-    [outlined]="true"
-    styleClass="text-secondary focus:outline-accent rounded-sm"
+    [raised]="false"
+    styleClass="text-secondary focus:outline-accent rounded-sm hover:text-accent hover:bg-transparent border-none"
   >
     <ng-icon name="lucideMenu" size="24"></ng-icon>
-  </p-button>
+  </fit-button>
   <p-tieredmenu [model]="allGroups" #menu [popup]="true">
     <ng-template pTemplate="item" let-item>
       <a

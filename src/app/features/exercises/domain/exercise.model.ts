@@ -3,9 +3,3 @@ export interface Exercise {
   name: string;
   description: string;
 }
-
-export const initialExercise: Exercise = {
-  id: '',
-  name: '',
-  description: '',
-};
