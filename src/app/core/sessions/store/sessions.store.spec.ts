@@ -82,6 +82,20 @@ describe('SessionStore', () => {
       });
     });
 
+    it('should not update session with non-existent id', () => {
+      const session = generateSession({
+        id: '1',
+      });
+      store.addSession(session);
+      const addedSession = store.sessions()[0];
+
+      store.updateSession('non-existent-id', {
+        exercises: [{ id: '1', name: 'Pull-ups', sets: [] }],
+      });
+
+      expect(store.sessions()).toEqual([addedSession]);
+    });
+
     it('should persist sessions to localStorage when state changes', fakeAsync(() => {
       const session = {
         id: '1',
