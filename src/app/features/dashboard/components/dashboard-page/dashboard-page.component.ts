@@ -4,6 +4,7 @@ import { SessionListComponent } from '../../../../core/sessions/components/sessi
 import { DashboardCalendarService } from '../../services/dashboard-calendar.service';
 import { PageSkeletonComponent } from '../../../../ui/components/page-skeleton/page-skeleton.component';
 import { UserStore } from '../../../../core/user/store/user.store';
+import { MotivationQuoteComponent } from '../motivation-quote/motivation-quote.component';
 
 @Component({
   selector: 'fit-dashboard-page',
@@ -12,6 +13,7 @@ import { UserStore } from '../../../../core/user/store/user.store';
     DashboardCalendarComponent,
     SessionListComponent,
     PageSkeletonComponent,
+    MotivationQuoteComponent,
   ],
   templateUrl: './dashboard-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

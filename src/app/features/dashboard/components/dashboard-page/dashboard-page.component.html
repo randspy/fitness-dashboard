@@ -4,7 +4,10 @@
       Hello {{ userStore.name() }}, how was your training?
     </h2>
     <div class="flex w-full flex-col gap-8 xl:flex-row xl:gap-4">
-      <fit-dashboard-calendar />
+      <div class="flex flex-col gap-8 xl:max-w-[306px] xl:gap-4">
+        <fit-dashboard-calendar />
+        <fit-motivation-quote />
+      </div>
       <div class="flex-grow">
         <fit-session-list
           [sessions]="dashboardCalendarService.selectedMonthSessions()"

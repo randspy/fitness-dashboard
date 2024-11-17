@@ -1,0 +1,14 @@
+<fit-card header="Motivation Quote">
+  <div class="p-4">
+    @if (quote()) {
+      <blockquote class="mb-4 text-xl italic leading-relaxed">
+        <span class="text-2xl text-accent">"</span>
+        {{ quote()?.quote }}
+        <span class="text-2xl text-accent">"</span>
+      </blockquote>
+      <p class="text-right text-gray-600">― {{ quote()?.author }}</p>
+    } @else {
+      <div class="p-4">Loading quote...</div>
+    }
+  </div>
+</fit-card>

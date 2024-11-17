@@ -9,6 +9,9 @@ import { SessionListComponent } from '../../../../core/sessions/components/sessi
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { generateSession } from '../../../../../../setup-jest';
 import { UserStore } from '../../../../core/user/store/user.store';
+import { MotivationQuoteService } from '../../services/motivation-quote.service';
+import { provideHttpClient } from '@angular/common/http';
+import { MotivationQuoteComponent } from '../motivation-quote/motivation-quote.component';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
@@ -20,7 +23,11 @@ describe('DashboardPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DashboardPageComponent, NoopAnimationsModule],
-      providers: [DashboardCalendarService],
+      providers: [
+        DashboardCalendarService,
+        MotivationQuoteService,
+        provideHttpClient(),
+      ],
     }).compileComponents();
 
     userStore = TestBed.inject(UserStore);
@@ -52,6 +59,13 @@ describe('DashboardPageComponent', () => {
       By.directive(SessionListComponent),
     );
     expect(sessionList).toBeTruthy();
+  });
+
+  it('should render motivation quote', () => {
+    const motivationQuote = fixture.debugElement.query(
+      By.directive(MotivationQuoteComponent),
+    );
+    expect(motivationQuote).toBeTruthy();
   });
 
   it('should render session list with sessions from selected month', () => {
