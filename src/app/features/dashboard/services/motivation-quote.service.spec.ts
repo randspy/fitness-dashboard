@@ -10,6 +10,7 @@ import {
 describe('MotivationQuoteService', () => {
   let service: MotivationQuoteService;
   let httpMock: HttpTestingController;
+  let consoleSpy: jest.SpyInstance;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -19,6 +20,9 @@ describe('MotivationQuoteService', () => {
         provideHttpClientTesting(),
       ],
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     service = TestBed.inject(MotivationQuoteService);
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -49,5 +53,11 @@ describe('MotivationQuoteService', () => {
     const quote = await quotePromise;
     expect(quote.quote).toBe('Do not fear failure but rather fear not trying.');
     expect(quote.author).toBe('Roy T. Bennett');
+  });
+
+  it('should log error', () => {
+    service.getQuote().subscribe();
+    httpMock.expectOne('/api/quotes').error(new ProgressEvent('Network error'));
+    expect(consoleSpy).toHaveBeenCalled();
   });
 });

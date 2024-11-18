@@ -32,6 +32,14 @@ describe('SessionFormComponent', () => {
       fixture.detectChanges();
     });
 
+    afterEach(() => {
+      jest
+        .spyOn(global.crypto, 'randomUUID')
+        .mockReturnValue(
+          'test-uuid' as `${string}-${string}-${string}-${string}-${string}`,
+        );
+    });
+
     it('should create', () => {
       expect(component).toBeTruthy();
     });
@@ -81,6 +89,10 @@ describe('SessionFormComponent', () => {
     });
 
     it('should add new exercise', async () => {
+      jest
+        .spyOn(global.crypto, 'randomUUID')
+        .mockReturnValue('11111111-1111-1111-1111-111111111111');
+
       const addExerciseButton = await loader.getHarness(
         ButtonComponentHarness.with({
           testId: 'add-exercise-button',
@@ -127,6 +139,10 @@ describe('SessionFormComponent', () => {
     });
 
     it('should add new set to exercise', async () => {
+      jest
+        .spyOn(global.crypto, 'randomUUID')
+        .mockReturnValue('11111111-1111-1111-1111-111111111111');
+
       const addSetButton = await loader.getHarness(
         ButtonComponentHarness.with({
           testId: 'add-set-button-0',
@@ -276,6 +292,14 @@ describe('SessionFormComponent', () => {
     });
 
     describe('canDeactivate', () => {
+      it('should return true after form is submitted', async () => {
+        await changeSessionNameInput('Test session');
+        await changeExerciseNameInput(0, 'Push-ups');
+        saveForm();
+
+        expect(component.canDeactivate()).toBeTruthy();
+      });
+
       it('should return true when form is pristine', () => {
         expect(component.canDeactivate()).toBeTruthy();
       });

@@ -87,6 +87,6 @@ export class DatepickerComponent implements ControlValueAccessor {
       'tr-TR': 'dd.mm.yy',
     };
 
-    return formats[navigator.language] || 'dd/mm/yy';
+    return formats[navigator.language] ?? 'dd/mm/yy';
   }
 }

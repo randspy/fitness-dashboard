@@ -70,6 +70,13 @@ describe('ExerciseFormComponent', () => {
     });
 
     describe('canDeactivate', () => {
+      it('should return true after form is submitted', async () => {
+        await setName('Push-ups');
+        clickSubmitButton();
+
+        expect(component.canDeactivate()).toBeTruthy();
+      });
+
       it('should return true when form is pristine', () => {
         expect(component.canDeactivate()).toBeTruthy();
       });
