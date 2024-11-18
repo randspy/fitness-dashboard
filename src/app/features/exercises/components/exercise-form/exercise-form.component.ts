@@ -74,7 +74,8 @@ export class ExerciseFormComponent implements OnInit {
   }
 
   get isNameInvalid(): boolean {
-    return !!(this.form.get('name')?.invalid && this.form.get('name')?.touched);
+    const nameControl = this.form.get('name')!;
+    return nameControl.invalid && nameControl.touched;
   }
 
   canDeactivate(): boolean {

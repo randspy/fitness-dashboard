@@ -124,18 +124,18 @@ export class SessionFormComponent implements OnInit {
   }
 
   isDateInvalid(): boolean {
-    const dateControl = this.form.get('date');
-    return !!(dateControl?.invalid && dateControl?.touched);
+    const dateControl = this.form.get('date')!;
+    return dateControl.invalid && dateControl.touched;
   }
 
   isSessionNameInvalid(): boolean {
-    const nameControl = this.form.get('name');
-    return !!(nameControl?.invalid && nameControl?.touched);
+    const nameControl = this.form.get('name')!;
+    return nameControl.invalid && nameControl.touched;
   }
 
   isExerciseNameInvalid(index: number): boolean {
-    const nameControl = this.exercises.at(index).get('name');
-    return !!(nameControl?.invalid && nameControl?.touched);
+    const nameControl = this.exercises.at(index).get('name')!;
+    return nameControl.invalid && nameControl.touched;
   }
 
   isSetInvalid(
@@ -143,8 +143,8 @@ export class SessionFormComponent implements OnInit {
     setIndex: number,
     field: 'repetitions' | 'weight',
   ): boolean {
-    const control = this.getSets(exerciseIndex).at(setIndex).get(field);
-    return !!(control?.invalid && control?.touched);
+    const control = this.getSets(exerciseIndex).at(setIndex).get(field)!;
+    return control.invalid && control.touched;
   }
 
   getSetErrorMessage(
@@ -152,11 +152,11 @@ export class SessionFormComponent implements OnInit {
     setIndex: number,
     field: 'repetitions' | 'weight',
   ): string {
-    const control = this.getSets(exerciseIndex).at(setIndex).get(field);
-    if (control?.hasError('required')) {
+    const control = this.getSets(exerciseIndex).at(setIndex).get(field)!;
+    if (control.hasError('required')) {
       return `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
     }
-    if (control?.hasError('min')) {
+    if (control.hasError('min')) {
       return field === 'repetitions'
         ? 'Repetitions must be at least 1'
         : 'Weight must be at least 0';

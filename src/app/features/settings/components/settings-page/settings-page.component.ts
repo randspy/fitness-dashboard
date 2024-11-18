@@ -49,12 +49,7 @@ export class SettingsPageComponent {
   }
 
   get isNameInvalid(): boolean {
-    return !!(this.form.get('name')?.invalid && this.form.get('name')?.touched);
-  }
-
-  get nameErrorMessage(): string {
-    return this.form.get('name')?.hasError('required')
-      ? 'Name is required'
-      : '';
+    const nameControl = this.form.get('name')!;
+    return nameControl.invalid && nameControl.touched;
   }
 }
