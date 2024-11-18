@@ -47,15 +47,7 @@ export class WelcomeComponent {
   }
 
   get isNameInvalid(): boolean {
-    return !!(
-      this.welcomeForm.get('name')?.invalid &&
-      this.welcomeForm.get('name')?.touched
-    );
-  }
-
-  get nameErrorMessage(): string {
-    return this.welcomeForm.get('name')?.hasError('required')
-      ? 'Name is required'
-      : '';
+    const nameControl = this.welcomeForm.get('name')!;
+    return nameControl.invalid && nameControl.touched;
   }
 }
