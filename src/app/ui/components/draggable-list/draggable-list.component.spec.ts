@@ -54,12 +54,8 @@ describe('DraggableListComponent', () => {
   });
 
   it('should reorder items', () => {
-    const draggableList = fixture.debugElement.query(
-      By.directive(DraggableListComponent),
-    ).componentInstance;
-
-    draggableList.dragStart(component.items[0]);
-    draggableList.drop(2);
+    draggableList().dragStart(component.items[0]);
+    draggableList().drop(2);
 
     fixture.detectChanges();
 
@@ -78,5 +74,21 @@ describe('DraggableListComponent', () => {
     expect(component.items[0].id).toBe('2');
     expect(component.items[1].id).toBe('3');
     expect(component.items[2].id).toBe('1');
+
+    expect(draggableList().draggedItem()).toBeNull();
   });
+
+  it('should do nothing if the dropped item does not come from the list', () => {
+    draggableList();
+
+    draggableList().drop(2);
+
+    fixture.detectChanges();
+
+    expect(component.items).toEqual(component.items);
+  });
+
+  const draggableList = () =>
+    fixture.debugElement.query(By.directive(DraggableListComponent))
+      .componentInstance;
 });

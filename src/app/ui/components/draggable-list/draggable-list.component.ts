@@ -27,14 +27,19 @@ export class DraggableListComponent<T extends { id: string }> {
   }
 
   drop(index: number) {
+    if (!this.draggedItem()) {
+      return;
+    }
+
     const items = [...this.items()];
     const currentIndex = items.findIndex(
-      (item) => item.id === this.draggedItem()?.id,
+      (item) => item.id === this.draggedItem()!.id,
     );
 
     items.splice(currentIndex, 1);
     items.splice(index, 0, this.draggedItem()!);
 
     this.itemsChanged.emit(items);
+    this.draggedItem.set(null);
   }
 }
