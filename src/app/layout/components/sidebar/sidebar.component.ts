@@ -60,14 +60,14 @@ export class SidebarComponent {
       routerLink: '/app/dashboard',
     },
     {
-      label: 'Exercises',
-      icon: 'lucideDumbbell',
-      routerLink: '/app/exercises',
-    },
-    {
       label: 'Sessions',
       icon: 'lucideLandPlot',
       routerLink: '/app/sessions',
+    },
+    {
+      label: 'Exercises',
+      icon: 'lucideDumbbell',
+      routerLink: '/app/exercises',
     },
   ];
 

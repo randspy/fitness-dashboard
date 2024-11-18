@@ -44,8 +44,8 @@ describe('SidebarComponent', () => {
 
     expect(links.length).toBe(4);
     expect(links[0].nativeElement.innerHTML).toContain('Dashboard');
-    expect(links[1].nativeElement.innerHTML).toContain('Exercises');
-    expect(links[2].nativeElement.innerHTML).toContain('Sessions');
+    expect(links[1].nativeElement.innerHTML).toContain('Sessions');
+    expect(links[2].nativeElement.innerHTML).toContain('Exercises');
     expect(links[3].nativeElement.innerHTML).toContain('Settings');
   });
 
