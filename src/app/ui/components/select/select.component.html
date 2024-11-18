@@ -1,0 +1,36 @@
+<div class="flex flex-col gap-1">
+  @if (label()) {
+    <label [for]="inputId()" class="text-sm text-foreground">
+      {{ label() }}
+    </label>
+  }
+  <p-select
+    [id]="inputId()"
+    [options]="suggestions()"
+    [(ngModel)]="value"
+    [optionLabel]="optionLabel()"
+    [filter]="true"
+    [filterBy]="filterBy()"
+    [showClear]="true"
+    (onChange)="onInputChange()"
+    [class.ng-invalid]="showError()"
+    [class.ng-touched]="showError()"
+    [class.ng-dirty]="showError()"
+  >
+    <ng-template pTemplate="selectedItem" let-selectedOption>
+      <div class="flex items-center gap-2">
+        <div class="truncate">{{ selectedOption[optionLabel()] }}</div>
+      </div>
+    </ng-template>
+    <ng-template let-item pTemplate="item">
+      <div class="flex items-center gap-2">
+        <div class="truncate">{{ item[optionLabel()] }}</div>
+      </div>
+    </ng-template>
+  </p-select>
+  <div class="h-5">
+    @if (showError() && errorMessage()) {
+      <p class="text-sm text-error">{{ errorMessage() }}</p>
+    }
+  </div>
+</div>
