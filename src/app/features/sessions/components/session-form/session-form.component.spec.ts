@@ -11,17 +11,23 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SessionFormComponent } from './session-form.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { cloneDeep } from 'lodash';
+import { SelectComponentHarness } from '../../../../../tests/harness/ui/select.harness';
+import { ExerciseStore } from '../../../exercises/store/exercise.store';
+import { generateExercise } from '../../../../../../setup-jest';
+import { Session } from '../../../../core/sessions/domain/session.model';
 
 describe('SessionFormComponent', () => {
   let component: SessionFormComponent;
   let fixture: ComponentFixture<SessionFormComponent>;
   let loader: HarnessLoader;
+  let exerciseStore: InstanceType<typeof ExerciseStore>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SessionFormComponent, NoopAnimationsModule],
     }).compileComponents();
 
+    exerciseStore = TestBed.inject(ExerciseStore);
     fixture = TestBed.createComponent(SessionFormComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
@@ -75,7 +81,7 @@ describe('SessionFormComponent', () => {
       const exercises = exerciseElements();
       expect(exercises.length).toBe(1);
 
-      const exerciseName = await exerciseNameInput(0);
+      const exerciseName = await exerciseNameSelect(0);
       expect(await exerciseName.getValue()).toBe('');
 
       const sets = setElementsQuery(exercises[0]);
@@ -104,16 +110,8 @@ describe('SessionFormComponent', () => {
       const exercises = exerciseElements();
       expect(exercises.length).toBe(2);
 
-      const input = await loader.getHarness(
-        InputComponentHarness.with({
-          within: {
-            selector: 'div[data-testid^="exercise"]',
-            index: 1,
-          },
-        }),
-      );
-
-      expect(await input.getValue()).toBe('');
+      const exerciseName = await exerciseNameSelect(1);
+      expect(await exerciseName.getValue()).toBe('');
 
       const sets = setElementsQuery(exercises[1]);
       expect(sets.length).toBe(1);
@@ -193,7 +191,7 @@ describe('SessionFormComponent', () => {
       const saveSpy = jest.spyOn(component.save, 'emit');
 
       await changeSessionNameInput('Test session');
-      await changeExerciseNameInput(0, 'Push-ups');
+      await changeExerciseInput(0, 'exercise-1');
 
       saveForm();
 
@@ -204,7 +202,7 @@ describe('SessionFormComponent', () => {
         exercises: [
           {
             id: 'test-uuid',
-            name: 'Push-ups',
+            exerciseId: 'exercise-1',
             sets: [{ id: 'test-uuid', repetitions: 1, weight: 0 }],
           },
         ],
@@ -237,7 +235,7 @@ describe('SessionFormComponent', () => {
         saveForm();
         fixture.detectChanges();
 
-        const exerciseName = await exerciseNameInput(0);
+        const exerciseName = await exerciseNameSelect(0);
         expect(await exerciseName.isInvalid()).toBe(true);
         expect(await exerciseName.isTouched()).toBe(true);
         expect(await exerciseName.getErrorMessage()).toBe(
@@ -294,7 +292,7 @@ describe('SessionFormComponent', () => {
     describe('canDeactivate', () => {
       it('should return true after form is submitted', async () => {
         await changeSessionNameInput('Test session');
-        await changeExerciseNameInput(0, 'Push-ups');
+        await changeExerciseInput(0, 'Push-ups');
         saveForm();
 
         expect(component.canDeactivate()).toBeTruthy();
@@ -305,13 +303,13 @@ describe('SessionFormComponent', () => {
       });
 
       it('should return true when form is dirty but has not changed', async () => {
-        await changeExerciseNameInput(0, '');
+        await changeExerciseInput(0, '');
 
         expect(component.canDeactivate()).toBeTruthy();
       });
 
       it('should return false when form is dirty and has changed', async () => {
-        await changeExerciseNameInput(0, 'Push-ups');
+        await changeExerciseInput(0, 'Push-ups');
 
         expect(component.canDeactivate()).toBeFalsy();
       });
@@ -327,31 +325,39 @@ describe('SessionFormComponent', () => {
   });
 
   describe('edit session', () => {
-    it('should update existing session', async () => {
-      const session = {
+    let session: Session;
+
+    beforeEach(() => {
+      session = {
         id: 'session-1',
         name: 'Session',
         date: new Date(),
         exercises: [
           {
-            id: 'exercise-1',
-            name: 'Push-ups',
+            id: 'ex-1',
+            exerciseId: 'exercise-1',
             sets: [
               { id: 'set-1', repetitions: 3, weight: 4 },
               { id: 'set-2', repetitions: 5, weight: 6 },
             ],
           },
           {
-            id: 'exercise-2',
-            name: 'Pull-ups',
+            id: 'ex-2',
+            exerciseId: 'exercise-2',
             sets: [{ id: 'set-3', repetitions: 7, weight: 8 }],
           },
         ],
       };
 
+      exerciseStore.setExercises([
+        generateExercise({ id: 'exercise-1', name: 'Push-ups' }),
+        generateExercise({ id: 'exercise-2', name: 'Pull-ups' }),
+      ]);
       fixture.componentRef.setInput('session', session);
       fixture.detectChanges();
+    });
 
+    it('should update existing session', async () => {
       const saveSpy = jest.spyOn(component.save, 'emit');
 
       await changeSessionNameInput('Test session');
@@ -363,6 +369,14 @@ describe('SessionFormComponent', () => {
       const result = { ...cloneDeep(session), name: 'Test session' };
 
       expect(saveSpy).toHaveBeenCalledWith(result);
+    });
+
+    it('should display exercise value', async () => {
+      await changeExerciseInput(0, 'exercise-1');
+      fixture.detectChanges();
+
+      const exerciseName = await exerciseNameSelect(0);
+      expect(await exerciseName.getValue()).toBe('Push-ups');
     });
   });
 
@@ -403,9 +417,9 @@ describe('SessionFormComponent', () => {
       }),
     );
 
-  const exerciseNameInput = async (index: number) =>
+  const exerciseNameSelect = async (index: number) =>
     await loader.getHarness(
-      InputComponentHarness.with({
+      SelectComponentHarness.with({
         within: {
           selector: 'div[data-testid^="exercise"]',
           index,
@@ -442,11 +456,8 @@ describe('SessionFormComponent', () => {
     await weight.setValue(value);
   };
 
-  const changeExerciseNameInput = async (
-    exerciseIndex: number,
-    value: string,
-  ) => {
-    const exerciseName = await exerciseNameInput(exerciseIndex);
+  const changeExerciseInput = async (exerciseIndex: number, value: string) => {
+    const exerciseName = await exerciseNameSelect(exerciseIndex);
     await exerciseName.setValue(value);
   };
 

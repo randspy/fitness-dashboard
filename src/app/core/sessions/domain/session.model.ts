@@ -7,7 +7,7 @@ export interface Session {
 
 export interface SessionExercise {
   id: string;
-  name: string;
+  exerciseId: string;
   sets: SessionExerciseSet[];
 }
 

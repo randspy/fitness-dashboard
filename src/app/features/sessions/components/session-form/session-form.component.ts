@@ -12,6 +12,7 @@ import {
   FormBuilder,
   ReactiveFormsModule,
   Validators,
+  FormsModule,
 } from '@angular/forms';
 import { isEqual } from 'lodash';
 import { DatepickerComponent } from '../../../../ui/components/datepicker/datepicker.component';
@@ -19,6 +20,9 @@ import { CardComponent } from '../../../../ui/components/card/card.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { InputComponent } from '../../../../ui/components/input/input.component';
 import { Session } from '../../../../core/sessions/domain/session.model';
+import { ExerciseStore } from '../../../exercises/store/exercise.store';
+import { AutocompleteLibModule } from 'angular-ng-autocomplete';
+import { SelectComponent } from '../../../../ui/components/select/select.component';
 
 @Component({
   selector: 'fit-session-form',
@@ -29,12 +33,16 @@ import { Session } from '../../../../core/sessions/domain/session.model';
     DatepickerComponent,
     ButtonComponent,
     InputComponent,
+    FormsModule,
+    AutocompleteLibModule,
+    SelectComponent,
   ],
   templateUrl: './session-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SessionFormComponent implements OnInit {
   formBuilder = inject(FormBuilder);
+  exerciseStore = inject(ExerciseStore);
 
   header = input<string>('');
   session = input<Session | undefined>();
@@ -67,7 +75,7 @@ export class SessionFormComponent implements OnInit {
     session.exercises.forEach((exercise) => {
       const exerciseGroup = this.formBuilder.group({
         id: [exercise.id],
-        name: [exercise.name, Validators.required],
+        exerciseId: [exercise.exerciseId, Validators.required],
         sets: this.formBuilder.array([]),
       });
 
@@ -98,7 +106,7 @@ export class SessionFormComponent implements OnInit {
   generateExercise() {
     return this.formBuilder.group({
       id: [crypto.randomUUID() as string],
-      name: ['', Validators.required],
+      exerciseId: ['', Validators.required],
       sets: this.formBuilder.array([this.generateSet()]),
     });
   }
@@ -133,8 +141,8 @@ export class SessionFormComponent implements OnInit {
     return nameControl.invalid && nameControl.touched;
   }
 
-  isExerciseNameInvalid(index: number): boolean {
-    const nameControl = this.exercises.at(index).get('name')!;
+  isExerciseIdInvalid(index: number): boolean {
+    const nameControl = this.exercises.at(index).get('exerciseId')!;
     return nameControl.invalid && nameControl.touched;
   }
 

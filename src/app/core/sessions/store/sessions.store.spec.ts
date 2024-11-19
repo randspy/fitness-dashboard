@@ -73,12 +73,12 @@ describe('SessionStore', () => {
       const addedSession = store.sessions()[0];
 
       store.updateSession(addedSession.id, {
-        exercises: [{ id: '1', name: 'Push-ups', sets: [] }],
+        exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
       });
 
       expect(store.sessions()[0]).toEqual({
         ...addedSession,
-        exercises: [{ id: '1', name: 'Push-ups', sets: [] }],
+        exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
       });
     });
 
@@ -90,7 +90,7 @@ describe('SessionStore', () => {
       const addedSession = store.sessions()[0];
 
       store.updateSession('non-existent-id', {
-        exercises: [{ id: '1', name: 'Pull-ups', sets: [] }],
+        exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
       });
 
       expect(store.sessions()).toEqual([addedSession]);
@@ -104,7 +104,7 @@ describe('SessionStore', () => {
         exercises: [
           {
             id: '1',
-            name: 'Push-ups',
+            exerciseId: 'exercise-1',
             sets: [],
           },
         ],
@@ -116,7 +116,7 @@ describe('SessionStore', () => {
 
       expect(localStorageSpy).toHaveBeenLastCalledWith(
         'sessions',
-        expect.stringContaining('Push-ups'),
+        expect.stringContaining('exercise-1'),
       );
     }));
 
@@ -131,7 +131,7 @@ describe('SessionStore', () => {
       const initialSessions = store.sessions();
 
       store.updateSession('non-existent-id', {
-        exercises: [{ id: '1', name: 'Pull-ups', sets: [] }],
+        exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
       });
 
       expect(store.sessions()).toEqual(initialSessions);
@@ -173,7 +173,7 @@ describe('SessionStore', () => {
         id: '1',
         name: 'Test session',
         date: new Date(),
-        exercises: [{ id: '1', name: 'Push-ups', sets: [] }],
+        exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
       },
     ];
     localStorage.setItem('sessions', JSON.stringify(testSessions));
