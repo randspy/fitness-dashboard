@@ -3,7 +3,7 @@ import { NewExercisePageComponent } from './new-exercise-page.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ExerciseStore } from '../../store/exercise.store';
+import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 
 describe('NewExercisePageComponent', () => {
   let component: NewExercisePageComponent;

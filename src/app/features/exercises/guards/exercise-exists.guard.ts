@@ -1,7 +1,7 @@
 import { Route } from '@angular/router';
 import { inject } from '@angular/core';
 import { Router, UrlSegment } from '@angular/router';
-import { ExerciseStore } from '../store/exercise.store';
+import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
 
 export const exerciseExistsGuard = (route: Route, segments: UrlSegment[]) => {
   const router = inject(Router);

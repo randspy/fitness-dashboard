@@ -12,7 +12,7 @@ import { SessionFormComponent } from './session-form.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { cloneDeep } from 'lodash';
 import { SelectComponentHarness } from '../../../../../tests/harness/ui/select.harness';
-import { ExerciseStore } from '../../../exercises/store/exercise.store';
+import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { generateExercise } from '../../../../../../setup-jest';
 import { Session } from '../../../../core/sessions/domain/session.model';
 

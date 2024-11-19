@@ -1,4 +1,4 @@
-import { ExerciseStore } from './../../store/exercise.store';
+import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExerciseListComponent } from './exercise-list.component';
 import { By } from '@angular/platform-browser';
@@ -9,7 +9,7 @@ import { DraggableListComponent } from '../../../../ui/components/draggable-list
 import { HarnessLoader } from '@angular/cdk/testing';
 import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Exercise } from '../../domain/exercise.model';
+import { Exercise } from '../../../../core/exercises/domain/exercise.model';
 import { ConfirmationService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { generateExercise } from '../../../../../../setup-jest';

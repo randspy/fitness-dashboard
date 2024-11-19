@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditExercisePageComponent } from './edit-exercise-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ExerciseStore } from '../../store/exercise.store';
+import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { By } from '@angular/platform-browser';
 import { generateExercise } from '../../../../../../setup-jest';
 

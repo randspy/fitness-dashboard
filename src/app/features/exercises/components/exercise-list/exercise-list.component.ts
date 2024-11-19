@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ExerciseStore } from '../../store/exercise.store';
+import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { DragDropModule } from 'primeng/dragdrop';
-import { Exercise } from '../../domain/exercise.model';
+import { Exercise } from '../../../../core/exercises/domain/exercise.model';
 import { DraggableListComponent } from '../../../../ui/components/draggable-list/draggable-list.component';
 import { ConfirmationService } from 'primeng/api';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';

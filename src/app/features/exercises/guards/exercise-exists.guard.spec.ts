@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Route, Router, UrlSegment } from '@angular/router';
 import { generateExercise } from '../../../../../setup-jest';
 import { exerciseExistsGuard } from './exercise-exists.guard';
-import { ExerciseStore } from '../store/exercise.store';
+import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
 
 describe('exerciseExistsGuard', () => {
   let exerciseStore: InstanceType<typeof ExerciseStore>;

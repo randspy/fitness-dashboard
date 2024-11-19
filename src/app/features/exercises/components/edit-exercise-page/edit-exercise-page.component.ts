@@ -10,8 +10,8 @@ import { ConfirmationService } from 'primeng/api';
 import { ExerciseFormComponent } from '../exercise-form/exercise-form.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
-import { ExerciseStore } from '../../store/exercise.store';
-import { Exercise } from '../../domain/exercise.model';
+import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
+import { Exercise } from '../../../../core/exercises/domain/exercise.model';
 
 @Component({
   selector: 'fit-edit-exercise-page',

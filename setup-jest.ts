@@ -1,6 +1,6 @@
 import 'jest-preset-angular/setup-jest';
 import { Session } from './src/app/core/sessions/domain/session.model';
-import { Exercise } from './src/app/features/exercises/domain/exercise.model';
+import { Exercise } from './src/app/core/exercises/domain/exercise.model';
 
 Object.defineProperty(global.crypto, 'randomUUID', {
   value: jest.fn().mockReturnValue('test-uuid'),
