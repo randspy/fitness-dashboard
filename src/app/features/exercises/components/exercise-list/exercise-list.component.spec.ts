@@ -139,6 +139,10 @@ describe('ExerciseListComponent', () => {
   });
 
   it('should remove exercise when confirmed', async () => {
+    const removeExerciseSpy = jest.spyOn(
+      component.exerciseStoreService,
+      'removeExercise',
+    );
     const exercise = generateExercise({
       id: '1',
     });
@@ -152,7 +156,7 @@ describe('ExerciseListComponent', () => {
       .calls[0][0];
     confirmArgs.accept();
 
-    expect(exerciseStore.exercises()).toEqual([]);
+    expect(removeExerciseSpy).toHaveBeenCalledWith('1');
   });
 
   it('should navigate to edit page when pencil icon is clicked', async () => {

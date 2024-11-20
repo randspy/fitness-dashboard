@@ -285,5 +285,70 @@ describe('SessionStoreService', () => {
       expect(exerciseStore.exercises()[0].usage).toEqual([]);
       expect(exerciseStore.exercises()[1].usage).toEqual([]);
     });
+
+    it('should remove exercise if it is hidden and usage is empty', () => {
+      const session = generateSession({
+        id: 'session-1',
+        exercises: [
+          {
+            id: 'session-exercise-1',
+            exerciseId: 'exercise-1',
+            sets: [],
+          },
+        ],
+      });
+
+      sessionStore.setSessions([session]);
+
+      const exercise = generateExercise({
+        id: 'exercise-1',
+        usage: [{ id: 'session-1' }],
+        hidden: true,
+      });
+
+      exerciseStore.setExercises([exercise]);
+
+      service.removeSession('session-1');
+
+      expect(exerciseStore.exercises()).toEqual([]);
+    });
+  });
+
+  it('should remove session id from exercise usage list if it is hidden and usage will not be empty after removing session', () => {
+    const session1 = generateSession({
+      id: 'session-1',
+      exercises: [
+        {
+          id: 'session-exercise-1',
+          exerciseId: 'exercise-1',
+          sets: [],
+        },
+      ],
+    });
+
+    const session2 = generateSession({
+      id: 'session-2',
+      exercises: [
+        {
+          id: 'session-exercise-2',
+          exerciseId: 'exercise-1',
+          sets: [],
+        },
+      ],
+    });
+
+    sessionStore.setSessions([session1, session2]);
+
+    const exercise = generateExercise({
+      id: 'exercise-1',
+      usage: [{ id: 'session-1' }, { id: 'session-2' }],
+      hidden: true,
+    });
+
+    exerciseStore.setExercises([exercise]);
+
+    service.removeSession('session-1');
+
+    expect(exerciseStore.exercises()[0].usage).toEqual([{ id: 'session-2' }]);
   });
 });

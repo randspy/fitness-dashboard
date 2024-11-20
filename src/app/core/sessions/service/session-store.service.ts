@@ -81,10 +81,15 @@ export class SessionStoreService {
         .find((e) => e.id === sessionExercise.exerciseId);
 
       if (exercise) {
-        this.exerciseStore.updateExercise(sessionExercise.exerciseId, {
-          ...exercise,
-          usage: exercise.usage.filter((u) => u.id !== sessionId),
-        });
+        const usage = exercise.usage.filter((u) => u.id !== sessionId);
+        if (!usage.length && exercise.hidden) {
+          this.exerciseStore.removeExercise(sessionExercise.exerciseId);
+        } else {
+          this.exerciseStore.updateExercise(sessionExercise.exerciseId, {
+            ...exercise,
+            usage,
+          });
+        }
       }
     }
   }

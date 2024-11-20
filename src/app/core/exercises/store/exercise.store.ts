@@ -24,6 +24,9 @@ export const ExerciseStore = signalStore(
   withState(initialState),
   withComputed((store) => ({
     isEmpty: computed(() => store.exercises().length === 0),
+    displayedExercises: computed(() =>
+      store.exercises().filter((exercise) => !exercise.hidden),
+    ),
   })),
   withMethods((store) => ({
     getExerciseById: (id: string) =>

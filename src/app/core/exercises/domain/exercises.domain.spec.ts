@@ -12,7 +12,7 @@ describe('Exercises Domain', () => {
 
       const result = createExercise(form);
 
-      expect(result).toEqual({ ...form, usage: [] });
+      expect(result).toEqual({ ...form, usage: [], hidden: false });
     });
   });
 
@@ -27,6 +27,7 @@ describe('Exercises Domain', () => {
             id: 'session-1',
           },
         ],
+        hidden: false,
       };
 
       const form: ExerciseForm = {
@@ -49,7 +50,7 @@ describe('Exercises Domain', () => {
 
       const result = updateExercise(undefined, form);
 
-      expect(result).toEqual({ ...form, usage: [] });
+      expect(result).toEqual({ ...form, usage: [], hidden: false });
     });
   });
 });

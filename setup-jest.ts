@@ -22,6 +22,7 @@ export function generateExercise(exercise: Partial<Exercise>) {
     name: 'test-exercise',
     description: 'test-description',
     usage: [],
+    hidden: false,
     ...exercise,
   };
 }

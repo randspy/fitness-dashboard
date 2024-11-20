@@ -10,6 +10,7 @@ import { lucidePencil, lucideTrash } from '@ng-icons/lucide';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { LinkComponent } from '../../../../ui/components/link/link.component';
+import { ExerciseStoreService } from '../../services/exercise-store.service';
 
 @Component({
   selector: 'fit-exercise-list',
@@ -42,9 +43,10 @@ import { LinkComponent } from '../../../../ui/components/link/link.component';
 })
 export class ExerciseListComponent {
   exerciseStore = inject(ExerciseStore);
+  exerciseStoreService = inject(ExerciseStoreService);
   confirmationService = inject(ConfirmationService);
 
-  exercises = this.exerciseStore.exercises;
+  exercises = this.exerciseStore.displayedExercises;
   exerciseListIsEmpty = this.exerciseStore.isEmpty;
 
   onReorder(exercises: Exercise[]) {
@@ -56,7 +58,7 @@ export class ExerciseListComponent {
       header: 'Delete exercise',
       message: 'Are you sure you want to delete this session?',
       accept: () => {
-        this.exerciseStore.removeExercise(id);
+        this.exerciseStoreService.removeExercise(id);
       },
     });
   }
