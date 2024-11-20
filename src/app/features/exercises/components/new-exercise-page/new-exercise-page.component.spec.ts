@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
+import { generateExercise } from '../../../../../../setup-jest';
 
 describe('NewExercisePageComponent', () => {
   let component: NewExercisePageComponent;
@@ -36,7 +37,6 @@ describe('NewExercisePageComponent', () => {
   });
 
   afterEach(() => {
-    localStorage.clear();
     jest.clearAllMocks();
   });
 
@@ -69,14 +69,14 @@ describe('NewExercisePageComponent', () => {
     const addExerciseSpy = jest.spyOn(exerciseStore, 'addExercise');
     const form = fixture.debugElement.query(By.css('fit-exercise-form'));
 
-    const exercise = {
-      id: '',
-      name: 'Push-ups',
-      description: 'Description',
+    const exerciseForm = {
+      id: '1',
+      name: 'Test Exercise',
+      description: 'Test Description',
     };
 
-    form.triggerEventHandler('save', exercise);
+    form.triggerEventHandler('save', exerciseForm);
 
-    expect(addExerciseSpy).toHaveBeenCalledWith(exercise);
+    expect(addExerciseSpy).toHaveBeenCalledWith(generateExercise(exerciseForm));
   });
 });

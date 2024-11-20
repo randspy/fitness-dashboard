@@ -14,11 +14,13 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
+import { SessionStoreService } from '../../service/session-store.service';
 
 describe('SessionListComponent', () => {
   let fixture: ComponentFixture<SessionListComponent>;
   let confirmationService: ConfirmationService;
   let sessionStore: InstanceType<typeof SessionStore>;
+  let sessionStoreService: SessionStoreService;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
@@ -29,7 +31,7 @@ describe('SessionListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [SessionListComponent, NoopAnimationsModule],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), SessionStoreService],
     })
       .overrideProvider(ConfirmationService, {
         useValue: mockConfirmationService,
@@ -37,6 +39,7 @@ describe('SessionListComponent', () => {
       .compileComponents();
 
     sessionStore = TestBed.inject(SessionStore);
+    sessionStoreService = TestBed.inject(SessionStoreService);
     fixture = TestBed.createComponent(SessionListComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
     confirmationService =
@@ -116,11 +119,11 @@ describe('SessionListComponent', () => {
   });
 
   it('should remove session when confirmed', async () => {
+    const removeSessionSpy = jest.spyOn(sessionStoreService, 'removeSession');
     const session: Session = generateSession({
       id: '1',
     });
 
-    sessionStore.setSessions([session]);
     fixture.componentRef.setInput('sessions', [session]);
     fixture.componentRef.setInput('displayActions', true);
     fixture.detectChanges();
@@ -131,7 +134,7 @@ describe('SessionListComponent', () => {
       .calls[0][0];
     confirmArgs.accept();
 
-    expect(sessionStore.sessions()).toEqual([]);
+    expect(removeSessionSpy).toHaveBeenCalledWith('1');
   });
 
   it('should navigate to the session page when a session is clicked', async () => {

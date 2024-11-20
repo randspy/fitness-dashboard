@@ -21,6 +21,7 @@ export function generateExercise(exercise: Partial<Exercise>) {
     id: 'test-uuid',
     name: 'test-exercise',
     description: 'test-description',
+    usage: [],
     ...exercise,
   };
 }

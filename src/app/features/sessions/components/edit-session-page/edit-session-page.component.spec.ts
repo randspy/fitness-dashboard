@@ -3,19 +3,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditSessionPageComponent } from './edit-session-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
-import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { generateSession } from '../../../../../../setup-jest';
+import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
 
 describe('EditSessionPageComponent', () => {
   let component: EditSessionPageComponent;
   let fixture: ComponentFixture<EditSessionPageComponent>;
   let router: Router;
-  let sessionStore: InstanceType<typeof SessionStore>;
+  let sessionStoreService: SessionStoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [EditSessionPageComponent],
       providers: [
+        SessionStoreService,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -28,7 +29,7 @@ describe('EditSessionPageComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
-    sessionStore = TestBed.inject(SessionStore);
+    sessionStoreService = TestBed.inject(SessionStoreService);
     fixture = TestBed.createComponent(EditSessionPageComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('id', '1');
@@ -38,7 +39,6 @@ describe('EditSessionPageComponent', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    sessionStore.reset();
   });
 
   it('should create', () => {
@@ -68,26 +68,18 @@ describe('EditSessionPageComponent', () => {
   });
 
   it('should update session on submit', () => {
+    const updateSessionSpy = jest.spyOn(sessionStoreService, 'updateSession');
     const form = fixture.debugElement.query(By.css('fit-session-form'));
-    const session = generateSession({
-      id: '1',
-    });
-
-    sessionStore.addSession(session);
 
     fixture.detectChanges();
 
-    const updatedSession = {
-      ...session,
-      exercises: [
-        {
-          name: 'Test Exercise',
-        },
-      ],
-    };
+    const updatedSession = generateSession({
+      id: '1',
+      exercises: [],
+    });
 
     form.triggerEventHandler('save', updatedSession);
 
-    expect(sessionStore.sessions()).toEqual([updatedSession]);
+    expect(updateSessionSpy).toHaveBeenCalledWith('1', updatedSession);
   });
 });

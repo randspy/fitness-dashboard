@@ -1,5 +1,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ExerciseStore } from './exercise.store';
+import { generateExercise } from '../../../../../setup-jest';
 
 describe('ExerciseStore', () => {
   let store: InstanceType<typeof ExerciseStore>;
@@ -34,11 +35,9 @@ describe('ExerciseStore', () => {
     it('should add exercise with generated id', () => {
       const id = '1-2-3-4-5';
       jest.spyOn(crypto, 'randomUUID').mockReturnValue(id);
-      const newExercise = {
+      const newExercise = generateExercise({
         id,
-        name: 'Push-ups',
-        description: 'Basic push-ups',
-      };
+      });
 
       store.addExercise(newExercise);
 
@@ -51,11 +50,9 @@ describe('ExerciseStore', () => {
     });
 
     it('should remove exercise by id', () => {
-      const exercise = {
+      const exercise = generateExercise({
         id: '1',
-        name: 'Push-ups',
-        description: 'Basic push-ups',
-      };
+      });
       store.addExercise(exercise);
       const addedExercise = store.exercises()[0];
 
@@ -65,11 +62,9 @@ describe('ExerciseStore', () => {
     });
 
     it('should update exercise', () => {
-      const exercise = {
+      const exercise = generateExercise({
         id: '1',
-        name: 'Push-ups',
-        description: 'Basic push-ups',
-      };
+      });
       store.addExercise(exercise);
       const addedExercise = store.exercises()[0];
 
@@ -82,11 +77,10 @@ describe('ExerciseStore', () => {
     });
 
     it('should persist exercises to localStorage when state changes', fakeAsync(() => {
-      const exercise = {
+      const exercise = generateExercise({
         id: '1',
         name: 'Push-ups',
-        description: 'Basic push-ups',
-      };
+      });
 
       store.addExercise(exercise);
 
@@ -99,11 +93,10 @@ describe('ExerciseStore', () => {
     }));
 
     it('should not update non-existent exercise', () => {
-      const exercise = {
+      const exercise = generateExercise({
         id: '1',
         name: 'Push-ups',
-        description: 'Basic push-ups',
-      };
+      });
       store.addExercise(exercise);
       const initialExercises = store.exercises();
 
@@ -113,11 +106,11 @@ describe('ExerciseStore', () => {
     });
 
     it('should reset state', () => {
-      store.addExercise({
-        id: '1',
-        name: 'Push-ups',
-        description: 'Basic push-ups',
-      });
+      store.addExercise(
+        generateExercise({
+          id: '1',
+        }),
+      );
 
       store.reset();
       expect(store.exercises()).toEqual([]);
@@ -129,11 +122,11 @@ describe('ExerciseStore', () => {
       });
 
       it('should return false if exercises array is not empty', () => {
-        store.addExercise({
-          id: '1',
-          name: 'Push-ups',
-          description: 'Basic push-ups',
-        });
+        store.addExercise(
+          generateExercise({
+            id: '1',
+          }),
+        );
 
         expect(store.isEmpty()).toBe(false);
       });
@@ -141,29 +134,27 @@ describe('ExerciseStore', () => {
 
     it('should get exercise by id', () => {
       store.setExercises([
-        {
+        generateExercise({
           id: '1',
-          name: 'Push-ups',
-          description: 'Basic push-ups',
-        },
-        {
+        }),
+        generateExercise({
           id: '2',
-          name: 'Pull-ups',
-          description: 'Basic pull-ups',
-        },
+        }),
       ]);
 
-      expect(store.getExerciseById('2')).toEqual({
-        id: '2',
-        name: 'Pull-ups',
-        description: 'Basic pull-ups',
-      });
+      expect(store.getExerciseById('2')).toEqual(
+        generateExercise({
+          id: '2',
+        }),
+      );
     });
   });
 
   it('should load exercises from localStorage on init', () => {
     const testExercises = [
-      { id: '1', name: 'Push-ups', description: 'Basic push-ups' },
+      generateExercise({
+        id: '1',
+      }),
     ];
     localStorage.setItem('exercises', JSON.stringify(testExercises));
 

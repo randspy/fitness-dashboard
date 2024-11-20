@@ -12,6 +12,7 @@ import { Session } from '../../../../core/sessions/domain/session.model';
 import { ConfirmationService } from 'primeng/api';
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
+import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
 
 @Component({
   selector: 'fit-edit-session-page',
@@ -32,13 +33,14 @@ export class EditSessionPageComponent extends BaseFormPageComponent<SessionFormC
   child = viewChild.required<SessionFormComponent>(SessionFormComponent);
   id = input.required<string>();
   sessionStore = inject(SessionStore);
+  sessionStoreService = inject(SessionStoreService);
 
   session = computed(() => {
     return this.sessionStore.getSessionById(this.id());
   });
 
   onSubmit(session: Session) {
-    this.sessionStore.updateSession(this.id() as string, session);
+    this.sessionStoreService.updateSession(this.id() as string, session);
     this.navigateToParent();
   }
 

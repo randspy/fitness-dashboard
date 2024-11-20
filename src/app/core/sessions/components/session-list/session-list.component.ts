@@ -17,6 +17,7 @@ import { SessionStore } from '../../store/sessions.store';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { LinkComponent } from '../../../../ui/components/link/link.component';
+import { SessionStoreService } from '../../service/session-store.service';
 
 @Component({
   selector: 'fit-session-list',
@@ -48,6 +49,7 @@ import { LinkComponent } from '../../../../ui/components/link/link.component';
 })
 export class SessionListComponent {
   sessionStore = inject(SessionStore);
+  sessionStoreService = inject(SessionStoreService);
   confirmationService = inject(ConfirmationService);
 
   sessions = input.required<Session[]>();
@@ -66,7 +68,7 @@ export class SessionListComponent {
       header: 'Delete session',
       message: 'Are you sure you want to delete this session?',
       accept: () => {
-        this.sessionStore.removeSession(id);
+        this.sessionStoreService.removeSession(id);
       },
     });
   }

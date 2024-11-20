@@ -67,22 +67,21 @@ describe('EditExercisePageComponent', () => {
   });
 
   it('should update exercise on submit', () => {
+    const exerciseStoreSpy = jest.spyOn(exerciseStore, 'updateExercise');
     const form = fixture.debugElement.query(By.css('fit-exercise-form'));
-    const exercise = generateExercise({
-      id: '1',
-    });
-
-    exerciseStore.addExercise(exercise);
-
     fixture.detectChanges();
 
-    const updatedExercise = {
-      ...exercise,
+    const updatedFormExercise = {
+      id: '1',
       name: 'Test Exercise',
+      description: 'Test Description',
     };
 
-    form.triggerEventHandler('save', updatedExercise);
+    form.triggerEventHandler('save', updatedFormExercise);
 
-    expect(exerciseStore.exercises()).toEqual([updatedExercise]);
+    expect(exerciseStoreSpy).toHaveBeenCalledWith(
+      '1',
+      generateExercise(updatedFormExercise),
+    );
   });
 });

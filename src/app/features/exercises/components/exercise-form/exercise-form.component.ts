@@ -14,7 +14,7 @@ import { CardComponent } from '../../../../ui/components/card/card.component';
 import { TextareaComponent } from '../../../../ui/components/textarea/textarea.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Exercise } from '../../../../core/exercises/domain/exercise.model';
+import { ExerciseForm } from '../../../../core/exercises/domain/exercise.model';
 import { isEqual } from 'lodash';
 
 @Component({
@@ -37,11 +37,11 @@ export class ExerciseFormComponent implements OnInit {
   formBuilder = inject(FormBuilder);
 
   header = input<string>('');
-  exercise = input<Exercise | undefined>();
-  save = output<Exercise>();
+  exercise = input<ExerciseForm | undefined>();
+  save = output<ExerciseForm>();
   cancel = output<void>();
 
-  notModifiedFormValue = signal<Exercise | undefined>(undefined);
+  notModifiedFormValue = signal<ExerciseForm | undefined>(undefined);
 
   form = this.formBuilder.group({
     id: [crypto.randomUUID() as string],
@@ -56,13 +56,13 @@ export class ExerciseFormComponent implements OnInit {
     }
 
     this.notModifiedFormValue.set(
-      exercise ? exercise : (this.form.value as Exercise),
+      exercise ? exercise : (this.form.value as ExerciseForm),
     );
   }
 
   onSubmit() {
     if (this.form.valid) {
-      this.save.emit(this.form.value as Exercise);
+      this.save.emit(this.form.value as ExerciseForm);
       this.form.reset();
     } else {
       this.form.markAllAsTouched();

@@ -79,14 +79,38 @@ describe('ExerciseListComponent', () => {
 
   it('should reorder exercises when dragging is completed', () => {
     const initialExercises = [
-      { id: '1', name: 'Push-ups', description: 'Basic push-ups' },
-      { id: '2', name: 'Squats', description: 'Basic squats' },
-      { id: '3', name: 'Pull-ups', description: 'Basic pull-ups' },
+      generateExercise({
+        id: '1',
+        name: 'Push-ups',
+        description: 'Basic push-ups',
+      }),
+      generateExercise({
+        id: '2',
+        name: 'Squats',
+        description: 'Basic squats',
+      }),
+      generateExercise({
+        id: '3',
+        name: 'Pull-ups',
+        description: 'Basic pull-ups',
+      }),
     ];
     const reorderedExercises = [
-      { id: '2', name: 'Squats', description: 'Basic squats' },
-      { id: '1', name: 'Push-ups', description: 'Basic push-ups' },
-      { id: '3', name: 'Pull-ups', description: 'Basic pull-ups' },
+      generateExercise({
+        id: '2',
+        name: 'Squats',
+        description: 'Basic squats',
+      }),
+      generateExercise({
+        id: '1',
+        name: 'Push-ups',
+        description: 'Basic push-ups',
+      }),
+      generateExercise({
+        id: '3',
+        name: 'Pull-ups',
+        description: 'Basic pull-ups',
+      }),
     ];
 
     exerciseStore.setExercises(initialExercises);
@@ -102,11 +126,9 @@ describe('ExerciseListComponent', () => {
   });
 
   it('should display the delete modal', async () => {
-    const exercise: Exercise = {
+    const exercise = generateExercise({
       id: '1',
-      name: 'Push-ups',
-      description: 'Basic push-ups',
-    };
+    });
 
     exerciseStore.addExercise(exercise);
     fixture.detectChanges();
@@ -117,11 +139,9 @@ describe('ExerciseListComponent', () => {
   });
 
   it('should remove exercise when confirmed', async () => {
-    const exercise: Exercise = {
+    const exercise = generateExercise({
       id: '1',
-      name: 'Push-ups',
-      description: 'Basic push-ups',
-    };
+    });
 
     exerciseStore.addExercise(exercise);
     fixture.detectChanges();

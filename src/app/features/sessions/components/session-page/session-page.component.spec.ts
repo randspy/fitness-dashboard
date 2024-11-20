@@ -9,6 +9,8 @@ import { SessionListComponent } from '../../../../core/sessions/components/sessi
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
+import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
+
 describe('SessionPageComponent', () => {
   let component: SessionPageComponent;
   let fixture: ComponentFixture<SessionPageComponent>;
@@ -18,7 +20,7 @@ describe('SessionPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SessionPageComponent],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), SessionStoreService],
     }).compileComponents();
 
     sessionStore = TestBed.inject(SessionStore);

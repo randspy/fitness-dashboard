@@ -2,20 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewSessionPageComponent } from './new-session-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { By } from '@angular/platform-browser';
+import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
+import { generateSession } from '../../../../../../setup-jest';
 
 describe('NewSessionPageComponent', () => {
   let component: NewSessionPageComponent;
   let fixture: ComponentFixture<NewSessionPageComponent>;
   let router: Router;
-  let sessionStore: InstanceType<typeof SessionStore>;
+  let sessionStoreService: SessionStoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NewSessionPageComponent],
       providers: [
-        SessionStore,
+        SessionStoreService,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -28,15 +29,13 @@ describe('NewSessionPageComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
+    sessionStoreService = TestBed.inject(SessionStoreService);
     fixture = TestBed.createComponent(NewSessionPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
-    sessionStore = TestBed.inject(SessionStore);
   });
 
   afterEach(() => {
-    localStorage.clear();
     jest.clearAllMocks();
   });
 
@@ -59,21 +58,17 @@ describe('NewSessionPageComponent', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
     const form = fixture.debugElement.query(By.css('fit-session-form'));
 
-    form.triggerEventHandler('save', null);
+    form.triggerEventHandler('save', generateSession({ id: '1' }));
     expect(navigateSpy).toHaveBeenCalledWith(['../'], {
       relativeTo: TestBed.inject(ActivatedRoute),
     });
   });
 
   it('should save the session in the store', () => {
-    const addSessionSpy = jest.spyOn(sessionStore, 'addSession');
+    const addSessionSpy = jest.spyOn(sessionStoreService, 'addSession');
     const form = fixture.debugElement.query(By.css('fit-session-form'));
 
-    const session = {
-      id: '',
-      date: new Date(),
-      exercises: [],
-    };
+    const session = generateSession({ id: '1' });
 
     form.triggerEventHandler('save', session);
 

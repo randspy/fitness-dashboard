@@ -11,7 +11,8 @@ import { ExerciseFormComponent } from '../exercise-form/exercise-form.component'
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
-import { Exercise } from '../../../../core/exercises/domain/exercise.model';
+import { ExerciseForm } from '../../../../core/exercises/domain/exercise.model';
+import { updateExercise } from '../../../../core/exercises/domain/exercises.domain';
 
 @Component({
   selector: 'fit-edit-exercise-page',
@@ -38,8 +39,11 @@ export class EditExercisePageComponent extends BaseFormPageComponent<ExerciseFor
     return this.exerciseStore.getExerciseById(this.id());
   });
 
-  save(exercise: Exercise) {
-    this.exerciseStore.updateExercise(this.id(), exercise);
+  save(exerciseForm: ExerciseForm) {
+    this.exerciseStore.updateExercise(
+      this.id(),
+      updateExercise(this.exercise(), exerciseForm),
+    );
     this.navigateToParent();
   }
 

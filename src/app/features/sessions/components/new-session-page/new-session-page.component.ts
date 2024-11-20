@@ -5,11 +5,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { SessionFormComponent } from '../session-form/session-form.component';
-import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { Session } from '../../../../core/sessions/domain/session.model';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
 
 @Component({
   selector: 'fit-new-session-page',
@@ -28,10 +28,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 })
 export class NewSessionPageComponent extends BaseFormPageComponent<SessionFormComponent> {
   child = viewChild.required<SessionFormComponent>(SessionFormComponent);
-  sessionStore = inject(SessionStore);
+  sessionStoreService = inject(SessionStoreService);
 
   onSubmit(session: Session) {
-    this.sessionStore.addSession(session);
+    this.sessionStoreService.addSession(session);
     this.navigateToParent();
   }
 
