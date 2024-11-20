@@ -7,12 +7,14 @@
     @for (session of sessionsByDate(); track session.id) {
       <fit-card data-testid="session-item">
         <div class="flex items-center gap-2">
-          <h3 class="truncate text-lg font-bold">
-            {{ session.name }}
-          </h3>
-          <p class="self-start text-sm text-primary-400">
-            {{ session.date | date }}
-          </p>
+          <div class="flex min-w-0 flex-col md:flex-row md:gap-2">
+            <h3 class="min-w-0 truncate text-lg font-bold">
+              {{ session.name }}
+            </h3>
+            <p class="self-start text-sm text-primary-400">
+              {{ session.date | date }}
+            </p>
+          </div>
 
           @if (displayActions()) {
             <fit-link [link]="session.id" class="ml-auto"
