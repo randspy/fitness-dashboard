@@ -12,7 +12,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Exercise } from '../../../../core/exercises/domain/exercise.model';
 import { ConfirmationService } from 'primeng/api';
 import { Subject } from 'rxjs';
-import { generateExercise } from '../../../../../../setup-jest';
+import { generateExercise } from '../../../../../tests/test-object-generators';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 
 describe('ExerciseListComponent', () => {

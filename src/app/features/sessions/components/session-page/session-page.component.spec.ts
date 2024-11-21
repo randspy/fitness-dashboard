@@ -11,7 +11,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 import { SessionStoreService } from '../../service/session-store.service';
 import { SessionListActionsComponent } from '../session-list-actions/session-list-actions.component';
-import { generateSession } from '../../../../../../setup-jest';
+import { generateSession } from '../../../../../tests/test-object-generators';
 
 describe('SessionPageComponent', () => {
   let component: SessionPageComponent;

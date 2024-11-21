@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
-import { generateExercise } from '../../../../../../setup-jest';
+import { generateExercise } from '../../../../../tests/test-object-generators';
 
 describe('NewExercisePageComponent', () => {
   let component: NewExercisePageComponent;

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Route, Router, UrlSegment } from '@angular/router';
-import { generateSession } from '../../../../../setup-jest';
+import { generateSession } from '../../../../tests/test-object-generators';
 import { SessionStore } from '../../../core/sessions/store/sessions.store';
 import { sessionExistsGuard } from './session-exists.guard';
 

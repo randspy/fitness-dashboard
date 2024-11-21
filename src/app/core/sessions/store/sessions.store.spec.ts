@@ -1,6 +1,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { SessionStore } from './sessions.store';
-import { generateSession } from '../../../../../setup-jest';
+import { generateSession } from '../../../../tests/test-object-generators';
 
 describe('SessionStore', () => {
   let store: InstanceType<typeof SessionStore>;

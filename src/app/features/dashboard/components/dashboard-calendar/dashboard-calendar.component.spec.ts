@@ -6,7 +6,7 @@ import { DashboardCalendarService } from '../../services/dashboard-calendar.serv
 import { CalendarComponent } from '../../../../ui/components/calendar/calendar.component';
 import { By } from '@angular/platform-browser';
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
-import { generateSession } from '../../../../../../setup-jest';
+import { generateSession } from '../../../../../tests/test-object-generators';
 
 describe('DashboardCalendarComponent', () => {
   let component: DashboardCalendarComponent;

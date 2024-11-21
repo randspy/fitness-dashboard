@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { DashboardCalendarService } from './dashboard-calendar.service';
 import { SessionStore } from '../../../core/sessions/store/sessions.store';
-import { generateSession } from '../../../../../setup-jest';
+import { generateSession } from '../../../../tests/test-object-generators';
 
 describe('DashboardCalendarService', () => {
   let service: DashboardCalendarService;

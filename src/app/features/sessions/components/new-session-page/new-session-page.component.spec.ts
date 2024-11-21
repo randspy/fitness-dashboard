@@ -4,7 +4,7 @@ import { NewSessionPageComponent } from './new-session-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { SessionStoreService } from '../../service/session-store.service';
-import { generateSession } from '../../../../../../setup-jest';
+import { generateSession } from '../../../../../tests/test-object-generators';
 
 describe('NewSessionPageComponent', () => {
   let component: NewSessionPageComponent;

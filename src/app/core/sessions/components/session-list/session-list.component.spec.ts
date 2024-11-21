@@ -5,7 +5,7 @@ import { SessionListComponent } from './session-list.component';
 import { By } from '@angular/platform-browser';
 import { Session } from '../../domain/session.model';
 import { DatePipe } from '@angular/common';
-import { generateSession } from '../../../../../../setup-jest';
+import { generateSession } from '../../../../../tests/test-object-generators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SessionStore } from '../../store/sessions.store';
 import { Subject } from 'rxjs';

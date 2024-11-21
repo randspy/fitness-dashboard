@@ -7,7 +7,7 @@ import { DashboardCalendarComponent } from '../dashboard-calendar/dashboard-cale
 import { DashboardCalendarService } from '../../services/dashboard-calendar.service';
 import { SessionListComponent } from '../../../../core/sessions/components/session-list/session-list.component';
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
-import { generateSession } from '../../../../../../setup-jest';
+import { generateSession } from '../../../../../tests/test-object-generators';
 import { UserStore } from '../../../../core/user/store/user.store';
 import { MotivationQuoteService } from '../../services/motivation-quote.service';
 import { provideHttpClient } from '@angular/common/http';

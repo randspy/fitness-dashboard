@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditSessionPageComponent } from './edit-session-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
-import { generateSession } from '../../../../../../setup-jest';
+import { generateSession } from '../../../../../tests/test-object-generators';
 import { SessionStoreService } from '../../service/session-store.service';
 
 describe('EditSessionPageComponent', () => {

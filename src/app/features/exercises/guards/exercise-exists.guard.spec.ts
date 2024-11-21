@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Route, Router, UrlSegment } from '@angular/router';
-import { generateExercise } from '../../../../../setup-jest';
+import { generateExercise } from '../../../../tests/test-object-generators';
 import { exerciseExistsGuard } from './exercise-exists.guard';
 import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
 

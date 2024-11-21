@@ -2,7 +2,10 @@ import { TestBed } from '@angular/core/testing';
 
 import { SessionStoreService } from './session-store.service';
 import { SessionStore } from '../../../core/sessions/store/sessions.store';
-import { generateExercise, generateSession } from '../../../../../setup-jest';
+import {
+  generateExercise,
+  generateSession,
+} from '../../../../tests/test-object-generators';
 import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
 
 describe('SessionStoreService', () => {
