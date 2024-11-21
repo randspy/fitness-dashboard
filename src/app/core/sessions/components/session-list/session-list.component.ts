@@ -36,9 +36,7 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class SessionListComponent {
   contentTemplate = input<TemplateRef<{ $implicit: Session }>>();
-
   sessions = input.required<Session[]>();
-  displayActions = input<boolean>(false);
 
   sessionListIsEmpty = computed(() => this.sessions().length === 0);
 

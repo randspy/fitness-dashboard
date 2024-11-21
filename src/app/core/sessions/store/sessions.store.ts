@@ -37,7 +37,7 @@ export const SessionStore = signalStore(
         sessions: state.sessions.filter((session) => session.id !== id),
       }));
     },
-    updateSession(id: string, session: Partial<Omit<Session, 'id'>>) {
+    updateSession(id: string, session: Session) {
       updateState(store, 'updateSession', (state) => ({
         ...state,
         sessions: state.sessions.map((s) =>

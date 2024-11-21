@@ -33,12 +33,9 @@ describe('SessionStore', () => {
     });
 
     it('should add session with generated id', () => {
-      const newSession = {
-        name: 'Test session',
-        id: crypto.randomUUID(),
-        date: new Date(),
-        exercises: [],
-      };
+      const newSession = generateSession({
+        id: '1',
+      });
 
       store.addSession(newSession);
 
@@ -48,12 +45,10 @@ describe('SessionStore', () => {
     });
 
     it('should remove session by id', () => {
-      const session = {
+      const session = generateSession({
         id: '1',
-        name: 'Test session',
-        date: new Date(),
-        exercises: [],
-      };
+      });
+
       store.addSession(session);
       const addedSession = store.sessions()[0];
 
@@ -63,16 +58,15 @@ describe('SessionStore', () => {
     });
 
     it('should update session', () => {
-      const session = {
+      const session = generateSession({
         id: '1',
-        name: 'Test session',
-        date: new Date(),
-        exercises: [],
-      };
+      });
+
       store.addSession(session);
       const addedSession = store.sessions()[0];
 
       store.updateSession(addedSession.id, {
+        ...addedSession,
         exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
       });
 
@@ -90,6 +84,7 @@ describe('SessionStore', () => {
       const addedSession = store.sessions()[0];
 
       store.updateSession('non-existent-id', {
+        ...addedSession,
         exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
       });
 
@@ -97,10 +92,8 @@ describe('SessionStore', () => {
     });
 
     it('should persist sessions to localStorage when state changes', fakeAsync(() => {
-      const session = {
+      const session = generateSession({
         id: '1',
-        name: 'Test session',
-        date: new Date(),
         exercises: [
           {
             id: '1',
@@ -108,7 +101,7 @@ describe('SessionStore', () => {
             sets: [],
           },
         ],
-      };
+      });
 
       store.addSession(session);
 
@@ -121,38 +114,32 @@ describe('SessionStore', () => {
     }));
 
     it('should not update non-existent session', () => {
-      const session = {
+      const session = generateSession({
         id: '1',
-        name: 'Test session',
-        date: new Date(),
-        exercises: [],
-      };
+      });
+
       store.addSession(session);
       const initialSessions = store.sessions();
 
-      store.updateSession('non-existent-id', {
-        exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
-      });
+      store.updateSession(
+        'non-existent-id',
+        generateSession({
+          exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
+        }),
+      );
 
       expect(store.sessions()).toEqual(initialSessions);
     });
 
     it('should reset state', () => {
-      store.addSession({
-        id: '1',
-        name: 'Test session',
-        date: new Date(),
-        exercises: [],
-      });
+      store.addSession(generateSession({ id: '1' }));
 
       store.reset();
       expect(store.sessions()).toEqual([]);
     });
 
     it('should set sessions', () => {
-      const sessions = [
-        { id: '1', name: 'Test session', date: new Date(), exercises: [] },
-      ];
+      const sessions = [generateSession({ id: '1' })];
 
       store.setSessions(sessions);
       expect(store.sessions()).toEqual(sessions);
@@ -168,14 +155,7 @@ describe('SessionStore', () => {
   });
 
   it('should load sessions from localStorage on init', () => {
-    const testSessions = [
-      {
-        id: '1',
-        name: 'Test session',
-        date: new Date(),
-        exercises: [{ id: '1', exerciseId: 'exercise-1', sets: [] }],
-      },
-    ];
+    const testSessions = [generateSession({ id: '1' })];
     localStorage.setItem('sessions', JSON.stringify(testSessions));
 
     store = TestBed.inject(SessionStore);

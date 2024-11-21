@@ -49,6 +49,15 @@ import { ButtonComponent } from '../../../ui/components/button/button.component'
       :host {
         @apply z-10 h-14 md:h-dvh md:w-20;
       }
+
+      // workaround for primeng tieredmenu opening outside the screen when page is scrolled
+      // it's displayed outside the screen, suspecting a bug in primeng
+      // already experienced that king of error while using ng-bootstrap
+      // TODO: recheck when primeng 18 gets out of beta
+      ::ng-deep .p-tieredmenu-overlay {
+        left: calc(100% - 210px) !important;
+        top: 45px !important;
+      }
     `,
   ],
 })

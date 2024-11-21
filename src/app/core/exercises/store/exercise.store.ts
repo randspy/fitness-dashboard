@@ -43,7 +43,7 @@ export const ExerciseStore = signalStore(
         exercises: state.exercises.filter((exercise) => exercise.id !== id),
       }));
     },
-    updateExercise(id: string, exercise: Partial<Omit<Exercise, 'id'>>) {
+    updateExercise(id: string, exercise: Exercise) {
       updateState(store, 'updateExercise', (state) => ({
         ...state,
         exercises: state.exercises.map((e) =>

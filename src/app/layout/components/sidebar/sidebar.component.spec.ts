@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SidebarComponent } from './sidebar.component';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { SidebarLinkComponent } from '../sidebar-link/sidebar-link.component';
 import { TooltipModule } from 'primeng/tooltip';
@@ -8,10 +8,14 @@ import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DummyComponent } from '../../../../tests/dummy-component';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { ButtonComponentHarness } from '../../../../tests/harness/ui/button.harness';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
+  let loader: HarnessLoader;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -29,6 +33,7 @@ describe('SidebarComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(SidebarComponent);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -49,52 +54,42 @@ describe('SidebarComponent', () => {
     expect(links[3].nativeElement.innerHTML).toContain('Settings');
   });
 
-  // those tests are passing but causing and log error in the console
-  // ERROR [TypeError: Cannot read properties of null (reading \'offsetHeight\'
-  // related to the fact that we use jsdom to run the tests
-  // and we are missing something
-  // not clear to me how to fix this properly
-  // offsetHeight exists in window.HTMLElement.prototype
-  // which exists in the test, I logged it.
-  // TODO: fix this properly
-  // I have decided that I prefer clean terminal over those tests for now.
+  it('should open mobile menu on button click', async () => {
+    const menuButton = await loader.getHarness(ButtonComponentHarness);
+    await menuButton.click();
 
-  // it('should open mobile menu on button click', () => {
-  //   const menuButton = fixture.debugElement.query(By.css('p-button'));
-  //   menuButton.triggerEventHandler('click', new MouseEvent('click'));
+    fixture.detectChanges();
 
-  //   fixture.detectChanges();
+    const tieredMenu = fixture.debugElement.query(
+      By.css('.p-tieredmenu-overlay'),
+    );
 
-  //   const tieredMenu = fixture.debugElement.query(
-  //     By.css('.p-tieredmenu-overlay'),
-  //   );
+    expect(tieredMenu).toBeTruthy();
+    expect(tieredMenu.nativeElement.innerHTML).toContain('Dashboard');
+    expect(tieredMenu.nativeElement.innerHTML).toContain('Exercises');
+    expect(tieredMenu.nativeElement.innerHTML).toContain('Sessions');
+    expect(tieredMenu.nativeElement.innerHTML).toContain('Settings');
+  });
 
-  //   expect(tieredMenu).toBeTruthy();
-  //   expect(tieredMenu.nativeElement.innerHTML).toContain('Dashboard');
-  //   expect(tieredMenu.nativeElement.innerHTML).toContain('Exercises');
-  //   expect(tieredMenu.nativeElement.innerHTML).toContain('Workouts');
-  //   expect(tieredMenu.nativeElement.innerHTML).toContain('Settings');
-  // });
+  it('should navigate to the correct route when a link is clicked in mobile menu', async () => {
+    const menuButton = await loader.getHarness(ButtonComponentHarness);
+    await menuButton.click();
 
-  // it('should navigate to the correct route when a link is clicked in mobile menu', async () => {
-  //   const menuButton = fixture.debugElement.query(By.css('p-button'));
-  //   menuButton.triggerEventHandler('click', new MouseEvent('click'));
+    fixture.detectChanges();
 
-  //   fixture.detectChanges();
+    const tieredMenu = fixture.debugElement.query(
+      By.css('.p-tieredmenu-overlay'),
+    );
 
-  //   const tieredMenu = fixture.debugElement.query(
-  //     By.css('.p-tieredmenu-overlay'),
-  //   );
+    const link = tieredMenu.query(By.css('a'));
+    link.triggerEventHandler('click', new MouseEvent('click'));
 
-  //   const link = tieredMenu.query(By.css('a'));
-  //   link.triggerEventHandler('click', new MouseEvent('click'));
+    fixture.detectChanges();
 
-  //   fixture.detectChanges();
+    const router = TestBed.inject(Router);
 
-  //   const router = TestBed.inject(Router);
+    await fixture.whenStable();
 
-  //   await fixture.whenStable();
-
-  //   expect(router.url).toBe('/app/dashboard');
-  // });
+    expect(router.url).toBe('/app/dashboard');
+  });
 });

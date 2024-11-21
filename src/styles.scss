@@ -41,11 +41,3 @@
     @apply min-h-screen;
   }
 }
-
-// workaround for primeng tieredmenu opening outside the screen when page is scrolled
-// it's displayed outside the screen
-// TODO: find a better solution
-.p-tieredmenu-overlay {
-  left: calc(100% - 210px) !important;
-  top: 49px !important;
-}

@@ -68,7 +68,13 @@ describe('ExerciseStore', () => {
       store.addExercise(exercise);
       const addedExercise = store.exercises()[0];
 
-      store.updateExercise(addedExercise.id, { name: 'Advanced Push-ups' });
+      store.updateExercise(
+        addedExercise.id,
+        generateExercise({
+          id: addedExercise.id,
+          name: 'Advanced Push-ups',
+        }),
+      );
 
       expect(store.exercises()[0]).toEqual({
         ...addedExercise,
@@ -100,7 +106,10 @@ describe('ExerciseStore', () => {
       store.addExercise(exercise);
       const initialExercises = store.exercises();
 
-      store.updateExercise('non-existent-id', { name: 'Advanced Push-ups' });
+      store.updateExercise(
+        'non-existent-id',
+        generateExercise({ name: 'Advanced Push-ups' }),
+      );
 
       expect(store.exercises()).toEqual(initialExercises);
     });
@@ -129,6 +138,17 @@ describe('ExerciseStore', () => {
         );
 
         expect(store.isEmpty()).toBe(false);
+      });
+
+      it('should return displayed exercises', () => {
+        store.setExercises([
+          generateExercise({ id: '1', hidden: false }),
+          generateExercise({ id: '2', hidden: true }),
+        ]);
+
+        expect(store.displayedExercises()).toEqual([
+          generateExercise({ id: '1', hidden: false }),
+        ]);
       });
     });
 
