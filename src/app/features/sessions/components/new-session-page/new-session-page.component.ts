@@ -9,7 +9,7 @@ import { Session } from '../../../../core/sessions/domain/session.model';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
+import { SessionStoreService } from '../../service/session-store.service';
 
 @Component({
   selector: 'fit-new-session-page',

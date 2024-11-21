@@ -3,6 +3,11 @@
   <fit-session-list
     [sessions]="sessionStore.sessions()"
     [displayActions]="true"
+    [contentTemplate]="contentTemplate"
     content
-  />
+  >
+    <ng-template #contentTemplate let-session>
+      <fit-session-list-actions [id]="session.id" />
+    </ng-template>
+  </fit-session-list>
 </fit-page-skeleton>

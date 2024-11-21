@@ -9,7 +9,9 @@ import { SessionListComponent } from '../../../../core/sessions/components/sessi
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
-import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
+import { SessionStoreService } from '../../service/session-store.service';
+import { SessionListActionsComponent } from '../session-list-actions/session-list-actions.component';
+import { generateSession } from '../../../../../../setup-jest';
 
 describe('SessionPageComponent', () => {
   let component: SessionPageComponent;
@@ -50,12 +52,7 @@ describe('SessionPageComponent', () => {
   });
 
   it('should forward sessions to the session list', () => {
-    const session: Session = {
-      id: '1',
-      name: 'Push-ups',
-      date: new Date(),
-      exercises: [],
-    };
+    const session = generateSession({ id: '1' });
     sessionStore.setSessions([session]);
     fixture.detectChanges();
 
@@ -63,5 +60,19 @@ describe('SessionPageComponent', () => {
       By.directive(SessionListComponent),
     );
     expect(sessionList.componentInstance.sessions()).toEqual([session]);
+  });
+
+  it("should display session's list actions", () => {
+    const session: Session = generateSession({
+      id: '1',
+    });
+
+    sessionStore.setSessions([session]);
+    fixture.detectChanges();
+
+    const sessionListActions = fixture.debugElement.query(
+      By.directive(SessionListActionsComponent),
+    );
+    expect(sessionListActions.componentInstance.id()).toBe('1');
   });
 });

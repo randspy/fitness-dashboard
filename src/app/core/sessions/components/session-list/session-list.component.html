@@ -16,22 +16,15 @@
             </p>
           </div>
 
-          @if (displayActions()) {
-            <fit-link [link]="session.id" class="ml-auto"
-              ><ng-icon name="lucidePencil"></ng-icon
-            ></fit-link>
-
-            <fit-button
-              severity="warn"
-              (onClick)="confirmDeleteSession(session.id)"
-              data-testid="delete-button"
-            >
-              <ng-icon name="lucideTrash"></ng-icon>
-            </fit-button>
-          }
+          <ng-container
+            *ngTemplateOutlet="
+              contentTemplate() ?? null;
+              context: { $implicit: session }
+            "
+          >
+          </ng-container>
         </div>
       </fit-card>
     }
   </div>
 }
-<p-confirmDialog />

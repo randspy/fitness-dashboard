@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NewSessionPageComponent } from './new-session-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
-import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
+import { SessionStoreService } from '../../service/session-store.service';
 import { generateSession } from '../../../../../../setup-jest';
 
 describe('NewSessionPageComponent', () => {

@@ -10,18 +10,31 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SessionStore } from '../../store/sessions.store';
 import { Subject } from 'rxjs';
 import { provideRouter } from '@angular/router';
-import { HarnessLoader } from '@angular/cdk/testing';
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
-import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
-import { SessionStoreService } from '../../service/session-store.service';
+import { SessionStoreService } from '../../../../features/sessions/service/session-store.service';
+import { Component, inject, signal } from '@angular/core';
+
+@Component({
+  standalone: true,
+  template: `<fit-session-list
+    [sessions]="sessions()"
+    [contentTemplate]="contentTemplate"
+  >
+    <ng-template #contentTemplate let-session>
+      <div data-testid="projected-content">
+        {{ session.name }}
+      </div>
+    </ng-template>
+  </fit-session-list>`,
+  imports: [SessionListComponent],
+})
+export class TestComponent {
+  sessionStore = inject(SessionStore);
+  sessions = signal<Session[]>([]);
+}
 
 describe('SessionListComponent', () => {
-  let fixture: ComponentFixture<SessionListComponent>;
-  let confirmationService: ConfirmationService;
-  let sessionStore: InstanceType<typeof SessionStore>;
-  let sessionStoreService: SessionStoreService;
-  let loader: HarnessLoader;
+  let component: TestComponent;
+  let fixture: ComponentFixture<TestComponent>;
 
   beforeEach(async () => {
     const mockConfirmationService = {
@@ -30,7 +43,7 @@ describe('SessionListComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [SessionListComponent, NoopAnimationsModule],
+      imports: [SessionListComponent, NoopAnimationsModule, TestComponent],
       providers: [provideRouter([]), SessionStoreService],
     })
       .overrideProvider(ConfirmationService, {
@@ -38,20 +51,11 @@ describe('SessionListComponent', () => {
       })
       .compileComponents();
 
-    sessionStore = TestBed.inject(SessionStore);
-    sessionStoreService = TestBed.inject(SessionStoreService);
-    fixture = TestBed.createComponent(SessionListComponent);
-    loader = TestbedHarnessEnvironment.loader(fixture);
-    confirmationService =
-      fixture.debugElement.injector.get(ConfirmationService);
+    fixture = TestBed.createComponent(TestComponent);
+    component = fixture.componentInstance;
 
     fixture.componentRef.setInput('sessions', []);
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    sessionStore.reset();
-    localStorage.clear();
   });
 
   it('should display empty state when no sessions', () => {
@@ -67,7 +71,7 @@ describe('SessionListComponent', () => {
       id: '1',
     });
 
-    fixture.componentRef.setInput('sessions', [session]);
+    component.sessions.set([session]);
     fixture.detectChanges();
 
     const sessionElements = sessionsQuery();
@@ -89,7 +93,7 @@ describe('SessionListComponent', () => {
       id: '2',
     });
 
-    fixture.componentRef.setInput('sessions', [session1, session2]);
+    component.sessions.set([session1, session2]);
     fixture.detectChanges();
 
     const sessionElements = sessionsQuery();
@@ -103,63 +107,20 @@ describe('SessionListComponent', () => {
     );
   });
 
-  it('should display the delete modal', async () => {
+  it('should display projected content', () => {
     const session: Session = generateSession({
       id: '1',
     });
 
-    sessionStore.setSessions([session]);
-    fixture.componentRef.setInput('sessions', [session]);
-    fixture.componentRef.setInput('displayActions', true);
+    component.sessions.set([session]);
     fixture.detectChanges();
 
-    await clickDeleteButton();
-
-    expect(confirmationService.confirm).toHaveBeenCalled();
-  });
-
-  it('should remove session when confirmed', async () => {
-    const removeSessionSpy = jest.spyOn(sessionStoreService, 'removeSession');
-    const session: Session = generateSession({
-      id: '1',
-    });
-
-    fixture.componentRef.setInput('sessions', [session]);
-    fixture.componentRef.setInput('displayActions', true);
-    fixture.detectChanges();
-
-    await clickDeleteButton();
-
-    const confirmArgs = (confirmationService.confirm as jest.Mock).mock
-      .calls[0][0];
-    confirmArgs.accept();
-
-    expect(removeSessionSpy).toHaveBeenCalledWith('1');
-  });
-
-  it('should navigate to the session page when a session is clicked', async () => {
-    const session: Session = generateSession({
-      id: '1',
-    });
-    sessionStore.setSessions([session]);
-    fixture.componentRef.setInput('sessions', [session]);
-    fixture.componentRef.setInput('displayActions', true);
-    fixture.detectChanges();
-
-    const link = await loader.getHarness(LinkComponentHarness);
-    expect(link).toBeTruthy();
-    expect(await link.getLink()).toBe('1');
+    const projectedContent = fixture.debugElement.query(
+      By.css('[data-testid="projected-content"]'),
+    );
+    expect(projectedContent.nativeElement.textContent).toContain(session.name);
   });
 
   const sessionsQuery = () =>
     fixture.debugElement.queryAll(By.css('[data-testid="session-item"]'));
-
-  const clickDeleteButton = async () => {
-    const deleteButton = await loader.getHarness(
-      ButtonComponentHarness.with({
-        testId: 'delete-button',
-      }),
-    );
-    await deleteButton.click();
-  };
 });

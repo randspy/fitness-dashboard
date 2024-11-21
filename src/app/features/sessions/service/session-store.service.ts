@@ -1,7 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { Session, SessionExercise } from '../domain/session.model';
-import { SessionStore } from '../store/sessions.store';
-import { ExerciseStore } from '../../exercises/store/exercise.store';
+import {
+  Session,
+  SessionExercise,
+} from '../../../core/sessions/domain/session.model';
+import { SessionStore } from '../../../core/sessions/store/sessions.store';
+import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
 
 @Injectable()
 export class SessionStoreService {

@@ -2,34 +2,21 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject,
   input,
+  TemplateRef,
 } from '@angular/core';
 
 import { CardComponent } from '../../../../ui/components/card/card.component';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Session } from '../../domain/session.model';
 import { provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideTrash } from '@ng-icons/lucide';
-import { NgIconComponent } from '@ng-icons/core';
-import { ButtonComponent } from '../../../../ui/components/button/button.component';
-import { SessionStore } from '../../store/sessions.store';
 import { ConfirmationService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { LinkComponent } from '../../../../ui/components/link/link.component';
-import { SessionStoreService } from '../../service/session-store.service';
 
 @Component({
   selector: 'fit-session-list',
   standalone: true,
-  imports: [
-    CardComponent,
-    DatePipe,
-    ButtonComponent,
-    NgIconComponent,
-    ConfirmDialogModule,
-    LinkComponent,
-  ],
+  imports: [CardComponent, DatePipe, CommonModule],
   templateUrl: './session-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -48,9 +35,7 @@ import { SessionStoreService } from '../../service/session-store.service';
   ],
 })
 export class SessionListComponent {
-  sessionStore = inject(SessionStore);
-  sessionStoreService = inject(SessionStoreService);
-  confirmationService = inject(ConfirmationService);
+  contentTemplate = input<TemplateRef<{ $implicit: Session }>>();
 
   sessions = input.required<Session[]>();
   displayActions = input<boolean>(false);
@@ -62,14 +47,4 @@ export class SessionListComponent {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
   });
-
-  confirmDeleteSession(id: string) {
-    this.confirmationService.confirm({
-      header: 'Delete session',
-      message: 'Are you sure you want to delete this session?',
-      accept: () => {
-        this.sessionStoreService.removeSession(id);
-      },
-    });
-  }
 }

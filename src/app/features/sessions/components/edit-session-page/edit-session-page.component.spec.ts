@@ -4,7 +4,7 @@ import { EditSessionPageComponent } from './edit-session-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { generateSession } from '../../../../../../setup-jest';
-import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
+import { SessionStoreService } from '../../service/session-store.service';
 
 describe('EditSessionPageComponent', () => {
   let component: EditSessionPageComponent;

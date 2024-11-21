@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { SessionStoreService } from './session-store.service';
-import { SessionStore } from '../store/sessions.store';
+import { SessionStore } from '../../../core/sessions/store/sessions.store';
 import { generateExercise, generateSession } from '../../../../../setup-jest';
-import { ExerciseStore } from '../../exercises/store/exercise.store';
+import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
 
 describe('SessionStoreService', () => {
   let service: SessionStoreService;

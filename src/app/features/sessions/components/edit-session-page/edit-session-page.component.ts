@@ -12,7 +12,7 @@ import { Session } from '../../../../core/sessions/domain/session.model';
 import { ConfirmationService } from 'primeng/api';
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
-import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
+import { SessionStoreService } from '../../service/session-store.service';
 
 @Component({
   selector: 'fit-edit-session-page',

@@ -12,7 +12,6 @@ import { UserStore } from '../../../../core/user/store/user.store';
 import { MotivationQuoteService } from '../../services/motivation-quote.service';
 import { provideHttpClient } from '@angular/common/http';
 import { MotivationQuoteComponent } from '../motivation-quote/motivation-quote.component';
-import { SessionStoreService } from '../../../../core/sessions/service/session-store.service';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
@@ -27,7 +26,6 @@ describe('DashboardPageComponent', () => {
       providers: [
         DashboardCalendarService,
         MotivationQuoteService,
-        SessionStoreService,
         provideHttpClient(),
       ],
     }).compileComponents();

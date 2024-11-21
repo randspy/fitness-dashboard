@@ -4,7 +4,7 @@ import { NewSessionPageComponent } from './components/new-session-page/new-sessi
 import { unsavedChangesGuard } from '../../core/shared/guards/unsaved-changes.guard';
 import { EditSessionPageComponent } from './components/edit-session-page/edit-session-page.component';
 import { sessionExistsGuard } from './guards/session-exists.guard';
-import { SessionStoreService } from '../../core/sessions/service/session-store.service';
+import { SessionStoreService } from './service/session-store.service';
 
 export const sessionsRoutes: Routes = [
   {
