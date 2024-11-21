@@ -54,7 +54,6 @@ describe('SessionListComponent', () => {
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
 
-    fixture.componentRef.setInput('sessions', []);
     fixture.detectChanges();
   });
 

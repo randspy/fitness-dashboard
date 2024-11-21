@@ -84,7 +84,6 @@ describe('SelectComponent', () => {
   });
 
   it('should show already set value', async () => {
-    console.log('start');
     const item = { id: '1', name: 'Test Item' };
     component.suggestions = [item];
     fixture.detectChanges();
