@@ -43,7 +43,7 @@ describe('SessionPageComponent', () => {
   it('should have a link to the new session page', async () => {
     const link = await loader.getHarness(LinkComponentHarness);
     expect(link).toBeTruthy();
-    expect(await link.getLink()).toBe('new');
+    expect(await link.getLink()).toBe('/new');
   });
 
   it('should have a exercise list', () => {

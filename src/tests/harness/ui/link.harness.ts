@@ -13,7 +13,9 @@ export class LinkComponentHarness extends ComponentHarness {
     return new HarnessPredicate(LinkComponentHarness, options);
   }
 
+  private label = this.locatorFor('a');
+
   async getLink(): Promise<string | null> {
-    return (await this.host()).getAttribute('ng-reflect-link');
+    return (await this.label()).getAttribute('href');
   }
 }

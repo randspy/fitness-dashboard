@@ -65,7 +65,7 @@ describe('SessionListActionsComponent', () => {
   it('should navigate to the session page when a session is clicked', async () => {
     const link = await loader.getHarness(LinkComponentHarness);
     expect(link).toBeTruthy();
-    expect(await link.getLink()).toBe('session-1');
+    expect(await link.getLink()).toBe('/session-1');
   });
 
   const clickDeleteButton = async () => {

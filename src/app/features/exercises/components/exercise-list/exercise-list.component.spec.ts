@@ -168,7 +168,7 @@ describe('ExerciseListComponent', () => {
 
     const link = await loader.getHarness(LinkComponentHarness);
     expect(link).toBeTruthy();
-    expect(await link.getLink()).toBe('1');
+    expect(await link.getLink()).toBe('/1');
   });
 
   const clickDeleteButton = async () => {
