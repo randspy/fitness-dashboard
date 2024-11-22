@@ -1,3 +1,27 @@
+# Installation
+
+The application was developed on MacBook Air M1 with node v20.17.0.
+
+If you have [volta](https://volta.sh) you can install this node version with:
+
+```
+volta install node
+```
+
+Install dependencies:
+
+```
+npm install
+```
+
+# Running the application
+
+Server will run on http://localhost:4200/.
+
+```
+npm start
+```
+
 # Application's overview
 
 The Application is a workout logging app. Application used to refresh my angular knowledge.
