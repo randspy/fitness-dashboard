@@ -77,6 +77,32 @@ describe('ExerciseListComponent', () => {
     expect(exerciseElements[0].nativeElement.textContent).toBe(exercise.name);
   });
 
+  it('should display aria labels for edit button', async () => {
+    const exercise = generateExercise({
+      name: 'Push-ups',
+    });
+
+    exerciseStore.addExercise(exercise);
+    fixture.detectChanges();
+
+    const link = await loader.getHarness(LinkComponentHarness);
+    expect(link).toBeTruthy();
+    expect(await link.getAriaLabel()).toBe('Edit Push-ups exercise');
+  });
+
+  it('should display aria labels for delete button', async () => {
+    const exercise = generateExercise({
+      name: 'Push-ups',
+    });
+
+    exerciseStore.addExercise(exercise);
+    fixture.detectChanges();
+
+    const button = await loader.getHarness(ButtonComponentHarness);
+    expect(button).toBeTruthy();
+    expect(await button.getAriaLabel()).toBe('Delete Push-ups exercise');
+  });
+
   it('should reorder exercises when dragging is completed', () => {
     const initialExercises = [
       generateExercise({

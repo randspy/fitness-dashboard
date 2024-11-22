@@ -45,8 +45,7 @@ describe('SidebarLinkComponent', () => {
   });
 
   it('should render link with provided item', () => {
-    const linkElement = fixture.debugElement.query(By.css('a'));
-    expect(linkElement.attributes['ng-reflect-router-link']).toBe('/link');
+    expect(linkElement().getAttribute('href')).toBe('/link');
   });
 
   it('should apply active class when route is active', async () => {
@@ -54,8 +53,7 @@ describe('SidebarLinkComponent', () => {
 
     await router.navigate(['/link']);
 
-    const linkElement = fixture.debugElement.query(By.css('a'));
-    expect(linkElement.classes['text-accent']).toBeTruthy();
+    expect(linkElement().classList.contains('text-accent')).toBeTruthy();
   });
 
   it('should project content inside the link', () => {
@@ -66,9 +64,14 @@ describe('SidebarLinkComponent', () => {
   });
 
   it('should show tooltip with item label', () => {
-    const linkElement = fixture.debugElement.query(By.css('a'));
-
-    expect(linkElement.attributes['ng-reflect-content']).toBe('label text');
-    expect(linkElement.attributes['tooltipPosition']).toBe('right');
+    expect(linkElement().getAttribute('ng-reflect-content')).toBe('label text');
+    expect(linkElement().getAttribute('tooltipPosition')).toBe('right');
   });
+
+  it('should have aria-label attribute', () => {
+    expect(linkElement().getAttribute('aria-label')).toBe('label text');
+  });
+
+  const linkElement = () =>
+    fixture.debugElement.query(By.css('a')).nativeElement;
 });

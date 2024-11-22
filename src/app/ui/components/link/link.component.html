@@ -1,3 +1,8 @@
-<a [routerLink]="link()" pButton class="p-button-raised">
+<a
+  [routerLink]="link()"
+  pButton
+  class="p-button-raised"
+  [attr.aria-label]="ariaLabel()"
+>
   <ng-content></ng-content>
 </a>

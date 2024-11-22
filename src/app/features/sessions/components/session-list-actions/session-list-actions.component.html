@@ -1,8 +1,11 @@
-<fit-link [link]="id()"><ng-icon name="lucidePencil"></ng-icon></fit-link>
+<fit-link [link]="id()" [ariaLabel]="editAriaLabel()"
+  ><ng-icon name="lucidePencil"></ng-icon
+></fit-link>
 
 <fit-button
-  severity="warn"
   (onClick)="confirmDeleteSession()"
+  [ariaLabel]="deleteAriaLabel()"
+  severity="warn"
   data-testid="delete-button"
 >
   <ng-icon name="lucideTrash"></ng-icon>

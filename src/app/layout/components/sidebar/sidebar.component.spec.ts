@@ -71,6 +71,12 @@ describe('SidebarComponent', () => {
     expect(tieredMenu.nativeElement.innerHTML).toContain('Settings');
   });
 
+  it('should have aria-label attribute for menu button', async () => {
+    const menuButton = await loader.getHarness(ButtonComponentHarness);
+
+    expect(await menuButton.getAriaLabel()).toBe('Sidebar menu');
+  });
+
   it('should navigate to the correct route when a link is clicked in mobile menu', async () => {
     const menuButton = await loader.getHarness(ButtonComponentHarness);
     await menuButton.click();

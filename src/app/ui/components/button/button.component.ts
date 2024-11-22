@@ -32,4 +32,5 @@ export class ButtonComponent {
     | null
     | undefined
   >('primary');
+  ariaLabel = input<string>('');
 }

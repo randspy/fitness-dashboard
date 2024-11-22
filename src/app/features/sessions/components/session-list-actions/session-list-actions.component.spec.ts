@@ -37,6 +37,7 @@ describe('SessionListActionsComponent', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
 
     fixture.componentRef.setInput('id', 'session-1');
+    fixture.componentRef.setInput('name', 'Test Session');
     fixture.detectChanges();
   });
 
@@ -76,4 +77,16 @@ describe('SessionListActionsComponent', () => {
     );
     await deleteButton.click();
   };
+
+  it('should have aria-label attribute form edit button', async () => {
+    const link = await loader.getHarness(LinkComponentHarness);
+    expect(await link.getAriaLabel()).toBe('Edit Test Session session');
+  });
+
+  it('should have aria-label attribute form delete button', async () => {
+    const deleteButton = await loader.getHarness(ButtonComponentHarness);
+    expect(await deleteButton.getAriaLabel()).toBe(
+      'Delete Test Session session',
+    );
+  });
 });

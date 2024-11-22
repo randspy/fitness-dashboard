@@ -11,4 +11,5 @@ import { ButtonModule } from 'primeng/button';
 })
 export class LinkComponent {
   link = input.required<string>();
+  ariaLabel = input<string>('');
 }

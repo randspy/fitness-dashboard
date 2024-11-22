@@ -33,6 +33,7 @@
   <fit-button
     (click)="menu.toggle($event)"
     [raised]="false"
+    [ariaLabel]="'Sidebar menu'"
     styleClass="text-secondary focus:outline-accent rounded-sm hover:text-accent hover:bg-transparent border-none"
   >
     <ng-icon name="lucideMenu" size="24"></ng-icon>
@@ -43,6 +44,7 @@
         [routerLink]="item.routerLink"
         routerLinkActive="text-accent"
         class="flex items-center gap-2 p-2"
+        [attr.aria-label]="item.label"
       >
         <ng-icon [name]="item.icon" size="24"></ng-icon>
         <span>{{ item.label }}</span>

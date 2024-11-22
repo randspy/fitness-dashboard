@@ -62,4 +62,12 @@ export class ExerciseListComponent {
       },
     });
   }
+
+  editExerciseLabel(name: string) {
+    return `Edit ${name} exercise`;
+  }
+
+  deleteExerciseLabel(name: string) {
+    return `Delete ${name} exercise`;
+  }
 }

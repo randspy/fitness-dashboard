@@ -13,11 +13,15 @@
         <fit-card data-testid="exercise-item" styleClass="mb-2">
           <div class="flex items-center gap-2">
             <h3 class="truncate text-lg font-bold">{{ exercise.name }}</h3>
-            <fit-link [link]="exercise.id" class="ml-auto"
+            <fit-link
+              [link]="exercise.id"
+              [ariaLabel]="editExerciseLabel(exercise.name)"
+              class="ml-auto"
               ><ng-icon name="lucidePencil"></ng-icon
             ></fit-link>
 
             <fit-button
+              [ariaLabel]="deleteExerciseLabel(exercise.name)"
               severity="warn"
               (onClick)="confirmDeleteExercise(exercise.id)"
               data-testid="delete-button"

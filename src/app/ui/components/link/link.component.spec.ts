@@ -26,8 +26,16 @@ describe('LinkComponent', () => {
   });
 
   it('should render link with correct link', () => {
-    const linkElement = fixture.debugElement.query(By.css('a'));
-
-    expect(linkElement.nativeElement.getAttribute('href')).toBe('/url');
+    expect(linkElement().getAttribute('href')).toBe('/url');
   });
+
+  it('should display aria label', () => {
+    fixture.componentRef.setInput('ariaLabel', 'Test aria label');
+    fixture.detectChanges();
+
+    expect(linkElement().getAttribute('aria-label')).toBe('Test aria label');
+  });
+
+  const linkElement = () =>
+    fixture.debugElement.query(By.css('a')).nativeElement;
 });

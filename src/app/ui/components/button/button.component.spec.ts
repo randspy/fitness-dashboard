@@ -40,41 +40,34 @@ describe('ButtonComponent', () => {
     fixture.componentRef.setInput('styleClass', 'custom-class');
     fixture.detectChanges();
 
-    const buttonElement = fixture.debugElement.query(By.css('button'));
-    expect(buttonElement.nativeElement.classList.contains('custom-class')).toBe(
-      true,
-    );
+    expect(buttonElement().classList.contains('custom-class')).toBe(true);
   });
 
   it('should set button type correctly', () => {
     fixture.componentRef.setInput('type', 'submit');
     fixture.detectChanges();
 
-    const buttonElement = fixture.debugElement.query(By.css('button'));
-    expect(buttonElement.nativeElement.type).toBe('submit');
+    expect(buttonElement().type).toBe('submit');
   });
 
   it('should disable button when disabled is true', () => {
     fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
 
-    const buttonElement = fixture.debugElement.query(By.css('button'));
-    expect(buttonElement.nativeElement.disabled).toBe(true);
+    expect(buttonElement().disabled).toBe(true);
   });
 
   it('should enable button when disabled is false', () => {
     fixture.componentRef.setInput('disabled', false);
     fixture.detectChanges();
 
-    const buttonElement = fixture.debugElement.query(By.css('button'));
-    expect(buttonElement.nativeElement.disabled).toBe(false);
+    expect(buttonElement().disabled).toBe(false);
   });
 
   it('should emit click event when button is clicked', () => {
     const clickSpy = jest.spyOn(component.onClick, 'emit');
-    const buttonElement = fixture.debugElement.query(By.css('button'));
 
-    buttonElement.nativeElement.click();
+    buttonElement().click();
 
     expect(clickSpy).toHaveBeenCalled();
   });
@@ -83,29 +76,30 @@ describe('ButtonComponent', () => {
     fixture.componentRef.setInput('severity', 'secondary');
     fixture.detectChanges();
 
-    const buttonElement = fixture.debugElement.query(By.css('button'));
-    expect(
-      buttonElement.nativeElement.classList.contains('p-button-secondary'),
-    ).toBe(true);
+    expect(buttonElement().classList.contains('p-button-secondary')).toBe(true);
   });
 
   it('should render text button when text is true', () => {
     fixture.componentRef.setInput('text', true);
     fixture.detectChanges();
 
-    const buttonElement = fixture.debugElement.query(By.css('button'));
-    expect(
-      buttonElement.nativeElement.classList.contains('p-button-text'),
-    ).toBe(true);
+    expect(buttonElement().classList.contains('p-button-text')).toBe(true);
   });
 
   it('should render raised button when raised is true', () => {
     fixture.componentRef.setInput('raised', true);
     fixture.detectChanges();
 
-    const buttonElement = fixture.debugElement.query(By.css('button'));
-    expect(
-      buttonElement.nativeElement.classList.contains('p-button-raised'),
-    ).toBe(true);
+    expect(buttonElement().classList.contains('p-button-raised')).toBe(true);
   });
+
+  it('should display aria label when provided', () => {
+    fixture.componentRef.setInput('ariaLabel', 'Test aria label');
+    fixture.detectChanges();
+
+    expect(buttonElement().getAttribute('aria-label')).toBe('Test aria label');
+  });
+
+  const buttonElement = () =>
+    fixture.debugElement.query(By.css('button')).nativeElement;
 });

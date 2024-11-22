@@ -18,4 +18,9 @@ export class LinkComponentHarness extends ComponentHarness {
   async getLink(): Promise<string | null> {
     return (await this.label()).getAttribute('href');
   }
+
+  async getAriaLabel(): Promise<string | null> {
+    const ariaLabel = await this.label();
+    return ariaLabel.getAttribute('aria-label');
+  }
 }

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
 } from '@angular/core';
@@ -43,6 +44,10 @@ export class SessionListActionsComponent {
   sessionStoreService = inject(SessionStoreService);
 
   id = input.required<string>();
+  name = input.required<string>();
+
+  editAriaLabel = computed(() => `Edit ${this.name()} session`);
+  deleteAriaLabel = computed(() => `Delete ${this.name()} session`);
 
   confirmDeleteSession() {
     this.confirmationService.confirm({

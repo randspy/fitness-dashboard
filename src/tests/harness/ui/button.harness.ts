@@ -30,4 +30,8 @@ export class ButtonComponentHarness extends ComponentHarness {
   async click(): Promise<void> {
     return (await this.getButton()).click();
   }
+
+  async getAriaLabel(): Promise<string | null> {
+    return (await this.getButton()).getAttribute('aria-label');
+  }
 }
