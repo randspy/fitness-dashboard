@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
+import { LoggerService } from '../../../core/errors/services/logger.service';
 
 export interface Quote {
   quote: string;
@@ -18,6 +19,7 @@ interface QuoteApiResponse {
 @Injectable()
 export class MotivationQuoteService {
   http = inject(HttpClient);
+  logger = inject(LoggerService);
 
   getQuote(): Observable<Quote> {
     return this.http.get<QuoteApiResponse[]>('/api/quotes').pipe(
@@ -28,7 +30,7 @@ export class MotivationQuoteService {
         }),
       ),
       catchError(() => {
-        console.error('Error fetching motivation quote');
+        this.logger.error('Error fetching motivation quote');
         return of({
           quote: 'Do not fear failure but rather fear not trying.',
           author: 'Roy T. Bennett',

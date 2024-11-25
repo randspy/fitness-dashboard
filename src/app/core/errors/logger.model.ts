@@ -18,3 +18,10 @@ export interface ITransporter<T> {
 export const LOGGER_TRANSPORTER = new InjectionToken<
   ITransporter<CapturedPayload>
 >('LOGGER_TRANSPORTER');
+
+export interface ILoggerService {
+  info(message: LogTypes): void;
+  debug(message: LogTypes): void;
+  warn(message: LogTypes): void;
+  error(message: LogTypes): void;
+}

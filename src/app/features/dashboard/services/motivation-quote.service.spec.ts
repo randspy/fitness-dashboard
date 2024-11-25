@@ -6,11 +6,12 @@ import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
+import { LoggerService } from '../../../core/errors/services/logger.service';
+import { mockLoggerService } from '../../../../tests/mock-logger-service';
 
 describe('MotivationQuoteService', () => {
   let service: MotivationQuoteService;
   let httpMock: HttpTestingController;
-  let consoleSpy: jest.SpyInstance;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,13 +19,16 @@ describe('MotivationQuoteService', () => {
         MotivationQuoteService,
         provideHttpClient(),
         provideHttpClientTesting(),
+        { provide: LoggerService, useValue: mockLoggerService },
       ],
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     service = TestBed.inject(MotivationQuoteService);
     httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be created', () => {
@@ -58,6 +62,8 @@ describe('MotivationQuoteService', () => {
   it('should log error', () => {
     service.getQuote().subscribe();
     httpMock.expectOne('/api/quotes').error(new ProgressEvent('Network error'));
-    expect(consoleSpy).toHaveBeenCalled();
+    expect(mockLoggerService.error).toHaveBeenCalledWith(
+      'Error fetching motivation quote',
+    );
   });
 });

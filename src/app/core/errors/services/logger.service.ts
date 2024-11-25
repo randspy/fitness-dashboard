@@ -4,12 +4,13 @@ import {
   LogLevel,
   LogTypes,
   LOGGER_TRANSPORTER,
+  ILoggerService,
 } from '../logger.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LoggerService {
+export class LoggerService implements ILoggerService {
   private transporter = inject(LOGGER_TRANSPORTER);
 
   info(message: LogTypes): void {

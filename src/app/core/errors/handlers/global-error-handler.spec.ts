@@ -1,20 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { GlobalErrorHandler } from './global-error-handler';
 import { LoggerService } from '../services/logger.service';
+import { mockLoggerService } from '../../../../tests/mock-logger-service';
 
 describe('GlobalErrorHandler', () => {
   let errorHandler: GlobalErrorHandler;
-  let loggerService: jest.Mocked<LoggerService>;
 
   beforeEach(() => {
-    loggerService = {
-      error: jest.fn(),
-    } as unknown as jest.Mocked<LoggerService>;
-
     TestBed.configureTestingModule({
       providers: [
         GlobalErrorHandler,
-        { provide: LoggerService, useValue: loggerService },
+        { provide: LoggerService, useValue: mockLoggerService },
       ],
     });
 
@@ -30,7 +26,7 @@ describe('GlobalErrorHandler', () => {
 
     errorHandler.handleError(error);
 
-    expect(loggerService.error).toHaveBeenCalledWith(error);
+    expect(mockLoggerService.error).toHaveBeenCalledWith(error);
   });
 
   it('should log a string error', () => {
@@ -38,7 +34,7 @@ describe('GlobalErrorHandler', () => {
 
     errorHandler.handleError(error);
 
-    expect(loggerService.error).toHaveBeenCalledWith('A string error');
+    expect(mockLoggerService.error).toHaveBeenCalledWith('A string error');
   });
 
   it('should log a null error', () => {
@@ -46,7 +42,7 @@ describe('GlobalErrorHandler', () => {
 
     errorHandler.handleError(error);
 
-    expect(loggerService.error).toHaveBeenCalledWith('Null error');
+    expect(mockLoggerService.error).toHaveBeenCalledWith('Null error');
   });
 
   it('should log an undefined error', () => {
@@ -54,7 +50,7 @@ describe('GlobalErrorHandler', () => {
 
     errorHandler.handleError(error);
 
-    expect(loggerService.error).toHaveBeenCalledWith('Undefined error');
+    expect(mockLoggerService.error).toHaveBeenCalledWith('Undefined error');
   });
 
   it('should log an object error', () => {
@@ -62,7 +58,7 @@ describe('GlobalErrorHandler', () => {
 
     errorHandler.handleError(error);
 
-    expect(loggerService.error).toHaveBeenCalledWith(
+    expect(mockLoggerService.error).toHaveBeenCalledWith(
       'message: An object error, code: 500',
     );
   });
@@ -79,7 +75,7 @@ describe('GlobalErrorHandler', () => {
 
     errorHandler.handleError(nonStringifiableFunction);
 
-    expect(loggerService.error).toHaveBeenCalledWith(
+    expect(mockLoggerService.error).toHaveBeenCalledWith(
       'Error could not be stringified',
     );
   });

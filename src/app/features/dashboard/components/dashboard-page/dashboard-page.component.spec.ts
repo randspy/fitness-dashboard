@@ -12,6 +12,7 @@ import { UserStore } from '../../../../core/user/store/user.store';
 import { MotivationQuoteService } from '../../services/motivation-quote.service';
 import { provideHttpClient } from '@angular/common/http';
 import { MotivationQuoteComponent } from '../motivation-quote/motivation-quote.component';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
@@ -27,6 +28,7 @@ describe('DashboardPageComponent', () => {
         DashboardCalendarService,
         MotivationQuoteService,
         provideHttpClient(),
+        provideTestLogger(),
       ],
     }).compileComponents();
 

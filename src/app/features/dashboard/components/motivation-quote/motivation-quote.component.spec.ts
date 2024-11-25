@@ -5,6 +5,7 @@ import { MotivationQuoteService } from '../../services/motivation-quote.service'
 import { provideHttpClient } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 describe('MotivationQuoteComponent', () => {
   let component: MotivationQuoteComponent;
@@ -14,7 +15,11 @@ describe('MotivationQuoteComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MotivationQuoteComponent],
-      providers: [MotivationQuoteService, provideHttpClient()],
+      providers: [
+        MotivationQuoteService,
+        provideHttpClient(),
+        provideTestLogger(),
+      ],
     }).compileComponents();
 
     quoteService = TestBed.inject(MotivationQuoteService);
