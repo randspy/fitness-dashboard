@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SessionPageComponent } from './session-page.component';
 import { provideRouter } from '@angular/router';
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
-import { Session } from '../../../../core/sessions/domain/session.model';
+import { Session } from '../../../../core/sessions/domain/session.types';
 import { By } from '@angular/platform-browser';
 import { SessionListComponent } from '../../../../core/sessions/components/session-list/session-list.component';
 import { HarnessLoader } from '@angular/cdk/testing';

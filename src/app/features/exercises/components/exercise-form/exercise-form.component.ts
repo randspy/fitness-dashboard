@@ -14,7 +14,7 @@ import { CardComponent } from '../../../../ui/components/card/card.component';
 import { TextareaComponent } from '../../../../ui/components/textarea/textarea.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ExerciseForm } from '../../../../core/exercises/domain/exercise.model';
+import { ExerciseForm } from '../../../../core/exercises/domain/exercise.types';
 import { isEqual } from 'lodash';
 
 @Component({

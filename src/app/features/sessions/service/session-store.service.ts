@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import {
   Session,
   SessionExercise,
-} from '../../../core/sessions/domain/session.model';
+} from '../../../core/sessions/domain/session.types';
 import { SessionStore } from '../../../core/sessions/store/sessions.store';
 import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
 

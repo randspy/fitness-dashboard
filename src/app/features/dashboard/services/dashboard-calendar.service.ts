@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal, untracked } from '@angular/core';
 import { DatePickerMonthChangeEvent } from 'primeng/datepicker';
 import { SessionStore } from '../../../core/sessions/store/sessions.store';
-import { Session } from '../../../core/sessions/domain/session.model';
+import { Session } from '../../../core/sessions/domain/session.types';
 
 @Injectable()
 export class DashboardCalendarService {

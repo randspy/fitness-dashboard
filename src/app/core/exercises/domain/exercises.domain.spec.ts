@@ -1,4 +1,4 @@
-import { Exercise, ExerciseForm } from './exercise.model';
+import { Exercise, ExerciseForm } from './exercise.types';
 import { createExercise, updateExercise } from './exercises.domain';
 
 describe('Exercises Domain', () => {

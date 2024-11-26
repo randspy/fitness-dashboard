@@ -8,7 +8,7 @@ import {
 
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Session } from '../../domain/session.model';
+import { Session } from '../../domain/session.types';
 import { provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideTrash } from '@ng-icons/lucide';
 import { ConfirmationService } from 'primeng/api';

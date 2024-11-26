@@ -1,5 +1,5 @@
-import { Session } from '../app/core/sessions/domain/session.model';
-import { Exercise } from '../app/core/exercises/domain/exercise.model';
+import { Session } from '../app/core/sessions/domain/session.types';
+import { Exercise } from '../app/core/exercises/domain/exercise.types';
 
 export function generateSession(session: Partial<Session>) {
   return {

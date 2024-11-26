@@ -8,7 +8,7 @@ import {
 } from '@ngrx/signals';
 import { updateState, withDevtools } from '@angular-architects/ngrx-toolkit';
 import { computed, effect } from '@angular/core';
-import { Exercise } from '../domain/exercise.model';
+import { Exercise } from '../domain/exercise.types';
 
 interface ExercisesState {
   exercises: Exercise[];

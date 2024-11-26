@@ -1,6 +1,6 @@
-import { Exercise } from './exercise.model';
+import { Exercise } from './exercise.types';
 
-import { ExerciseForm } from './exercise.model';
+import { ExerciseForm } from './exercise.types';
 
 export function createExercise(exerciseForm: ExerciseForm): Exercise {
   return { ...exerciseForm, usage: [], hidden: false };

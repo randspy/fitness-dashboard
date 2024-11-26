@@ -5,7 +5,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { ExerciseFormComponent } from '../exercise-form/exercise-form.component';
-import { ExerciseForm } from '../../../../core/exercises/domain/exercise.model';
+import { ExerciseForm } from '../../../../core/exercises/domain/exercise.types';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';

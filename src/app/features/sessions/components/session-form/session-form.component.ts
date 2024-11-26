@@ -19,7 +19,7 @@ import { DatepickerComponent } from '../../../../ui/components/datepicker/datepi
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { InputComponent } from '../../../../ui/components/input/input.component';
-import { Session } from '../../../../core/sessions/domain/session.model';
+import { Session } from '../../../../core/sessions/domain/session.types';
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { SelectComponent } from '../../../../ui/components/select/select.component';

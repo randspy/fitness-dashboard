@@ -14,7 +14,7 @@ import { cloneDeep } from 'lodash';
 import { SelectComponentHarness } from '../../../../../tests/harness/ui/select.harness';
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { generateExercise } from '../../../../../tests/test-object-generators';
-import { Session } from '../../../../core/sessions/domain/session.model';
+import { Session } from '../../../../core/sessions/domain/session.types';
 
 describe('SessionFormComponent', () => {
   let component: SessionFormComponent;

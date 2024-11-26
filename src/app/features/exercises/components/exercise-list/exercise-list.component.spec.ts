@@ -9,7 +9,7 @@ import { DraggableListComponent } from '../../../../ui/components/draggable-list
 import { HarnessLoader } from '@angular/cdk/testing';
 import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Exercise } from '../../../../core/exercises/domain/exercise.model';
+import { Exercise } from '../../../../core/exercises/domain/exercise.types';
 import { ConfirmationService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { generateExercise } from '../../../../../tests/test-object-generators';

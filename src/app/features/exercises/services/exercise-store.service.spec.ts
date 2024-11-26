@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ExerciseStoreService } from './exercise-store.service';
-import { Exercise } from '../../../core/exercises/domain/exercise.model';
+import { Exercise } from '../../../core/exercises/domain/exercise.types';
 import { generateExercise } from '../../../../tests/test-object-generators';
 import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
 

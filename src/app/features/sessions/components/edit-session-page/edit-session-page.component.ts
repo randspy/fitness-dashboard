@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SessionFormComponent } from '../session-form/session-form.component';
-import { Session } from '../../../../core/sessions/domain/session.model';
+import { Session } from '../../../../core/sessions/domain/session.types';
 import { ConfirmationService } from 'primeng/api';
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
