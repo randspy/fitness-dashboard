@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { MotivationQuoteService } from '../../services/motivation-quote.service';
 
@@ -12,5 +11,5 @@ import { MotivationQuoteService } from '../../services/motivation-quote.service'
 })
 export class MotivationQuoteComponent {
   quoteService = inject(MotivationQuoteService);
-  quote = toSignal(this.quoteService.getQuote(), { initialValue: null });
+  quote = this.quoteService.getQuote();
 }

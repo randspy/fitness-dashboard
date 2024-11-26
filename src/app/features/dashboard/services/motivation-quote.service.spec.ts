@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { MotivationQuoteService } from './motivation-quote.service';
-import { firstValueFrom } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
 import {
   HttpTestingController,
@@ -29,6 +28,8 @@ describe('MotivationQuoteService', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    httpMock.verify();
+    TestBed.resetTestingModule();
   });
 
   it('should be created', () => {
@@ -38,29 +39,52 @@ describe('MotivationQuoteService', () => {
   it('should fetch quote', async () => {
     const mockResponse = [{ q: 'Test quote', a: 'Test author' }];
 
-    const quotePromise = firstValueFrom(service.getQuote());
+    const quote = service.getQuote();
 
     const req = httpMock.expectOne('/api/quotes');
     req.flush(mockResponse);
 
-    const quote = await quotePromise;
-    expect(quote.quote).toBe('Test quote');
-    expect(quote.author).toBe('Test author');
+    expect(quote()).toEqual({
+      quote: 'Test quote',
+      author: 'Test author',
+    });
+  });
+
+  it('should get random quote from cache', async () => {
+    jest.spyOn(Math, 'random').mockReturnValue(0.5);
+    const mockResponse = [
+      { q: 'Test quote', a: 'Test author' },
+      { q: 'Test quote 2', a: 'Test author 2' },
+      { q: 'Test quote 3', a: 'Test author 3' },
+    ];
+
+    service.getQuote();
+
+    const req = httpMock.expectOne('/api/quotes');
+    req.flush(mockResponse);
+
+    const quote = service.getQuote();
+
+    expect(quote()).toEqual({
+      quote: 'Test quote 2',
+      author: 'Test author 2',
+    });
   });
 
   it('should handle error', async () => {
-    const quotePromise = firstValueFrom(service.getQuote());
+    const quote = service.getQuote();
 
     const req = httpMock.expectOne('/api/quotes');
     req.error(new ProgressEvent('Network error'));
 
-    const quote = await quotePromise;
-    expect(quote.quote).toBe('Do not fear failure but rather fear not trying.');
-    expect(quote.author).toBe('Roy T. Bennett');
+    expect(quote()).toEqual({
+      quote: 'Do not fear failure but rather fear not trying.',
+      author: 'Roy T. Bennett',
+    });
   });
 
   it('should log error', () => {
-    service.getQuote().subscribe();
+    service.getQuote();
     httpMock.expectOne('/api/quotes').error(new ProgressEvent('Network error'));
     expect(mockLoggerService.error).toHaveBeenCalledWith(
       'Error fetching motivation quote',

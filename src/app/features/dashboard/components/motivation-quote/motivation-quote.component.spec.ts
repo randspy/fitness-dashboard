@@ -4,8 +4,8 @@ import { MotivationQuoteComponent } from './motivation-quote.component';
 import { MotivationQuoteService } from '../../services/motivation-quote.service';
 import { provideHttpClient } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs';
 import { provideTestLogger } from '../../../../../tests/provide-test-logger';
+import { signal } from '@angular/core';
 
 describe('MotivationQuoteComponent', () => {
   let component: MotivationQuoteComponent;
@@ -36,7 +36,9 @@ describe('MotivationQuoteComponent', () => {
     const quote = 'Test quote';
     const author = 'Test author';
 
-    jest.spyOn(quoteService, 'getQuote').mockReturnValue(of({ quote, author }));
+    jest
+      .spyOn(quoteService, 'getQuote')
+      .mockReturnValue(signal({ quote, author }));
 
     fixture = TestBed.createComponent(MotivationQuoteComponent);
     fixture.detectChanges();
