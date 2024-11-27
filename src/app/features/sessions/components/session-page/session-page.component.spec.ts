@@ -12,6 +12,7 @@ import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harne
 import { SessionStoreService } from '../../service/session-store.service';
 import { SessionListActionsComponent } from '../session-list-actions/session-list-actions.component';
 import { generateSession } from '../../../../../tests/test-object-generators';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 describe('SessionPageComponent', () => {
   let component: SessionPageComponent;
@@ -22,7 +23,7 @@ describe('SessionPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SessionPageComponent],
-      providers: [provideRouter([]), SessionStoreService],
+      providers: [provideRouter([]), provideTestLogger(), SessionStoreService],
     }).compileComponents();
 
     sessionStore = TestBed.inject(SessionStore);

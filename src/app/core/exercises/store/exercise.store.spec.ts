@@ -1,6 +1,8 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ExerciseStore } from './exercise.store';
 import { generateExercise } from '../../../../tests/test-object-generators';
+import { LoggerService } from '../../errors/services/logger.service';
+import { mockLoggerService } from '../../../../tests/mock-logger-service';
 
 describe('ExerciseStore', () => {
   let store: InstanceType<typeof ExerciseStore>;
@@ -8,7 +10,10 @@ describe('ExerciseStore', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ExerciseStore],
+      providers: [
+        ExerciseStore,
+        { provide: LoggerService, useValue: mockLoggerService },
+      ],
     });
 
     localStorageSpy = jest.spyOn(Storage.prototype, 'setItem');
@@ -180,5 +185,27 @@ describe('ExerciseStore', () => {
     store = TestBed.inject(ExerciseStore);
 
     expect(store.exercises()).toEqual(testExercises);
+  });
+
+  it('should handle invalid json data', () => {
+    localStorage.setItem('exercises', 'invalid-data');
+
+    store = TestBed.inject(ExerciseStore);
+
+    expect(store.exercises()).toEqual([]);
+    expect(mockLoggerService.error).toHaveBeenCalledWith(
+      'Invalid exercises data : Unexpected token \'i\', "invalid-data" is not valid JSON, raw data: "invalid-data"',
+    );
+  });
+
+  it('should handle invalid exercise data', () => {
+    localStorage.setItem('exercises', JSON.stringify([{ invalid: 'data' }]));
+
+    store = TestBed.inject(ExerciseStore);
+
+    expect(store.exercises()).toEqual([]);
+    expect(mockLoggerService.error).toHaveBeenCalledWith(
+      'Invalid exercise data structure: Validation error: Required at "[0].id"; Required at "[0].name"; Required at "[0].description"; Required at "[0].usage"; Required at "[0].hidden"; Required at "[0].position"',
+    );
   });
 });

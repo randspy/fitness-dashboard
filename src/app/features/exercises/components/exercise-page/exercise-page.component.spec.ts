@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 describe('ExercisePageComponent', () => {
   let component: ExercisePageComponent;
@@ -14,7 +15,7 @@ describe('ExercisePageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ExercisePageComponent, NoopAnimationsModule],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideTestLogger()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExercisePageComponent);

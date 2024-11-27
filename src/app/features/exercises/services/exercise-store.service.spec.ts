@@ -4,13 +4,16 @@ import { ExerciseStoreService } from './exercise-store.service';
 import { Exercise } from '../../../core/exercises/domain/exercise.types';
 import { generateExercise } from '../../../../tests/test-object-generators';
 import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
+import { provideTestLogger } from '../../../../tests/provide-test-logger';
 
 describe('ExerciseStoreService', () => {
   let service: ExerciseStoreService;
   let exerciseStore: InstanceType<typeof ExerciseStore>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideTestLogger()],
+    });
     service = TestBed.inject(ExerciseStoreService);
     exerciseStore = TestBed.inject(ExerciseStore);
   });

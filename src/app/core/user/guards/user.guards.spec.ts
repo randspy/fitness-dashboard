@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { UserStore } from '../store/user.store';
 import { userSetupCompletedGuard, userSetupRequiredGuard } from './user.guards';
+import { provideTestLogger } from '../../../../tests/provide-test-logger';
 
 describe('User Guards', () => {
   let router: jest.Mocked<Router>;
@@ -13,7 +14,11 @@ describe('User Guards', () => {
     } as unknown as jest.Mocked<Router>;
 
     TestBed.configureTestingModule({
-      providers: [UserStore, { provide: Router, useValue: router }],
+      providers: [
+        UserStore,
+        { provide: Router, useValue: router },
+        provideTestLogger(),
+      ],
     });
 
     userStore = TestBed.inject(UserStore);

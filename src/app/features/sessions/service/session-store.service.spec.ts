@@ -7,6 +7,7 @@ import {
   generateSession,
 } from '../../../../tests/test-object-generators';
 import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
+import { provideTestLogger } from '../../../../tests/provide-test-logger';
 
 describe('SessionStoreService', () => {
   let service: SessionStoreService;
@@ -15,7 +16,7 @@ describe('SessionStoreService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SessionStoreService],
+      providers: [SessionStoreService, provideTestLogger()],
     });
     service = TestBed.inject(SessionStoreService);
     sessionStore = TestBed.inject(SessionStore);

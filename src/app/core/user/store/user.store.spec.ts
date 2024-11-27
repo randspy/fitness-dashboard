@@ -1,5 +1,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { UserStore } from './user.store';
+import { LoggerService } from '../../errors/services/logger.service';
+import { mockLoggerService } from '../../../../tests/mock-logger-service';
 
 describe('UserStore', () => {
   let store: InstanceType<typeof UserStore>;
@@ -7,7 +9,13 @@ describe('UserStore', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [UserStore],
+      providers: [
+        UserStore,
+        {
+          provide: LoggerService,
+          useValue: mockLoggerService,
+        },
+      ],
     });
 
     localStorageSpy = jest.spyOn(Storage.prototype, 'setItem');
@@ -63,5 +71,27 @@ describe('UserStore', () => {
     store = TestBed.inject(UserStore);
 
     expect(store.name()).toBe('John');
+  });
+
+  it('should handle invalid json data', () => {
+    localStorage.setItem('user', 'invalid-data');
+
+    store = TestBed.inject(UserStore);
+
+    expect(store.name()).toBe('');
+    expect(mockLoggerService.error).toHaveBeenCalledWith(
+      'Invalid user data : Unexpected token \'i\', "invalid-data" is not valid JSON, raw data: "invalid-data"',
+    );
+  });
+
+  it('should handle invalid user data', () => {
+    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
+
+    store = TestBed.inject(UserStore);
+
+    expect(store.name()).toBe('');
+    expect(mockLoggerService.error).toHaveBeenCalledWith(
+      'Invalid user data structure: Validation error: Required at "name"',
+    );
   });
 });

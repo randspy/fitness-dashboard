@@ -3,6 +3,7 @@ import { Route, Router, UrlSegment } from '@angular/router';
 import { generateExercise } from '../../../../tests/test-object-generators';
 import { exerciseExistsGuard } from './exercise-exists.guard';
 import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
+import { provideTestLogger } from '../../../../tests/provide-test-logger';
 
 describe('exerciseExistsGuard', () => {
   let exerciseStore: InstanceType<typeof ExerciseStore>;
@@ -12,6 +13,7 @@ describe('exerciseExistsGuard', () => {
     TestBed.configureTestingModule({
       providers: [
         ExerciseStore,
+        provideTestLogger(),
         {
           provide: Router,
           useValue: {

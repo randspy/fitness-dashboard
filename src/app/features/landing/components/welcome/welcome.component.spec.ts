@@ -10,6 +10,7 @@ import { UserStore } from '../../../../core/user/store/user.store';
 
 import { Router, provideRouter } from '@angular/router';
 import { DummyComponent } from '../../../../../tests/dummy-component';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 describe('WelcomeComponent', () => {
   let component: WelcomeComponent;
@@ -30,6 +31,7 @@ describe('WelcomeComponent', () => {
       providers: [
         UserStore,
         provideRouter([{ path: 'app/dashboard', component: DummyComponent }]),
+        provideTestLogger(),
       ],
     }).compileComponents();
 

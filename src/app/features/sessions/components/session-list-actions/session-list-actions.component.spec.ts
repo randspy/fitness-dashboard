@@ -9,6 +9,7 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ConfirmationService } from 'primeng/api';
 import { Subject } from 'rxjs';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 describe('SessionListActionsComponent', () => {
   let fixture: ComponentFixture<SessionListActionsComponent>;
@@ -24,7 +25,7 @@ describe('SessionListActionsComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [SessionListActionsComponent],
-      providers: [SessionStoreService, provideRouter([])],
+      providers: [SessionStoreService, provideRouter([]), provideTestLogger()],
     })
       .overrideProvider(ConfirmationService, {
         useValue: mockConfirmationService,

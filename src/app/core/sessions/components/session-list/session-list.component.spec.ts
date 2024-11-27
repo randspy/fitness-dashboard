@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 import { provideRouter } from '@angular/router';
 import { SessionStoreService } from '../../../../features/sessions/service/session-store.service';
 import { Component, inject, signal } from '@angular/core';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 @Component({
   standalone: true,
@@ -44,7 +45,7 @@ describe('SessionListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [SessionListComponent, NoopAnimationsModule, TestComponent],
-      providers: [provideRouter([]), SessionStoreService],
+      providers: [provideRouter([]), provideTestLogger(), SessionStoreService],
     })
       .overrideProvider(ConfirmationService, {
         useValue: mockConfirmationService,

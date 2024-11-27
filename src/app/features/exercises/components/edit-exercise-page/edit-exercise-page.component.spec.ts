@@ -4,6 +4,7 @@ import { EditExercisePageComponent } from './edit-exercise-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { ExerciseStoreService } from '../../services/exercise-store.service';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 describe('EditExercisePageComponent', () => {
   let component: EditExercisePageComponent;
@@ -15,6 +16,7 @@ describe('EditExercisePageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EditExercisePageComponent],
       providers: [
+        provideTestLogger(),
         {
           provide: ActivatedRoute,
           useValue: {

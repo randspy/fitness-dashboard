@@ -1,6 +1,10 @@
 import { signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
 import { updateState, withDevtools } from '@angular-architects/ngrx-toolkit';
-import { effect } from '@angular/core';
+import { effect, inject } from '@angular/core';
+import { LoggerService } from '../../errors/services/logger.service';
+import { fromError } from 'zod-validation-error';
+import { z } from 'zod';
+import { UserSchema } from '../domain/user.schema';
 
 interface User {
   name: string;
@@ -22,16 +26,35 @@ export const UserStore = signalStore(
       updateState(store, 'reset', () => initialState);
     },
   })),
-  withHooks((store) => ({
-    onInit() {
-      const user = localStorage.getItem('user');
-      if (user) {
-        store.setName(JSON.parse(user).name);
-      }
+  withHooks((store) => {
+    const loggerService = inject(LoggerService);
 
-      effect(() => {
-        localStorage.setItem('user', JSON.stringify({ name: store.name() }));
-      });
-    },
-  })),
+    return {
+      onInit() {
+        const user = localStorage.getItem('user');
+        try {
+          if (user) {
+            const parsedUser = JSON.parse(user);
+            const validatedUser = UserSchema.parse(parsedUser);
+
+            store.setName(validatedUser.name);
+          }
+        } catch (error) {
+          if (error instanceof SyntaxError) {
+            loggerService.error(
+              `Invalid user data : ${error.message}, raw data: "${user}"`,
+            );
+          } else if (error instanceof z.ZodError) {
+            loggerService.error(
+              `Invalid user data structure: ${fromError(error).toString()}`,
+            );
+          }
+        }
+
+        effect(() => {
+          localStorage.setItem('user', JSON.stringify({ name: store.name() }));
+        });
+      },
+    };
+  }),
 );

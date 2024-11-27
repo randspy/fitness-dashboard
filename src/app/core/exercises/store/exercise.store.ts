@@ -5,7 +5,7 @@ import {
   withMethods,
 } from '@ngrx/signals';
 import { updateState, withDevtools } from '@angular-architects/ngrx-toolkit';
-import { computed, effect } from '@angular/core';
+import { computed, effect, inject } from '@angular/core';
 import { Exercise } from '../domain/exercise.types';
 import {
   setEntities,
@@ -15,6 +15,10 @@ import {
   withEntities,
   removeAllEntities,
 } from '@ngrx/signals/entities';
+import { z } from 'zod';
+import { fromError } from 'zod-validation-error';
+import { LoggerService } from '../../errors/services/logger.service';
+import { ExerciseSchema } from '../domain/exercise.schema';
 
 export const ExerciseStore = signalStore(
   { providedIn: 'root' },
@@ -47,16 +51,37 @@ export const ExerciseStore = signalStore(
       updateState(store, 'reset', removeAllEntities());
     },
   })),
-  withHooks((store) => ({
-    onInit() {
-      const exercises = localStorage.getItem('exercises');
-      if (exercises) {
-        updateState(store, 'init', setEntities(JSON.parse(exercises)));
-      }
+  withHooks((store) => {
+    const loggerService = inject(LoggerService);
 
-      effect(() => {
-        localStorage.setItem('exercises', JSON.stringify(store.exercises()));
-      });
-    },
-  })),
+    return {
+      onInit() {
+        const exercises = localStorage.getItem('exercises');
+        if (exercises) {
+          try {
+            const parsedExercises = JSON.parse(exercises);
+            const validatedExercises = z
+              .array(ExerciseSchema)
+              .parse(parsedExercises);
+
+            updateState(store, 'init', setEntities(validatedExercises));
+          } catch (error) {
+            if (error instanceof SyntaxError) {
+              loggerService.error(
+                `Invalid exercises data : ${error.message}, raw data: "${exercises}"`,
+              );
+            } else if (error instanceof z.ZodError) {
+              loggerService.error(
+                `Invalid exercise data structure: ${fromError(error).toString()}`,
+              );
+            }
+          }
+        }
+
+        effect(() => {
+          localStorage.setItem('exercises', JSON.stringify(store.exercises()));
+        });
+      },
+    };
+  }),
 );

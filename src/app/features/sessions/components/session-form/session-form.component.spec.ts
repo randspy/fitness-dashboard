@@ -15,6 +15,7 @@ import { SelectComponentHarness } from '../../../../../tests/harness/ui/select.h
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { generateExercise } from '../../../../../tests/test-object-generators';
 import { Session } from '../../../../core/sessions/domain/session.types';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 describe('SessionFormComponent', () => {
   let component: SessionFormComponent;
@@ -25,6 +26,7 @@ describe('SessionFormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SessionFormComponent, NoopAnimationsModule],
+      providers: [provideTestLogger()],
     }).compileComponents();
 
     exerciseStore = TestBed.inject(ExerciseStore);

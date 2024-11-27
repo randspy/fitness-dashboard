@@ -5,7 +5,7 @@ import {
   withMethods,
 } from '@ngrx/signals';
 import { updateState, withDevtools } from '@angular-architects/ngrx-toolkit';
-import { computed, effect } from '@angular/core';
+import { computed, effect, inject } from '@angular/core';
 import { Session } from '../domain/session.types';
 import {
   addEntity,
@@ -15,6 +15,10 @@ import {
   updateEntity,
   withEntities,
 } from '@ngrx/signals/entities';
+import { SessionSchema } from '../domain/session.schema';
+import { z } from 'zod';
+import { fromError } from 'zod-validation-error';
+import { LoggerService } from '../../errors/services/logger.service';
 
 export const SessionStore = signalStore(
   { providedIn: 'root' },
@@ -45,22 +49,40 @@ export const SessionStore = signalStore(
       updateState(store, 'reset', removeAllEntities());
     },
   })),
-  withHooks((store) => ({
-    onInit() {
-      const sessions = localStorage.getItem('sessions');
+  withHooks((store) => {
+    const loggerService = inject(LoggerService);
 
-      if (sessions) {
-        const parsedSessions = JSON.parse(sessions).map((session: Session) => ({
-          ...session,
-          date: new Date(session.date),
-        }));
+    return {
+      onInit() {
+        const sessions = localStorage.getItem('sessions');
 
-        updateState(store, 'init', setEntities(parsedSessions));
-      }
+        if (sessions) {
+          try {
+            const rawSessions = JSON.parse(sessions);
+            const validatedSessions = z.array(SessionSchema).parse(rawSessions);
+            const parsedSessions = validatedSessions.map((session) => ({
+              ...session,
+              date: new Date(session.date),
+            }));
 
-      effect(() => {
-        localStorage.setItem('sessions', JSON.stringify(store.sessions()));
-      });
-    },
-  })),
+            updateState(store, 'init', setEntities(parsedSessions));
+          } catch (error) {
+            if (error instanceof SyntaxError) {
+              loggerService.error(
+                `Invalid session data : ${error.message}, raw data: "${sessions}"`,
+              );
+            } else if (error instanceof z.ZodError) {
+              loggerService.error(
+                `Invalid session data structure: ${fromError(error).toString()}`,
+              );
+            }
+          }
+        }
+
+        effect(() => {
+          localStorage.setItem('sessions', JSON.stringify(store.sessions()));
+        });
+      },
+    };
+  }),
 );

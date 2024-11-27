@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { DashboardCalendarService } from './dashboard-calendar.service';
 import { SessionStore } from '../../../core/sessions/store/sessions.store';
 import { generateSession } from '../../../../tests/test-object-generators';
+import { provideTestLogger } from '../../../../tests/provide-test-logger';
 
 describe('DashboardCalendarService', () => {
   let service: DashboardCalendarService;
@@ -10,7 +11,7 @@ describe('DashboardCalendarService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DashboardCalendarService],
+      providers: [DashboardCalendarService, provideTestLogger()],
     });
     sessionStore = TestBed.inject(SessionStore);
     service = TestBed.inject(DashboardCalendarService);

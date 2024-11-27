@@ -1,6 +1,8 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { SessionStore } from './sessions.store';
 import { generateSession } from '../../../../tests/test-object-generators';
+import { mockLoggerService } from '../../../../tests/mock-logger-service';
+import { LoggerService } from '../../errors/services/logger.service';
 
 describe('SessionStore', () => {
   let store: InstanceType<typeof SessionStore>;
@@ -8,7 +10,10 @@ describe('SessionStore', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SessionStore],
+      providers: [
+        SessionStore,
+        { provide: LoggerService, useValue: mockLoggerService },
+      ],
     });
 
     localStorageSpy = jest.spyOn(Storage.prototype, 'setItem');
@@ -161,5 +166,27 @@ describe('SessionStore', () => {
     store = TestBed.inject(SessionStore);
 
     expect(store.sessions()).toEqual(testSessions);
+  });
+
+  it('should handle invalid json data', () => {
+    localStorage.setItem('sessions', 'invalid-data');
+
+    store = TestBed.inject(SessionStore);
+
+    expect(store.sessions()).toEqual([]);
+    expect(mockLoggerService.error).toHaveBeenCalledWith(
+      'Invalid session data : Unexpected token \'i\', "invalid-data" is not valid JSON, raw data: "invalid-data"',
+    );
+  });
+
+  it('should handle invalid session data', () => {
+    localStorage.setItem('sessions', JSON.stringify([{ invalid: 'data' }]));
+
+    store = TestBed.inject(SessionStore);
+
+    expect(store.sessions()).toEqual([]);
+    expect(mockLoggerService.error).toHaveBeenCalledWith(
+      'Invalid session data structure: Validation error: Required at "[0].id"; Required at "[0].name"; Required at "[0].date"; Required at "[0].exercises"',
+    );
   });
 });

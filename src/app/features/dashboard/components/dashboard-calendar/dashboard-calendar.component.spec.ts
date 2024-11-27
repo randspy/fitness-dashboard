@@ -7,6 +7,7 @@ import { CalendarComponent } from '../../../../ui/components/calendar/calendar.c
 import { By } from '@angular/platform-browser';
 import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { generateSession } from '../../../../../tests/test-object-generators';
+import { provideTestLogger } from '../../../../../tests/provide-test-logger';
 
 describe('DashboardCalendarComponent', () => {
   let component: DashboardCalendarComponent;
@@ -17,7 +18,7 @@ describe('DashboardCalendarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DashboardCalendarComponent, NoopAnimationsModule],
-      providers: [DashboardCalendarService, SessionStore],
+      providers: [DashboardCalendarService, SessionStore, provideTestLogger()],
     }).compileComponents();
 
     dashboardCalendarService = TestBed.inject(DashboardCalendarService);
