@@ -1,58 +1,48 @@
 import {
-  patchState,
   signalStore,
+  withComputed,
   withHooks,
   withMethods,
-  withState,
 } from '@ngrx/signals';
 import { updateState, withDevtools } from '@angular-architects/ngrx-toolkit';
-import { effect } from '@angular/core';
+import { computed, effect } from '@angular/core';
 import { Session } from '../domain/session.types';
-
-interface SessionsState {
-  sessions: Session[];
-}
-
-export const initialState: SessionsState = {
-  sessions: [],
-};
+import {
+  addEntity,
+  removeAllEntities,
+  removeEntity,
+  setEntities,
+  updateEntity,
+  withEntities,
+} from '@ngrx/signals/entities';
 
 export const SessionStore = signalStore(
   { providedIn: 'root' },
   withDevtools('sessions'),
-  withState(initialState),
+  withEntities<Session>(),
+  withComputed(({ entities }) => ({
+    sessions: computed(() => entities()),
+  })),
   withMethods((store) => ({
-    getSessionById(id: string) {
-      return store.sessions().find((session) => session.id === id);
-    },
+    getSessionById: (id: string) => store.entityMap()[id],
     addSession(session: Session) {
-      updateState(store, 'addSession', (state) => ({
-        ...state,
-        sessions: [...state.sessions, { ...session }],
-      }));
+      updateState(store, 'addSession', addEntity(session));
     },
     removeSession(id: string) {
-      updateState(store, 'removeSession', (state) => ({
-        ...state,
-        sessions: state.sessions.filter((session) => session.id !== id),
-      }));
+      updateState(store, 'removeSession', removeEntity(id));
     },
     updateSession(id: string, session: Session) {
-      updateState(store, 'updateSession', (state) => ({
-        ...state,
-        sessions: state.sessions.map((s) =>
-          s.id === id ? { ...s, ...session } : s,
-        ),
-      }));
+      updateState(
+        store,
+        'updateSession',
+        updateEntity({ id, changes: session }),
+      );
     },
     setSessions(sessions: Session[]) {
-      updateState(store, 'setSessions', (state) => ({
-        ...state,
-        sessions: [...sessions],
-      }));
+      updateState(store, 'setSessions', setEntities(sessions));
     },
     reset() {
-      patchState(store, initialState);
+      updateState(store, 'reset', removeAllEntities());
     },
   })),
   withHooks((store) => ({
@@ -65,9 +55,7 @@ export const SessionStore = signalStore(
           date: new Date(session.date),
         }));
 
-        updateState(store, 'init', () => ({
-          sessions: parsedSessions,
-        }));
+        updateState(store, 'init', setEntities(parsedSessions));
       }
 
       effect(() => {

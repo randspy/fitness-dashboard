@@ -16,15 +16,19 @@ describe('DashboardCalendarService', () => {
     service = TestBed.inject(DashboardCalendarService);
   });
 
+  afterEach(() => {
+    sessionStore.reset();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   it('should filter sessions for selected month', () => {
     const sessions = [
-      generateSession({ date: new Date(2023, 10, 3) }),
-      generateSession({ date: new Date(2024, 3, 1) }),
-      generateSession({ date: new Date(2024, 10, 5) }),
+      generateSession({ id: '1', date: new Date(2023, 10, 3) }),
+      generateSession({ id: '2', date: new Date(2024, 3, 1) }),
+      generateSession({ id: '3', date: new Date(2024, 10, 5) }),
     ];
 
     sessionStore.setSessions(sessions);
@@ -35,9 +39,9 @@ describe('DashboardCalendarService', () => {
 
   it('should get all sessions dates', () => {
     const sessions = [
-      generateSession({ date: new Date(2023, 10, 3) }),
-      generateSession({ date: new Date(2024, 3, 1) }),
-      generateSession({ date: new Date(2024, 10, 5) }),
+      generateSession({ id: '1', date: new Date(2023, 10, 3) }),
+      generateSession({ id: '2', date: new Date(2024, 3, 1) }),
+      generateSession({ id: '3', date: new Date(2024, 10, 5) }),
     ];
 
     sessionStore.setSessions(sessions);

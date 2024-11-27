@@ -28,6 +28,10 @@ describe('DashboardCalendarComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    sessionStore.reset();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -41,8 +45,8 @@ describe('DashboardCalendarComponent', () => {
 
   it('should set selected month on monthChanged event', () => {
     sessionStore.setSessions([
-      generateSession({ date: new Date(2024, 11, 5) }),
-      generateSession({ date: new Date(2024, 1, 2) }),
+      generateSession({ id: '1', date: new Date(2024, 11, 5) }),
+      generateSession({ id: '2', date: new Date(2024, 1, 2) }),
     ]);
 
     const calendar = fixture.debugElement.query(
@@ -61,7 +65,7 @@ describe('DashboardCalendarComponent', () => {
 
   it('should render calendar with sessions for selected month', () => {
     sessionStore.setSessions([
-      generateSession({ date: new Date(2024, 11, 5) }),
+      generateSession({ id: '1', date: new Date(2024, 11, 5) }),
     ]);
 
     dashboardCalendarService.setSelectedMonth({

@@ -72,8 +72,8 @@ describe('DashboardPageComponent', () => {
 
   it('should render session list with sessions from selected month', () => {
     sessionStore.setSessions([
-      generateSession({ date: new Date(2024, 11, 5) }),
-      generateSession({ date: new Date(2024, 1, 2) }),
+      generateSession({ id: '1', date: new Date(2024, 11, 5) }),
+      generateSession({ id: '2', date: new Date(2024, 1, 2) }),
     ]);
 
     dashboardCalendarService.setSelectedMonth({
