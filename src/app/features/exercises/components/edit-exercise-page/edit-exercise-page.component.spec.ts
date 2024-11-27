@@ -2,15 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditExercisePageComponent } from './edit-exercise-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { By } from '@angular/platform-browser';
-import { generateExercise } from '../../../../../tests/test-object-generators';
+import { ExerciseStoreService } from '../../services/exercise-store.service';
 
 describe('EditExercisePageComponent', () => {
   let component: EditExercisePageComponent;
   let fixture: ComponentFixture<EditExercisePageComponent>;
   let router: Router;
-  let exerciseStore: InstanceType<typeof ExerciseStore>;
+  let exerciseStoreService: ExerciseStoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -28,7 +27,7 @@ describe('EditExercisePageComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
-    exerciseStore = TestBed.inject(ExerciseStore);
+    exerciseStoreService = TestBed.inject(ExerciseStoreService);
     fixture = TestBed.createComponent(EditExercisePageComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('id', '1');
@@ -37,7 +36,6 @@ describe('EditExercisePageComponent', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    exerciseStore.reset();
   });
 
   it('should create', () => {
@@ -67,8 +65,12 @@ describe('EditExercisePageComponent', () => {
   });
 
   it('should update exercise on submit', () => {
-    const exerciseStoreSpy = jest.spyOn(exerciseStore, 'updateExercise');
+    const exerciseStoreServiceSpy = jest.spyOn(
+      exerciseStoreService,
+      'updateExercise',
+    );
     const form = fixture.debugElement.query(By.css('fit-exercise-form'));
+
     fixture.detectChanges();
 
     const updatedFormExercise = {
@@ -79,9 +81,9 @@ describe('EditExercisePageComponent', () => {
 
     form.triggerEventHandler('save', updatedFormExercise);
 
-    expect(exerciseStoreSpy).toHaveBeenCalledWith(
+    expect(exerciseStoreServiceSpy).toHaveBeenCalledWith(
       '1',
-      generateExercise(updatedFormExercise),
+      updatedFormExercise,
     );
   });
 });

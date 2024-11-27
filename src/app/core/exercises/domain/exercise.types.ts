@@ -10,4 +10,5 @@ export interface ExerciseForm {
 export interface Exercise extends ExerciseForm {
   usage: ExerciseUsage[];
   hidden: boolean;
+  position: number;
 }

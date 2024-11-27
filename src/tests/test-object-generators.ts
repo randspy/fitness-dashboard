@@ -18,6 +18,7 @@ export function generateExercise(exercise: Partial<Exercise>) {
     description: 'test-description',
     usage: [],
     hidden: false,
+    position: 0,
     ...exercise,
   };
 }

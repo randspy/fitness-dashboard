@@ -8,9 +8,9 @@ import { ExerciseFormComponent } from '../exercise-form/exercise-form.component'
 import { ExerciseForm } from '../../../../core/exercises/domain/exercise.types';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
+
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
-import { createExercise } from '../../../../core/exercises/domain/exercises.domain';
+import { ExerciseStoreService } from '../../services/exercise-store.service';
 
 @Component({
   selector: 'fit-new-exercise-page',
@@ -29,10 +29,10 @@ import { createExercise } from '../../../../core/exercises/domain/exercises.doma
 })
 export class NewExercisePageComponent extends BaseFormPageComponent<ExerciseFormComponent> {
   child = viewChild.required<ExerciseFormComponent>(ExerciseFormComponent);
-  exerciseStore = inject(ExerciseStore);
+  exerciseStoreService = inject(ExerciseStoreService);
 
   save(exerciseForm: ExerciseForm) {
-    this.exerciseStore.addExercise(createExercise(exerciseForm));
+    this.exerciseStoreService.addExercise(exerciseForm);
     this.navigateToParent();
   }
 

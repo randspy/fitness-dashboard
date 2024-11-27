@@ -14,11 +14,13 @@ import { ConfirmationService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { generateExercise } from '../../../../../tests/test-object-generators';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
+import { ExerciseStoreService } from '../../services/exercise-store.service';
 
 describe('ExerciseListComponent', () => {
   let component: ExerciseListComponent;
   let fixture: ComponentFixture<ExerciseListComponent>;
   let exerciseStore: InstanceType<typeof ExerciseStore>;
+  let exerciseStoreService: ExerciseStoreService;
   let confirmationService: ConfirmationService;
   let loader: HarnessLoader;
 
@@ -38,6 +40,7 @@ describe('ExerciseListComponent', () => {
       .compileComponents();
 
     exerciseStore = TestBed.inject(ExerciseStore);
+    exerciseStoreService = TestBed.inject(ExerciseStoreService);
     fixture = TestBed.createComponent(ExerciseListComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
@@ -104,38 +107,38 @@ describe('ExerciseListComponent', () => {
   });
 
   it('should reorder exercises when dragging is completed', () => {
+    const reorderExercisesSpy = jest.spyOn(
+      exerciseStoreService,
+      'reorderExercises',
+    );
+
     const initialExercises = [
       generateExercise({
         id: '1',
-        name: 'Push-ups',
-        description: 'Basic push-ups',
+        position: 0,
       }),
       generateExercise({
         id: '2',
-        name: 'Squats',
-        description: 'Basic squats',
+        position: 1,
       }),
       generateExercise({
         id: '3',
-        name: 'Pull-ups',
-        description: 'Basic pull-ups',
+        position: 2,
       }),
     ];
+
     const reorderedExercises = [
       generateExercise({
         id: '2',
-        name: 'Squats',
-        description: 'Basic squats',
+        position: 1,
       }),
       generateExercise({
         id: '1',
-        name: 'Push-ups',
-        description: 'Basic push-ups',
+        position: 0,
       }),
       generateExercise({
         id: '3',
-        name: 'Pull-ups',
-        description: 'Basic pull-ups',
+        position: 2,
       }),
     ];
 
@@ -148,7 +151,7 @@ describe('ExerciseListComponent', () => {
     draggableList.triggerEventHandler('itemsChanged', reorderedExercises);
     fixture.detectChanges();
 
-    expect(exerciseStore.exercises()).toEqual(reorderedExercises);
+    expect(reorderExercisesSpy).toHaveBeenCalledWith(reorderedExercises);
   });
 
   it('should display the delete modal', async () => {

@@ -1,73 +1,57 @@
 import {
-  patchState,
   signalStore,
   withComputed,
   withHooks,
   withMethods,
-  withState,
 } from '@ngrx/signals';
 import { updateState, withDevtools } from '@angular-architects/ngrx-toolkit';
 import { computed, effect } from '@angular/core';
 import { Exercise } from '../domain/exercise.types';
-
-interface ExercisesState {
-  exercises: Exercise[];
-}
-
-export const initialState: ExercisesState = {
-  exercises: [],
-};
+import {
+  setEntities,
+  addEntity,
+  removeEntity,
+  updateEntity,
+  withEntities,
+  removeAllEntities,
+} from '@ngrx/signals/entities';
 
 export const ExerciseStore = signalStore(
   { providedIn: 'root' },
   withDevtools('exercises'),
-  withState(initialState),
-  withComputed((store) => ({
-    isEmpty: computed(() => store.exercises().length === 0),
-    displayedExercises: computed(() =>
-      store.exercises().filter((exercise) => !exercise.hidden),
-    ),
+  withEntities<Exercise>(),
+  withComputed(({ entities }) => ({
+    exercises: computed(() => entities()),
+    length: computed(() => entities().length),
+    isEmpty: computed(() => entities().length === 0),
   })),
   withMethods((store) => ({
-    getExerciseById: (id: string) =>
-      store.exercises().find((exercise) => exercise.id === id),
+    getExerciseById: (id: string) => store.entityMap()[id],
     addExercise(exercise: Exercise) {
-      updateState(store, 'addExercise', (state) => ({
-        ...state,
-        exercises: [...state.exercises, { ...exercise }],
-      }));
+      updateState(store, 'addExercise', addEntity(exercise));
     },
     removeExercise(id: string) {
-      updateState(store, 'removeExercise', (state) => ({
-        ...state,
-        exercises: state.exercises.filter((exercise) => exercise.id !== id),
-      }));
+      updateState(store, 'removeExercise', removeEntity(id));
     },
     updateExercise(id: string, exercise: Exercise) {
-      updateState(store, 'updateExercise', (state) => ({
-        ...state,
-        exercises: state.exercises.map((e) =>
-          e.id === id ? { ...e, ...exercise } : e,
-        ),
-      }));
+      updateState(
+        store,
+        'updateExercise',
+        updateEntity({ id, changes: exercise }),
+      );
     },
     setExercises(exercises: Exercise[]) {
-      updateState(store, 'setExercises', (state) => ({
-        ...state,
-        exercises: [...exercises],
-      }));
+      updateState(store, 'setExercises', setEntities(exercises));
     },
     reset() {
-      patchState(store, initialState);
+      updateState(store, 'reset', removeAllEntities());
     },
   })),
   withHooks((store) => ({
     onInit() {
       const exercises = localStorage.getItem('exercises');
       if (exercises) {
-        updateState(store, 'init', () => ({
-          exercises: JSON.parse(exercises),
-        }));
+        updateState(store, 'init', setEntities(JSON.parse(exercises)));
       }
 
       effect(() => {

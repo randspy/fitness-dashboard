@@ -54,4 +54,109 @@ describe('ExerciseStoreService', () => {
       ]);
     });
   });
+
+  describe('addExercise', () => {
+    it('should add exercise to store', () => {
+      const exercise: Exercise = generateExercise({
+        id: 'exercise-1',
+      });
+
+      exerciseStore.setExercises([exercise]);
+
+      const exerciseToAdd: Exercise = generateExercise({
+        id: 'exercise-2',
+      });
+      service.addExercise(exerciseToAdd);
+
+      expect(exerciseStore.exercises()).toEqual([
+        {
+          ...exercise,
+          position: 0,
+        },
+        {
+          ...exerciseToAdd,
+          position: 1,
+        },
+      ]);
+    });
+
+    it('should increment position of the exercise with biggest position', () => {
+      const exercise: Exercise = generateExercise({
+        id: 'exercise-1',
+        position: 41,
+      });
+
+      exerciseStore.setExercises([exercise]);
+      service.addExercise({
+        id: 'exercise-2',
+        name: 'Exercise 2',
+        description: 'Description 2',
+      });
+
+      expect(exerciseStore.exercises()[1].position).toBe(42);
+    });
+  });
+
+  describe('reorderExercises', () => {
+    it('should reorder exercises', () => {
+      const exercises = [
+        generateExercise({ id: 'exercise-1' }),
+        generateExercise({ id: 'exercise-2' }),
+      ];
+
+      service.reorderExercises(exercises);
+
+      expect(exerciseStore.exercises()).toEqual([
+        {
+          ...exercises[0],
+          position: 0,
+        },
+        {
+          ...exercises[1],
+          position: 1,
+        },
+      ]);
+    });
+  });
+
+  describe('updateExercise', () => {
+    it('should update exercise', () => {
+      const exercise = generateExercise({ id: 'exercise-1' });
+      exerciseStore.setExercises([exercise]);
+
+      const updatedExercise = generateExercise({
+        id: 'exercise-1',
+        name: 'Updated Exercise',
+      });
+      service.updateExercise(exercise.id, updatedExercise);
+
+      expect(exerciseStore.exercises()).toEqual([updatedExercise]);
+    });
+
+    it('should not update exercise if it does not exist', () => {
+      const exercise = generateExercise({ id: 'exercise-1' });
+      exerciseStore.setExercises([exercise]);
+
+      service.updateExercise('exercise-2', exercise);
+
+      expect(exerciseStore.exercises()).toEqual([exercise]);
+    });
+  });
+
+  describe('sortedVisibleExercises', () => {
+    it('should return sorted visible exercises', () => {
+      const exercises = [
+        generateExercise({ id: 'exercise-1', hidden: false, position: 2 }),
+        generateExercise({ id: 'exercise-2', hidden: true, position: 1 }),
+        generateExercise({ id: 'exercise-3', hidden: false, position: 0 }),
+      ];
+
+      exerciseStore.setExercises(exercises);
+
+      expect(service.sortedVisibleExercises()).toEqual([
+        exercises[2],
+        exercises[0],
+      ]);
+    });
+  });
 });

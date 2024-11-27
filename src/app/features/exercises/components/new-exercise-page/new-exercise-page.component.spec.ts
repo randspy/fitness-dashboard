@@ -3,20 +3,18 @@ import { NewExercisePageComponent } from './new-exercise-page.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
-import { generateExercise } from '../../../../../tests/test-object-generators';
+import { ExerciseStoreService } from '../../services/exercise-store.service';
 
 describe('NewExercisePageComponent', () => {
   let component: NewExercisePageComponent;
   let fixture: ComponentFixture<NewExercisePageComponent>;
   let router: Router;
-  let exerciseStore: InstanceType<typeof ExerciseStore>;
+  let exerciseStoreService: ExerciseStoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NewExercisePageComponent, NoopAnimationsModule],
       providers: [
-        ExerciseStore,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -29,11 +27,10 @@ describe('NewExercisePageComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
+    exerciseStoreService = TestBed.inject(ExerciseStoreService);
     fixture = TestBed.createComponent(NewExercisePageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
-    exerciseStore = TestBed.inject(ExerciseStore);
   });
 
   afterEach(() => {
@@ -66,7 +63,7 @@ describe('NewExercisePageComponent', () => {
   });
 
   it('should save the exercise in the store', () => {
-    const addExerciseSpy = jest.spyOn(exerciseStore, 'addExercise');
+    const addExerciseSpy = jest.spyOn(exerciseStoreService, 'addExercise');
     const form = fixture.debugElement.query(By.css('fit-exercise-form'));
 
     const exerciseForm = {
@@ -77,6 +74,6 @@ describe('NewExercisePageComponent', () => {
 
     form.triggerEventHandler('save', exerciseForm);
 
-    expect(addExerciseSpy).toHaveBeenCalledWith(generateExercise(exerciseForm));
+    expect(addExerciseSpy).toHaveBeenCalledWith(exerciseForm);
   });
 });

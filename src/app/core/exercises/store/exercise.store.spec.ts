@@ -126,11 +126,11 @@ describe('ExerciseStore', () => {
     });
 
     describe('With computed', () => {
-      it('should return true if exercises array is empty', () => {
+      it('should return true if exercise entities are empty', () => {
         expect(store.isEmpty()).toBe(true);
       });
 
-      it('should return false if exercises array is not empty', () => {
+      it('should return false if exercise entities are not empty', () => {
         store.addExercise(
           generateExercise({
             id: '1',
@@ -140,15 +140,14 @@ describe('ExerciseStore', () => {
         expect(store.isEmpty()).toBe(false);
       });
 
-      it('should return displayed exercises', () => {
+      it('should get length of exercise entities', () => {
         store.setExercises([
-          generateExercise({ id: '1', hidden: false }),
-          generateExercise({ id: '2', hidden: true }),
+          generateExercise({
+            id: '1',
+          }),
         ]);
 
-        expect(store.displayedExercises()).toEqual([
-          generateExercise({ id: '1', hidden: false }),
-        ]);
+        expect(store.length()).toBe(1);
       });
     });
 

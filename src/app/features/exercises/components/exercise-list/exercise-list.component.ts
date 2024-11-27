@@ -46,11 +46,11 @@ export class ExerciseListComponent {
   exerciseStoreService = inject(ExerciseStoreService);
   confirmationService = inject(ConfirmationService);
 
-  exercises = this.exerciseStore.displayedExercises;
+  exercises = this.exerciseStoreService.sortedVisibleExercises;
   exerciseListIsEmpty = this.exerciseStore.isEmpty;
 
   onReorder(exercises: Exercise[]) {
-    this.exerciseStore.setExercises(exercises);
+    this.exerciseStoreService.reorderExercises(exercises);
   }
 
   confirmDeleteExercise(id: string) {
