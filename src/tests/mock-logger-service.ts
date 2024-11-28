@@ -1,4 +1,4 @@
-import { ILoggerService } from '../app/core/errors/logger.model';
+import { ILoggerService } from '../app/core/errors/domain/logger.types';
 
 export const mockLoggerService: jest.Mocked<ILoggerService> = {
   error: jest.fn(),

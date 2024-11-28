@@ -1,5 +1,5 @@
-import { LogLevel } from '../logger.model';
-import { ITransporter } from '../logger.model';
+import { LogLevel } from '../domain/logger.types';
+import { ITransporter } from '../domain/logger.types';
 
 export class ConsoleTransporter<T> implements ITransporter<T> {
   log(payload: T, level: LogLevel) {

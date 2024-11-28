@@ -5,7 +5,7 @@ import {
   LogTypes,
   LOGGER_TRANSPORTER,
   ILoggerService,
-} from '../logger.model';
+} from '../domain/logger.types';
 
 @Injectable({
   providedIn: 'root',

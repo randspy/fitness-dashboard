@@ -3,7 +3,7 @@ import {
   CapturedPayload,
   ITransporter,
   LOGGER_TRANSPORTER,
-} from '../app/core/errors/logger.model';
+} from '../app/core/errors/domain/logger.types';
 import { LoggerService } from '../app/core/errors/services/logger.service';
 
 export const provideTestLogger = (

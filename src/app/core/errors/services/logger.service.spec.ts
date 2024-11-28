@@ -1,6 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { LoggerService } from './logger.service';
-import { ITransporter, CapturedPayload, LogLevel } from '../logger.model';
+import {
+  ITransporter,
+  CapturedPayload,
+  LogLevel,
+} from '../domain/logger.types';
 import { provideTestLogger } from '../../../../tests/provide-test-logger';
 import { HttpErrorResponse } from '@angular/common/http';
 
