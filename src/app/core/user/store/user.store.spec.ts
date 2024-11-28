@@ -94,4 +94,16 @@ describe('UserStore', () => {
       'Invalid user data structure: Validation error: Required at "name"',
     );
   });
+
+  it('should not clear localStorage when state is invalid', fakeAsync(() => {
+    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
+
+    store = TestBed.inject(UserStore);
+
+    tick();
+
+    expect(localStorage.getItem('user')).toEqual(
+      JSON.stringify({ invalid: 'data' }),
+    );
+  }));
 });

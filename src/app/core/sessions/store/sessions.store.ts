@@ -51,6 +51,7 @@ export const SessionStore = signalStore(
   })),
   withHooks((store) => {
     const loggerService = inject(LoggerService);
+    let stateIsValidated = true;
 
     return {
       onInit() {
@@ -67,6 +68,8 @@ export const SessionStore = signalStore(
 
             updateState(store, 'init', setEntities(parsedSessions));
           } catch (error) {
+            stateIsValidated = false;
+
             if (error instanceof SyntaxError) {
               loggerService.error(
                 `Invalid session data : ${error.message}, raw data: "${sessions}"`,
@@ -80,7 +83,9 @@ export const SessionStore = signalStore(
         }
 
         effect(() => {
-          localStorage.setItem('sessions', JSON.stringify(store.sessions()));
+          if (stateIsValidated) {
+            localStorage.setItem('sessions', JSON.stringify(store.sessions()));
+          }
         });
       },
     };

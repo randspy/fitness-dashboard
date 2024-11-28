@@ -189,4 +189,16 @@ describe('SessionStore', () => {
       'Invalid session data structure: Validation error: Required at "[0].id"; Required at "[0].name"; Required at "[0].date"; Required at "[0].exercises"',
     );
   });
+
+  it('should not clear localStorage when state is invalid', fakeAsync(() => {
+    localStorage.setItem('sessions', JSON.stringify([{ invalid: 'data' }]));
+
+    store = TestBed.inject(SessionStore);
+
+    tick();
+
+    expect(localStorage.getItem('sessions')).toEqual(
+      JSON.stringify([{ invalid: 'data' }]),
+    );
+  }));
 });

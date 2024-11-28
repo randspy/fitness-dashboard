@@ -208,4 +208,16 @@ describe('ExerciseStore', () => {
       'Invalid exercise data structure: Validation error: Required at "[0].id"; Required at "[0].name"; Required at "[0].description"; Required at "[0].usage"; Required at "[0].hidden"; Required at "[0].position"',
     );
   });
+
+  it('should not clear localStorage when state is invalid', fakeAsync(() => {
+    localStorage.setItem('exercises', JSON.stringify([{ invalid: 'data' }]));
+
+    store = TestBed.inject(ExerciseStore);
+
+    tick();
+
+    expect(localStorage.getItem('exercises')).toEqual(
+      JSON.stringify([{ invalid: 'data' }]),
+    );
+  }));
 });

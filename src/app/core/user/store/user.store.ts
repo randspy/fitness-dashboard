@@ -28,6 +28,7 @@ export const UserStore = signalStore(
   })),
   withHooks((store) => {
     const loggerService = inject(LoggerService);
+    let stateIsValidated = true;
 
     return {
       onInit() {
@@ -40,6 +41,8 @@ export const UserStore = signalStore(
             store.setName(validatedUser.name);
           }
         } catch (error) {
+          stateIsValidated = false;
+
           if (error instanceof SyntaxError) {
             loggerService.error(
               `Invalid user data : ${error.message}, raw data: "${user}"`,
@@ -52,7 +55,12 @@ export const UserStore = signalStore(
         }
 
         effect(() => {
-          localStorage.setItem('user', JSON.stringify({ name: store.name() }));
+          if (stateIsValidated) {
+            localStorage.setItem(
+              'user',
+              JSON.stringify({ name: store.name() }),
+            );
+          }
         });
       },
     };

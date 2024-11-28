@@ -53,6 +53,7 @@ export const ExerciseStore = signalStore(
   })),
   withHooks((store) => {
     const loggerService = inject(LoggerService);
+    let stateIsValidated = true;
 
     return {
       onInit() {
@@ -66,6 +67,8 @@ export const ExerciseStore = signalStore(
 
             updateState(store, 'init', setEntities(validatedExercises));
           } catch (error) {
+            stateIsValidated = false;
+
             if (error instanceof SyntaxError) {
               loggerService.error(
                 `Invalid exercises data : ${error.message}, raw data: "${exercises}"`,
@@ -79,7 +82,12 @@ export const ExerciseStore = signalStore(
         }
 
         effect(() => {
-          localStorage.setItem('exercises', JSON.stringify(store.exercises()));
+          if (stateIsValidated) {
+            localStorage.setItem(
+              'exercises',
+              JSON.stringify(store.exercises()),
+            );
+          }
         });
       },
     };
