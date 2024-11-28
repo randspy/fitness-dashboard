@@ -2,6 +2,8 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { UserStore } from './user.store';
 import { LoggerService } from '../../errors/services/logger.service';
 import { mockLoggerService } from '../../../../tests/mock-logger-service';
+import { mockDisplayStateCorruptionToastService } from '../../../../tests/mock-display-state-corruption-toast';
+import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
 
 describe('UserStore', () => {
   let store: InstanceType<typeof UserStore>;
@@ -11,6 +13,10 @@ describe('UserStore', () => {
     TestBed.configureTestingModule({
       providers: [
         UserStore,
+        {
+          provide: DisplayStateCorruptionToastService,
+          useValue: mockDisplayStateCorruptionToastService,
+        },
         {
           provide: LoggerService,
           useValue: mockLoggerService,
@@ -106,4 +112,14 @@ describe('UserStore', () => {
       JSON.stringify({ invalid: 'data' }),
     );
   }));
+
+  it('should show error toast', () => {
+    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
+
+    store = TestBed.inject(UserStore);
+
+    expect(mockDisplayStateCorruptionToastService.show).toHaveBeenCalledWith(
+      'User',
+    );
+  });
 });

@@ -4,7 +4,7 @@ import { MotivationQuoteComponent } from './motivation-quote.component';
 import { MotivationQuoteService } from '../../services/motivation-quote.service';
 import { provideHttpClient } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
-import { provideTestLogger } from '../../../../../tests/provide-test-logger';
+import { provideTestServices } from '../../../../../tests/test-providers';
 import { signal } from '@angular/core';
 
 describe('MotivationQuoteComponent', () => {
@@ -18,7 +18,7 @@ describe('MotivationQuoteComponent', () => {
       providers: [
         MotivationQuoteService,
         provideHttpClient(),
-        provideTestLogger(),
+        ...provideTestServices(),
       ],
     }).compileComponents();
 

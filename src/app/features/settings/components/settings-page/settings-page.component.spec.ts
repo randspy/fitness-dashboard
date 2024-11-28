@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SettingsPageComponent } from './settings-page.component';
 import { UserStore } from '../../../../core/user/store/user.store';
-import { provideTestLogger } from '../../../../../tests/provide-test-logger';
+import { provideTestServices } from '../../../../../tests/test-providers';
 
 describe('SettingsPageComponent', () => {
   let component: SettingsPageComponent;
@@ -12,7 +12,7 @@ describe('SettingsPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SettingsPageComponent],
-      providers: [provideTestLogger()],
+      providers: [...provideTestServices()],
     }).compileComponents();
 
     userStore = TestBed.inject(UserStore);

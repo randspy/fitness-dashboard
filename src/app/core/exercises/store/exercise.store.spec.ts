@@ -3,6 +3,8 @@ import { ExerciseStore } from './exercise.store';
 import { generateExercise } from '../../../../tests/test-object-generators';
 import { LoggerService } from '../../errors/services/logger.service';
 import { mockLoggerService } from '../../../../tests/mock-logger-service';
+import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
+import { mockDisplayStateCorruptionToastService } from '../../../../tests/mock-display-state-corruption-toast';
 
 describe('ExerciseStore', () => {
   let store: InstanceType<typeof ExerciseStore>;
@@ -12,6 +14,10 @@ describe('ExerciseStore', () => {
     TestBed.configureTestingModule({
       providers: [
         ExerciseStore,
+        {
+          provide: DisplayStateCorruptionToastService,
+          useValue: mockDisplayStateCorruptionToastService,
+        },
         { provide: LoggerService, useValue: mockLoggerService },
       ],
     });
@@ -220,4 +226,14 @@ describe('ExerciseStore', () => {
       JSON.stringify([{ invalid: 'data' }]),
     );
   }));
+
+  it('should show error toast', () => {
+    localStorage.setItem('exercises', JSON.stringify([{ invalid: 'data' }]));
+
+    store = TestBed.inject(ExerciseStore);
+
+    expect(mockDisplayStateCorruptionToastService.show).toHaveBeenCalledWith(
+      'Exercises',
+    );
+  });
 });

@@ -5,6 +5,7 @@ import { LoggerService } from '../../errors/services/logger.service';
 import { fromError } from 'zod-validation-error';
 import { z } from 'zod';
 import { UserSchema } from '../domain/user.schema';
+import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
 
 interface User {
   name: string;
@@ -28,6 +29,9 @@ export const UserStore = signalStore(
   })),
   withHooks((store) => {
     const loggerService = inject(LoggerService);
+    const displayStateCorruptionToastService = inject(
+      DisplayStateCorruptionToastService,
+    );
     let stateIsValidated = true;
 
     return {
@@ -42,7 +46,7 @@ export const UserStore = signalStore(
           }
         } catch (error) {
           stateIsValidated = false;
-
+          displayStateCorruptionToastService.show('User');
           if (error instanceof SyntaxError) {
             loggerService.error(
               `Invalid user data : ${error.message}, raw data: "${user}"`,

@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ExerciseStoreService } from '../../services/exercise-store.service';
-import { provideTestLogger } from '../../../../../tests/provide-test-logger';
+import { provideTestServices } from '../../../../../tests/test-providers';
 
 describe('NewExercisePageComponent', () => {
   let component: NewExercisePageComponent;
@@ -16,7 +16,7 @@ describe('NewExercisePageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NewExercisePageComponent, NoopAnimationsModule],
       providers: [
-        provideTestLogger(),
+        ...provideTestServices(),
         {
           provide: ActivatedRoute,
           useValue: {

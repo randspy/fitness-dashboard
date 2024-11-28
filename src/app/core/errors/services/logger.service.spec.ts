@@ -4,8 +4,8 @@ import {
   ITransporter,
   CapturedPayload,
   LogLevel,
+  LOGGER_TRANSPORTER,
 } from '../domain/logger.types';
-import { provideTestLogger } from '../../../../tests/provide-test-logger';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('LoggerService', () => {
@@ -19,7 +19,12 @@ describe('LoggerService', () => {
     } as jest.Mocked<ITransporter<CapturedPayload>>;
 
     TestBed.configureTestingModule({
-      providers: [provideTestLogger(transporterMock)],
+      providers: [
+        {
+          provide: LOGGER_TRANSPORTER,
+          useValue: transporterMock,
+        },
+      ],
     });
 
     service = TestBed.inject(LoggerService);

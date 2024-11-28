@@ -3,15 +3,20 @@ import { SessionStore } from './sessions.store';
 import { generateSession } from '../../../../tests/test-object-generators';
 import { mockLoggerService } from '../../../../tests/mock-logger-service';
 import { LoggerService } from '../../errors/services/logger.service';
+import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
+import { mockDisplayStateCorruptionToastService } from '../../../../tests/mock-display-state-corruption-toast';
 
 describe('SessionStore', () => {
   let store: InstanceType<typeof SessionStore>;
   let localStorageSpy: jest.SpyInstance;
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         SessionStore,
+        {
+          provide: DisplayStateCorruptionToastService,
+          useValue: mockDisplayStateCorruptionToastService,
+        },
         { provide: LoggerService, useValue: mockLoggerService },
       ],
     });
@@ -201,4 +206,14 @@ describe('SessionStore', () => {
       JSON.stringify([{ invalid: 'data' }]),
     );
   }));
+
+  it('should show error toast', () => {
+    localStorage.setItem('sessions', JSON.stringify([{ invalid: 'data' }]));
+
+    store = TestBed.inject(SessionStore);
+
+    expect(mockDisplayStateCorruptionToastService.show).toHaveBeenCalledWith(
+      'Sessions',
+    );
+  });
 });

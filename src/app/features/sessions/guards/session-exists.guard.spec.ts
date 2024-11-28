@@ -3,7 +3,7 @@ import { Route, Router, UrlSegment } from '@angular/router';
 import { generateSession } from '../../../../tests/test-object-generators';
 import { SessionStore } from '../../../core/sessions/store/sessions.store';
 import { sessionExistsGuard } from './session-exists.guard';
-import { provideTestLogger } from '../../../../tests/provide-test-logger';
+import { provideTestServices } from '../../../../tests/test-providers';
 
 describe('sessionExistsGuard', () => {
   let sessionStore: InstanceType<typeof SessionStore>;
@@ -13,7 +13,7 @@ describe('sessionExistsGuard', () => {
     TestBed.configureTestingModule({
       providers: [
         SessionStore,
-        provideTestLogger(),
+        ...provideTestServices(),
         {
           provide: Router,
           useValue: {

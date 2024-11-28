@@ -7,6 +7,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideHttpClient } from '@angular/common/http';
 import { GlobalErrorHandler } from './core/errors/handlers/global-error-handler';
 import { provideLogger } from './core/errors/logger.config';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,5 +18,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideLogger(),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    MessageService,
   ],
 };

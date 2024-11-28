@@ -15,7 +15,7 @@ import { Subject } from 'rxjs';
 import { generateExercise } from '../../../../../tests/test-object-generators';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 import { ExerciseStoreService } from '../../services/exercise-store.service';
-import { provideTestLogger } from '../../../../../tests/provide-test-logger';
+import { provideTestServices } from '../../../../../tests/test-providers';
 
 describe('ExerciseListComponent', () => {
   let component: ExerciseListComponent;
@@ -33,7 +33,7 @@ describe('ExerciseListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [ExerciseListComponent, NoopAnimationsModule],
-      providers: [ExerciseStore, provideRouter([]), provideTestLogger()],
+      providers: [ExerciseStore, provideRouter([]), ...provideTestServices()],
     })
       .overrideProvider(ConfirmationService, {
         useValue: mockConfirmationService,

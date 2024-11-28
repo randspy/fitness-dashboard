@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { SessionStoreService } from '../../service/session-store.service';
 import { generateSession } from '../../../../../tests/test-object-generators';
-import { provideTestLogger } from '../../../../../tests/provide-test-logger';
+import { provideTestServices } from '../../../../../tests/test-providers';
 
 describe('NewSessionPageComponent', () => {
   let component: NewSessionPageComponent;
@@ -18,7 +18,7 @@ describe('NewSessionPageComponent', () => {
       imports: [NewSessionPageComponent],
       providers: [
         SessionStoreService,
-        provideTestLogger(),
+        ...provideTestServices(),
         {
           provide: ActivatedRoute,
           useValue: {

@@ -4,7 +4,7 @@ import { ExerciseStoreService } from './exercise-store.service';
 import { Exercise } from '../../../core/exercises/domain/exercise.types';
 import { generateExercise } from '../../../../tests/test-object-generators';
 import { ExerciseStore } from '../../../core/exercises/store/exercise.store';
-import { provideTestLogger } from '../../../../tests/provide-test-logger';
+import { provideTestServices } from '../../../../tests/test-providers';
 
 describe('ExerciseStoreService', () => {
   let service: ExerciseStoreService;
@@ -12,7 +12,7 @@ describe('ExerciseStoreService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideTestLogger()],
+      providers: [...provideTestServices()],
     });
     service = TestBed.inject(ExerciseStoreService);
     exerciseStore = TestBed.inject(ExerciseStore);

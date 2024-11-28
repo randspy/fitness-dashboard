@@ -19,6 +19,7 @@ import { z } from 'zod';
 import { fromError } from 'zod-validation-error';
 import { LoggerService } from '../../errors/services/logger.service';
 import { ExerciseSchema } from '../domain/exercise.schema';
+import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
 
 export const ExerciseStore = signalStore(
   { providedIn: 'root' },
@@ -53,6 +54,9 @@ export const ExerciseStore = signalStore(
   })),
   withHooks((store) => {
     const loggerService = inject(LoggerService);
+    const displayStateCorruptionToastService = inject(
+      DisplayStateCorruptionToastService,
+    );
     let stateIsValidated = true;
 
     return {
@@ -68,6 +72,7 @@ export const ExerciseStore = signalStore(
             updateState(store, 'init', setEntities(validatedExercises));
           } catch (error) {
             stateIsValidated = false;
+            displayStateCorruptionToastService.show('Exercises');
 
             if (error instanceof SyntaxError) {
               loggerService.error(

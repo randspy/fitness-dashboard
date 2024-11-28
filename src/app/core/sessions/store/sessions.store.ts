@@ -19,6 +19,7 @@ import { SessionSchema } from '../domain/session.schema';
 import { z } from 'zod';
 import { fromError } from 'zod-validation-error';
 import { LoggerService } from '../../errors/services/logger.service';
+import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
 
 export const SessionStore = signalStore(
   { providedIn: 'root' },
@@ -51,6 +52,9 @@ export const SessionStore = signalStore(
   })),
   withHooks((store) => {
     const loggerService = inject(LoggerService);
+    const displayStateCorruptionToastService = inject(
+      DisplayStateCorruptionToastService,
+    );
     let stateIsValidated = true;
 
     return {
@@ -69,6 +73,7 @@ export const SessionStore = signalStore(
             updateState(store, 'init', setEntities(parsedSessions));
           } catch (error) {
             stateIsValidated = false;
+            displayStateCorruptionToastService.show('Sessions');
 
             if (error instanceof SyntaxError) {
               loggerService.error(
