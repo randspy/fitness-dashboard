@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { provideTestServices } from '../tests/test-providers';
 
@@ -7,22 +7,28 @@ jest.mock('./app.styles', () => ({
 }));
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
       providers: [...provideTestServices()],
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
-  it(`should have the 'fitness-dashboard' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('fitness-dashboard');
+  it('should have the "fitness-dashboard" title', () => {
+    expect(component.title).toEqual('fitness-dashboard');
+  });
+
+  it('should render toast', () => {
+    expect(fixture.nativeElement.querySelector('fit-toast')).toBeTruthy();
   });
 });

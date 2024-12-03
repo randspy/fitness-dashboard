@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
 import { themeConfig } from './app.styles';
+import { ToastComponent } from './ui/components/toast/toast.component';
 
 @Component({
   selector: 'fit-root',
   standalone: true,
-  imports: [RouterOutlet, ToastModule],
+  imports: [RouterOutlet, ToastComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
