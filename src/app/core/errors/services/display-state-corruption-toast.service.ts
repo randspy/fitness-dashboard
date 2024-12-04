@@ -1,18 +1,17 @@
 import { inject, Injectable } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ToastService } from '../../../ui/services/toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DisplayStateCorruptionToastService {
-  private messageService = inject(MessageService);
+  private toastService = inject(ToastService);
 
   show(storeName: string) {
-    this.messageService.add({
+    this.toastService.show({
       severity: 'error',
       summary: `${storeName} state is corrupted`,
       detail: "Application won't behave as expected.",
-      sticky: true,
     });
   }
 }

@@ -1,21 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 
 import { DisplayStateCorruptionToastService } from './display-state-corruption-toast.service';
-import { MessageService } from 'primeng/api';
+import { ToastService } from '../../../ui/services/toast.service';
+import { mockToastService } from '../../../../tests/mock-toast-service';
 
 describe('DisplayStateCorruptionToastService', () => {
   let service: DisplayStateCorruptionToastService;
-  let messageService: jest.Mocked<MessageService>;
-  beforeEach(() => {
-    messageService = {
-      add: jest.fn(),
-    } as unknown as jest.Mocked<MessageService>;
 
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         {
-          provide: MessageService,
-          useValue: messageService,
+          provide: ToastService,
+          useValue: mockToastService,
         },
       ],
     });
@@ -29,11 +26,10 @@ describe('DisplayStateCorruptionToastService', () => {
   it('should show error toast', () => {
     service.show('test');
 
-    expect(messageService.add).toHaveBeenCalledWith({
+    expect(mockToastService.show).toHaveBeenCalledWith({
       severity: 'error',
       summary: 'test state is corrupted',
       detail: "Application won't behave as expected.",
-      sticky: true,
     });
   });
 });
