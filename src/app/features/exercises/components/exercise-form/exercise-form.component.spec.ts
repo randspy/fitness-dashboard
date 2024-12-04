@@ -2,13 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExerciseFormComponent } from './exercise-form.component';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ConfirmationService } from 'primeng/api';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
 import { InputComponentHarness } from '../../../../../tests/harness/ui/input.harness';
 import { TextareaComponentHarness } from '../../../../../tests/harness/ui/textarea.harness';
 import { CardComponentHarness } from '../../../../../tests/harness/ui/card.harness';
+import { provideTestServices } from '../../../../../tests/test-providers';
 
 describe('ExerciseFormComponent', () => {
   let component: ExerciseFormComponent;
@@ -18,7 +18,7 @@ describe('ExerciseFormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ExerciseFormComponent, NoopAnimationsModule],
-      providers: [ConfirmationService],
+      providers: [...provideTestServices()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExerciseFormComponent);

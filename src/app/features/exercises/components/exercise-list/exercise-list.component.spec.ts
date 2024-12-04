@@ -10,33 +10,30 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.harness';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Exercise } from '../../../../core/exercises/domain/exercise.types';
-import { ConfirmationService } from 'primeng/api';
-import { Subject } from 'rxjs';
 import { generateExercise } from '../../../../../tests/test-object-generators';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 import { ExerciseStoreService } from '../../services/exercise-store.service';
 import { provideTestServices } from '../../../../../tests/test-providers';
+import { ConfirmationDialogComponent } from '../../../../ui/components/confirmation-dialog/confirmation-dialog.component';
+import { applyConfirmationDialogOverrides } from '../../../../../tests/apply-confirmation-dialog-overrides';
+import { mockConfirmationDialogService } from '../../../../../tests/mock-confirmation-dialog-service';
 
 describe('ExerciseListComponent', () => {
   let component: ExerciseListComponent;
   let fixture: ComponentFixture<ExerciseListComponent>;
   let exerciseStore: InstanceType<typeof ExerciseStore>;
   let exerciseStoreService: ExerciseStoreService;
-  let confirmationService: ConfirmationService;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    const mockConfirmationService = {
-      requireConfirmation$: new Subject(),
-      confirm: jest.fn(),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [ExerciseListComponent, NoopAnimationsModule],
-      providers: [ExerciseStore, provideRouter([]), ...provideTestServices()],
-    })
-      .overrideProvider(ConfirmationService, {
-        useValue: mockConfirmationService,
+    await applyConfirmationDialogOverrides(TestBed)
+      .configureTestingModule({
+        imports: [
+          ExerciseListComponent,
+          NoopAnimationsModule,
+          ConfirmationDialogComponent,
+        ],
+        providers: [ExerciseStore, provideRouter([]), ...provideTestServices()],
       })
       .compileComponents();
 
@@ -45,13 +42,12 @@ describe('ExerciseListComponent', () => {
     fixture = TestBed.createComponent(ExerciseListComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
-    confirmationService =
-      fixture.debugElement.injector.get(ConfirmationService);
     fixture.detectChanges();
   });
 
   afterEach(() => {
     exerciseStore.reset();
+    jest.resetAllMocks();
   });
 
   it('should create', () => {
@@ -165,7 +161,7 @@ describe('ExerciseListComponent', () => {
 
     await clickDeleteButton();
 
-    expect(confirmationService.confirm).toHaveBeenCalled();
+    expect(mockConfirmationDialogService.show).toHaveBeenCalled();
   });
 
   it('should remove exercise when confirmed', async () => {
@@ -182,7 +178,7 @@ describe('ExerciseListComponent', () => {
 
     await clickDeleteButton();
 
-    const confirmArgs = (confirmationService.confirm as jest.Mock).mock
+    const confirmArgs = (mockConfirmationDialogService.show as jest.Mock).mock
       .calls[0][0];
     confirmArgs.accept();
 
@@ -199,6 +195,13 @@ describe('ExerciseListComponent', () => {
     const link = await loader.getHarness(LinkComponentHarness);
     expect(link).toBeTruthy();
     expect(await link.getLink()).toBe('/1');
+  });
+
+  it('should have a dialog', () => {
+    const dialog = fixture.debugElement.query(
+      By.css('fit-confirmation-dialog'),
+    );
+    expect(dialog).toBeTruthy();
   });
 
   const clickDeleteButton = async () => {

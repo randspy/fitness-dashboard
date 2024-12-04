@@ -6,6 +6,7 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 import { provideTestServices } from '../../../../../tests/test-providers';
+import { applyConfirmationDialogOverrides } from '../../../../../tests/apply-confirmation-dialog-overrides';
 
 describe('ExercisePageComponent', () => {
   let component: ExercisePageComponent;
@@ -13,10 +14,12 @@ describe('ExercisePageComponent', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ExercisePageComponent, NoopAnimationsModule],
-      providers: [provideRouter([]), ...provideTestServices()],
-    }).compileComponents();
+    await applyConfirmationDialogOverrides(TestBed)
+      .configureTestingModule({
+        imports: [ExercisePageComponent, NoopAnimationsModule],
+        providers: [provideRouter([]), ...provideTestServices()],
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(ExercisePageComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);

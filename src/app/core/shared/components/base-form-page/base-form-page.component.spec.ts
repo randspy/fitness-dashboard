@@ -9,8 +9,9 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
 import { Observable } from 'rxjs';
+import { ConfirmationDialogService } from '../../../../ui/services/confirmation-dialog.service';
+import { mockConfirmationDialogService } from '../../../../../tests/mock-confirmation-dialog-service';
 
 interface TestFormComponent {
   canDeactivate: () => boolean;
@@ -19,7 +20,12 @@ interface TestFormComponent {
 @Component({
   standalone: true,
   imports: [ReactiveFormsModule],
-  providers: [ConfirmationService],
+  providers: [
+    {
+      provide: ConfirmationDialogService,
+      useValue: mockConfirmationDialogService,
+    },
+  ],
   template: `
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <button type="submit">Submit</button>
@@ -89,42 +95,46 @@ describe('BaseFormComponent', () => {
   it('should return an observable that emits true when confirm is accepted', fakeAsync(() => {
     component.child.set({ canDeactivate: () => false });
 
-    const confirmationService =
-      fixture.debugElement.injector.get(ConfirmationService);
-    const confirmSpy = jest.spyOn(confirmationService, 'confirm');
-
     let result: boolean | undefined;
     (component.canDeactivate() as Observable<boolean>).subscribe((value) => {
       result = value;
     });
 
-    const confirmOptions = confirmSpy.mock.calls[0][0];
+    const confirmOptions = (mockConfirmationDialogService.show as jest.Mock)
+      .mock.calls[0][0];
     confirmOptions.accept?.();
 
     tick();
 
-    expect(confirmSpy).toHaveBeenCalled();
+    expect(mockConfirmationDialogService.show).toHaveBeenCalledWith({
+      header: 'You have unsaved changes',
+      message: 'Are you sure you want to leave this page?',
+      accept: expect.any(Function),
+      reject: expect.any(Function),
+    });
     expect(result).toBe(true);
   }));
 
   it('should return an observable that emits false when confirm is rejected', fakeAsync(() => {
     component.child.set({ canDeactivate: () => false });
 
-    const confirmationService =
-      fixture.debugElement.injector.get(ConfirmationService);
-    const confirmSpy = jest.spyOn(confirmationService, 'confirm');
-
     let result: boolean | undefined;
     (component.canDeactivate() as Observable<boolean>).subscribe((value) => {
       result = value;
     });
 
-    const confirmOptions = confirmSpy.mock.calls[0][0];
+    const confirmOptions = (mockConfirmationDialogService.show as jest.Mock)
+      .mock.calls[0][0];
     confirmOptions.reject?.();
 
     tick();
 
-    expect(confirmSpy).toHaveBeenCalled();
+    expect(mockConfirmationDialogService.show).toHaveBeenCalledWith({
+      header: 'You have unsaved changes',
+      message: 'Are you sure you want to leave this page?',
+      accept: expect.any(Function),
+      reject: expect.any(Function),
+    });
     expect(result).toBe(false);
   }));
 });

@@ -11,7 +11,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Session } from '../../domain/session.types';
 import { provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideTrash } from '@ng-icons/lucide';
-import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'fit-session-list',
@@ -24,7 +23,6 @@ import { ConfirmationService } from 'primeng/api';
       lucideTrash,
       lucidePencil,
     }),
-    ConfirmationService,
   ],
   styles: [
     `

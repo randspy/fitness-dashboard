@@ -7,17 +7,17 @@ import {
 import { SessionFormComponent } from '../session-form/session-form.component';
 import { Session } from '../../../../core/sessions/domain/session.types';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
-import { ConfirmationService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SessionStoreService } from '../../service/session-store.service';
+import { ConfirmationDialogComponent } from '../../../../ui/components/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogService } from '../../../../ui/services/confirmation-dialog.service';
 
 @Component({
   selector: 'fit-new-session-page',
   standalone: true,
-  imports: [SessionFormComponent, ConfirmDialogModule],
+  imports: [SessionFormComponent, ConfirmationDialogComponent],
   templateUrl: './new-session-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
+  providers: [ConfirmationDialogService],
   styles: [
     `
       :host {

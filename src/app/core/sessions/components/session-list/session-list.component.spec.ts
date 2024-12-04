@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ConfirmationService } from 'primeng/api';
 
 import { SessionListComponent } from './session-list.component';
 import { By } from '@angular/platform-browser';
@@ -8,7 +7,6 @@ import { DatePipe } from '@angular/common';
 import { generateSession } from '../../../../../tests/test-object-generators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SessionStore } from '../../store/sessions.store';
-import { Subject } from 'rxjs';
 import { provideRouter } from '@angular/router';
 import { SessionStoreService } from '../../../../features/sessions/service/session-store.service';
 import { Component, inject, signal } from '@angular/core';
@@ -38,11 +36,6 @@ describe('SessionListComponent', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   beforeEach(async () => {
-    const mockConfirmationService = {
-      requireConfirmation$: new Subject(),
-      confirm: jest.fn(),
-    };
-
     await TestBed.configureTestingModule({
       imports: [SessionListComponent, NoopAnimationsModule, TestComponent],
       providers: [
@@ -50,11 +43,7 @@ describe('SessionListComponent', () => {
         ...provideTestServices(),
         SessionStoreService,
       ],
-    })
-      .overrideProvider(ConfirmationService, {
-        useValue: mockConfirmationService,
-      })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;

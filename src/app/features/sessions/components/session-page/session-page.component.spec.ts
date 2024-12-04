@@ -13,6 +13,7 @@ import { SessionStoreService } from '../../service/session-store.service';
 import { SessionListActionsComponent } from '../session-list-actions/session-list-actions.component';
 import { generateSession } from '../../../../../tests/test-object-generators';
 import { provideTestServices } from '../../../../../tests/test-providers';
+import { applyConfirmationDialogOverrides } from '../../../../../tests/apply-confirmation-dialog-overrides';
 
 describe('SessionPageComponent', () => {
   let component: SessionPageComponent;
@@ -21,14 +22,16 @@ describe('SessionPageComponent', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SessionPageComponent],
-      providers: [
-        provideRouter([]),
-        ...provideTestServices(),
-        SessionStoreService,
-      ],
-    }).compileComponents();
+    await applyConfirmationDialogOverrides(TestBed)
+      .configureTestingModule({
+        imports: [SessionPageComponent],
+        providers: [
+          provideRouter([]),
+          ...provideTestServices(),
+          SessionStoreService,
+        ],
+      })
+      .compileComponents();
 
     sessionStore = TestBed.inject(SessionStore);
     fixture = TestBed.createComponent(SessionPageComponent);

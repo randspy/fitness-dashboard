@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ExerciseStoreService } from '../../services/exercise-store.service';
 import { provideTestServices } from '../../../../../tests/test-providers';
+import { applyConfirmationDialogOverrides } from '../../../../../tests/apply-confirmation-dialog-overrides';
 
 describe('NewExercisePageComponent', () => {
   let component: NewExercisePageComponent;
@@ -13,20 +14,22 @@ describe('NewExercisePageComponent', () => {
   let exerciseStoreService: ExerciseStoreService;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [NewExercisePageComponent, NoopAnimationsModule],
-      providers: [
-        ...provideTestServices(),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              url: [{ path: 'app' }, { path: 'exercises' }, { path: 'new' }],
+    await applyConfirmationDialogOverrides(TestBed)
+      .configureTestingModule({
+        imports: [NewExercisePageComponent, NoopAnimationsModule],
+        providers: [
+          ...provideTestServices(),
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              snapshot: {
+                url: [{ path: 'app' }, { path: 'exercises' }, { path: 'new' }],
+              },
             },
           },
-        },
-      ],
-    }).compileComponents();
+        ],
+      })
+      .compileComponents();
 
     router = TestBed.inject(Router);
     exerciseStoreService = TestBed.inject(ExerciseStoreService);
@@ -77,5 +80,12 @@ describe('NewExercisePageComponent', () => {
     form.triggerEventHandler('save', exerciseForm);
 
     expect(addExerciseSpy).toHaveBeenCalledWith(exerciseForm);
+  });
+
+  it('should have a dialog', () => {
+    const dialog = fixture.debugElement.query(
+      By.css('fit-confirmation-dialog'),
+    );
+    expect(dialog).toBeTruthy();
   });
 });

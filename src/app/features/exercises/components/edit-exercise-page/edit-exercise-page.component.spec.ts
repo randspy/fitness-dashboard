@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { ExerciseStoreService } from '../../services/exercise-store.service';
 import { provideTestServices } from '../../../../../tests/test-providers';
+import { applyConfirmationDialogOverrides } from '../../../../../tests/apply-confirmation-dialog-overrides';
 
 describe('EditExercisePageComponent', () => {
   let component: EditExercisePageComponent;
@@ -13,20 +14,22 @@ describe('EditExercisePageComponent', () => {
   let exerciseStoreService: ExerciseStoreService;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [EditExercisePageComponent],
-      providers: [
-        ...provideTestServices(),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              url: [{ path: 'app' }, { path: 'sessions' }, { path: '1' }],
+    await applyConfirmationDialogOverrides(TestBed)
+      .configureTestingModule({
+        imports: [EditExercisePageComponent],
+        providers: [
+          ...provideTestServices(),
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              snapshot: {
+                url: [{ path: 'app' }, { path: 'sessions' }, { path: '1' }],
+              },
             },
           },
-        },
-      ],
-    }).compileComponents();
+        ],
+      })
+      .compileComponents();
 
     router = TestBed.inject(Router);
     exerciseStoreService = TestBed.inject(ExerciseStoreService);
@@ -87,5 +90,12 @@ describe('EditExercisePageComponent', () => {
       '1',
       updatedFormExercise,
     );
+  });
+
+  it('should have a dialog', () => {
+    const dialog = fixture.debugElement.query(
+      By.css('fit-confirmation-dialog'),
+    );
+    expect(dialog).toBeTruthy();
   });
 });

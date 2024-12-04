@@ -6,19 +6,19 @@ import {
 } from '@angular/core';
 import { ExerciseFormComponent } from '../exercise-form/exercise-form.component';
 import { ExerciseForm } from '../../../../core/exercises/domain/exercise.types';
-import { ConfirmationService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
 import { ExerciseStoreService } from '../../services/exercise-store.service';
+import { ConfirmationDialogService } from '../../../../ui/services/confirmation-dialog.service';
+import { ConfirmationDialogComponent } from '../../../../ui/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'fit-new-exercise-page',
   standalone: true,
-  imports: [ExerciseFormComponent, ConfirmDialogModule],
+  imports: [ExerciseFormComponent, ConfirmationDialogComponent],
   templateUrl: './new-exercise-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
+  providers: [ConfirmationDialogService],
   styles: [
     `
       :host {

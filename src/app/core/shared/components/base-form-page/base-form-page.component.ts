@@ -1,14 +1,14 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { inject, Signal } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationDialogService } from '../../../../ui/services/confirmation-dialog.service';
 
 export abstract class BaseFormPageComponent<
   T extends { canDeactivate: () => boolean },
 > {
   protected router = inject(Router);
   protected route = inject(ActivatedRoute);
-  protected confirmationService = inject(ConfirmationService);
+  protected confirmationDialogService = inject(ConfirmationDialogService);
   protected abstract child: Signal<T>;
 
   navigateToParent() {
@@ -21,7 +21,7 @@ export abstract class BaseFormPageComponent<
     }
 
     return new Observable<boolean>((observer: Observer<boolean>) => {
-      this.confirmationService.confirm({
+      this.confirmationDialogService.show({
         header: 'You have unsaved changes',
         message: 'Are you sure you want to leave this page?',
         accept: () => {

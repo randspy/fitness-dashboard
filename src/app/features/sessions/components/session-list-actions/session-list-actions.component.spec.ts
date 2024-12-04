@@ -7,37 +7,29 @@ import { ButtonComponentHarness } from '../../../../../tests/harness/ui/button.h
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { ConfirmationService } from 'primeng/api';
-import { Subject } from 'rxjs';
 import { provideTestServices } from '../../../../../tests/test-providers';
+import { applyConfirmationDialogOverrides } from '../../../../../tests/apply-confirmation-dialog-overrides';
+import { mockConfirmationDialogService } from '../../../../../tests/mock-confirmation-dialog-service';
+import { By } from '@angular/platform-browser';
 
 describe('SessionListActionsComponent', () => {
   let fixture: ComponentFixture<SessionListActionsComponent>;
-  let confirmationService: ConfirmationService;
   let sessionStoreService: SessionStoreService;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    const mockConfirmationService = {
-      requireConfirmation$: new Subject(),
-      confirm: jest.fn(),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [SessionListActionsComponent],
-      providers: [
-        SessionStoreService,
-        provideRouter([]),
-        ...provideTestServices(),
-      ],
-    })
-      .overrideProvider(ConfirmationService, {
-        useValue: mockConfirmationService,
+    await applyConfirmationDialogOverrides(TestBed)
+      .configureTestingModule({
+        imports: [SessionListActionsComponent],
+        providers: [
+          SessionStoreService,
+          provideRouter([]),
+          ...provideTestServices(),
+        ],
       })
       .compileComponents();
 
     sessionStoreService = TestBed.inject(SessionStoreService);
-    confirmationService = TestBed.inject(ConfirmationService);
     fixture = TestBed.createComponent(SessionListActionsComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
 
@@ -53,7 +45,13 @@ describe('SessionListActionsComponent', () => {
   it('should display the delete modal', async () => {
     await clickDeleteButton();
 
-    expect(confirmationService.confirm).toHaveBeenCalled();
+    expect(
+      (mockConfirmationDialogService.show as jest.Mock).mock.calls[0][0],
+    ).toEqual({
+      header: 'Delete session',
+      message: 'Are you sure you want to delete this session?',
+      accept: expect.any(Function),
+    });
   });
 
   it('should remove session when confirmed', async () => {
@@ -61,7 +59,7 @@ describe('SessionListActionsComponent', () => {
 
     await clickDeleteButton();
 
-    const confirmArgs = (confirmationService.confirm as jest.Mock).mock
+    const confirmArgs = (mockConfirmationDialogService.show as jest.Mock).mock
       .calls[0][0];
     confirmArgs.accept();
 
@@ -93,5 +91,12 @@ describe('SessionListActionsComponent', () => {
     expect(await deleteButton.getAriaLabel()).toBe(
       'Delete Test Session session',
     );
+  });
+
+  it('should have a dialog', () => {
+    const dialog = fixture.debugElement.query(
+      By.css('fit-confirmation-dialog'),
+    );
+    expect(dialog).toBeTruthy();
   });
 });

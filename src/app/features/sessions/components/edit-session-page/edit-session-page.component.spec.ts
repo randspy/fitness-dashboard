@@ -6,6 +6,7 @@ import { By } from '@angular/platform-browser';
 import { generateSession } from '../../../../../tests/test-object-generators';
 import { SessionStoreService } from '../../service/session-store.service';
 import { provideTestServices } from '../../../../../tests/test-providers';
+import { applyConfirmationDialogOverrides } from '../../../../../tests/apply-confirmation-dialog-overrides';
 
 describe('EditSessionPageComponent', () => {
   let component: EditSessionPageComponent;
@@ -14,21 +15,23 @@ describe('EditSessionPageComponent', () => {
   let sessionStoreService: SessionStoreService;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [EditSessionPageComponent],
-      providers: [
-        SessionStoreService,
-        ...provideTestServices(),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              url: [{ path: 'app' }, { path: 'sessions' }, { path: '1' }],
+    await applyConfirmationDialogOverrides(TestBed)
+      .configureTestingModule({
+        imports: [EditSessionPageComponent],
+        providers: [
+          SessionStoreService,
+          ...provideTestServices(),
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              snapshot: {
+                url: [{ path: 'app' }, { path: 'sessions' }, { path: '1' }],
+              },
             },
           },
-        },
-      ],
-    }).compileComponents();
+        ],
+      })
+      .compileComponents();
 
     router = TestBed.inject(Router);
     sessionStoreService = TestBed.inject(SessionStoreService);
@@ -83,5 +86,12 @@ describe('EditSessionPageComponent', () => {
     form.triggerEventHandler('save', updatedSession);
 
     expect(updateSessionSpy).toHaveBeenCalledWith('1', updatedSession);
+  });
+
+  it('should have a dialog', () => {
+    const dialog = fixture.debugElement.query(
+      By.css('fit-confirmation-dialog'),
+    );
+    expect(dialog).toBeTruthy();
   });
 });

@@ -7,11 +7,11 @@ import {
 } from '@angular/core';
 import { LinkComponent } from '../../../../ui/components/link/link.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideTrash } from '@ng-icons/lucide';
-import { ConfirmationService } from 'primeng/api';
 import { SessionStoreService } from '../../service/session-store.service';
+import { ConfirmationDialogComponent } from '../../../../ui/components/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogService } from '../../../../ui/services/confirmation-dialog.service';
 
 @Component({
   selector: 'fit-session-list-actions',
@@ -20,7 +20,7 @@ import { SessionStoreService } from '../../service/session-store.service';
     LinkComponent,
     ButtonComponent,
     NgIconComponent,
-    ConfirmDialogModule,
+    ConfirmationDialogComponent,
   ],
   templateUrl: './session-list-actions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +29,7 @@ import { SessionStoreService } from '../../service/session-store.service';
       lucideTrash,
       lucidePencil,
     }),
-    ConfirmationService,
+    ConfirmationDialogService,
   ],
   styles: [
     `
@@ -40,7 +40,7 @@ import { SessionStoreService } from '../../service/session-store.service';
   ],
 })
 export class SessionListActionsComponent {
-  confirmationService = inject(ConfirmationService);
+  confirmationService = inject(ConfirmationDialogService);
   sessionStoreService = inject(SessionStoreService);
 
   id = input.required<string>();
@@ -50,7 +50,7 @@ export class SessionListActionsComponent {
   deleteAriaLabel = computed(() => `Delete ${this.name()} session`);
 
   confirmDeleteSession() {
-    this.confirmationService.confirm({
+    this.confirmationService.show({
       header: 'Delete session',
       message: 'Are you sure you want to delete this session?',
       accept: () => {

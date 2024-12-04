@@ -12,8 +12,6 @@ import { ButtonComponent } from '../../../../ui/components/button/button.compone
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { TextareaComponent } from '../../../../ui/components/textarea/textarea.component';
-import { ConfirmationService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ExerciseForm } from '../../../../core/exercises/domain/exercise.types';
 import { isEqual } from 'lodash';
 
@@ -26,14 +24,12 @@ import { isEqual } from 'lodash';
     ReactiveFormsModule,
     ButtonComponent,
     CardComponent,
-    ConfirmDialogModule,
   ],
-  providers: [ConfirmationService],
+
   templateUrl: './exercise-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExerciseFormComponent implements OnInit {
-  confirmationService = inject(ConfirmationService);
   formBuilder = inject(FormBuilder);
 
   header = input<string>('');
