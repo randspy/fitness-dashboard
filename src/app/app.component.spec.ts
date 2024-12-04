@@ -24,10 +24,6 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the "fitness-dashboard" title', () => {
-    expect(component.title).toEqual('fitness-dashboard');
-  });
-
   it('should render toast', () => {
     expect(fixture.nativeElement.querySelector('fit-toast')).toBeTruthy();
   });

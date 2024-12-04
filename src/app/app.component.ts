@@ -12,7 +12,6 @@ import { ToastComponent } from './ui/components/toast/toast.component';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'fitness-dashboard';
   constructor(private config: PrimeNGConfig) {
     this.config.theme.set(themeConfig);
   }
