@@ -173,47 +173,15 @@ describe('SessionStore', () => {
     expect(store.sessions()).toEqual(testSessions);
   });
 
-  it('should handle invalid json data', () => {
-    localStorage.setItem('sessions', 'invalid-data');
-
+  it('should save sessions to localStorage', fakeAsync(() => {
+    const sessions = [generateSession({ id: '1' })];
     store = TestBed.inject(SessionStore);
-
-    expect(store.sessions()).toEqual([]);
-    expect(mockLoggerService.error).toHaveBeenCalledWith(
-      'Invalid session data : Unexpected token \'i\', "invalid-data" is not valid JSON, raw data: "invalid-data"',
-    );
-  });
-
-  it('should handle invalid session data', () => {
-    localStorage.setItem('sessions', JSON.stringify([{ invalid: 'data' }]));
-
-    store = TestBed.inject(SessionStore);
-
-    expect(store.sessions()).toEqual([]);
-    expect(mockLoggerService.error).toHaveBeenCalledWith(
-      'Invalid session data structure: Validation error: Required at "[0].id"; Required at "[0].name"; Required at "[0].date"; Required at "[0].exercises"',
-    );
-  });
-
-  it('should not clear localStorage when state is invalid', fakeAsync(() => {
-    localStorage.setItem('sessions', JSON.stringify([{ invalid: 'data' }]));
-
-    store = TestBed.inject(SessionStore);
+    store.setSessions(sessions);
 
     tick();
-
-    expect(localStorage.getItem('sessions')).toEqual(
-      JSON.stringify([{ invalid: 'data' }]),
+    expect(localStorageSpy).toHaveBeenLastCalledWith(
+      'sessions',
+      JSON.stringify(sessions),
     );
   }));
-
-  it('should show error toast', () => {
-    localStorage.setItem('sessions', JSON.stringify([{ invalid: 'data' }]));
-
-    store = TestBed.inject(SessionStore);
-
-    expect(mockDisplayStateCorruptionToastService.show).toHaveBeenCalledWith(
-      'Sessions',
-    );
-  });
 });

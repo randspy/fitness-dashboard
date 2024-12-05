@@ -15,11 +15,7 @@ import {
   updateEntity,
   withEntities,
 } from '@ngrx/signals/entities';
-import { SessionSchema } from '../domain/session.schema';
-import { z } from 'zod';
-import { fromError } from 'zod-validation-error';
-import { LoggerService } from '../../errors/services/logger.service';
-import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
+import { LocalStorageSessionService } from '../services/local-storage-session.service';
 
 export const SessionStore = signalStore(
   { providedIn: 'root' },
@@ -51,46 +47,18 @@ export const SessionStore = signalStore(
     },
   })),
   withHooks((store) => {
-    const loggerService = inject(LoggerService);
-    const displayStateCorruptionToastService = inject(
-      DisplayStateCorruptionToastService,
-    );
-    let stateIsValidated = true;
+    const localStorageSessionService = inject(LocalStorageSessionService);
 
     return {
       onInit() {
-        const sessions = localStorage.getItem('sessions');
-
-        if (sessions) {
-          try {
-            const rawSessions = JSON.parse(sessions);
-            const validatedSessions = z.array(SessionSchema).parse(rawSessions);
-            const parsedSessions = validatedSessions.map((session) => ({
-              ...session,
-              date: new Date(session.date),
-            }));
-
-            updateState(store, 'init', setEntities(parsedSessions));
-          } catch (error) {
-            stateIsValidated = false;
-            displayStateCorruptionToastService.show('Sessions');
-
-            if (error instanceof SyntaxError) {
-              loggerService.error(
-                `Invalid session data : ${error.message}, raw data: "${sessions}"`,
-              );
-            } else if (error instanceof z.ZodError) {
-              loggerService.error(
-                `Invalid session data structure: ${fromError(error).toString()}`,
-              );
-            }
-          }
-        }
+        updateState(
+          store,
+          'init',
+          setEntities(localStorageSessionService.sessions),
+        );
 
         effect(() => {
-          if (stateIsValidated) {
-            localStorage.setItem('sessions', JSON.stringify(store.sessions()));
-          }
+          localStorageSessionService.sessions = store.sessions();
         });
       },
     };

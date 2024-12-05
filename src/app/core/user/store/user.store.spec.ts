@@ -70,56 +70,22 @@ describe('UserStore', () => {
     });
   });
 
-  it('should load user from localStorage on init', () => {
-    const testUser = { name: 'John' };
-    localStorage.setItem('user', JSON.stringify(testUser));
+  it('should load user from localStorage', () => {
+    localStorage.setItem('user', JSON.stringify({ name: 'John' }));
 
     store = TestBed.inject(UserStore);
 
     expect(store.name()).toBe('John');
   });
 
-  it('should handle invalid json data', () => {
-    localStorage.setItem('user', 'invalid-data');
-
+  it('should save user to localStorage', fakeAsync(() => {
     store = TestBed.inject(UserStore);
-
-    expect(store.name()).toBe('');
-    expect(mockLoggerService.error).toHaveBeenCalledWith(
-      'Invalid user data : Unexpected token \'i\', "invalid-data" is not valid JSON, raw data: "invalid-data"',
-    );
-  });
-
-  it('should handle invalid user data', () => {
-    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
-
-    store = TestBed.inject(UserStore);
-
-    expect(store.name()).toBe('');
-    expect(mockLoggerService.error).toHaveBeenCalledWith(
-      'Invalid user data structure: Validation error: Required at "name"',
-    );
-  });
-
-  it('should not clear localStorage when state is invalid', fakeAsync(() => {
-    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
-
-    store = TestBed.inject(UserStore);
+    store.setName('John');
 
     tick();
-
-    expect(localStorage.getItem('user')).toEqual(
-      JSON.stringify({ invalid: 'data' }),
+    expect(localStorageSpy).toHaveBeenLastCalledWith(
+      'user',
+      JSON.stringify({ name: 'John' }),
     );
   }));
-
-  it('should show error toast', () => {
-    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
-
-    store = TestBed.inject(UserStore);
-
-    expect(mockDisplayStateCorruptionToastService.show).toHaveBeenCalledWith(
-      'User',
-    );
-  });
 });

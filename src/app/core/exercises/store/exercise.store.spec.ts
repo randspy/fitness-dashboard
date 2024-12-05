@@ -163,77 +163,40 @@ describe('ExerciseStore', () => {
     });
 
     it('should get exercise by id', () => {
-      store.setExercises([
-        generateExercise({
-          id: '1',
-        }),
-        generateExercise({
-          id: '2',
-        }),
-      ]);
+      const exerciseOne = generateExercise({
+        id: '1',
+      });
+      const exerciseTwo = generateExercise({
+        id: '2',
+      });
+      store.setExercises([exerciseOne, exerciseTwo]);
 
-      expect(store.getExerciseById('2')).toEqual(
-        generateExercise({
-          id: '2',
-        }),
-      );
+      expect(store.getExerciseById('2')).toEqual(exerciseTwo);
     });
   });
 
   it('should load exercises from localStorage on init', () => {
-    const testExercises = [
+    const exercises = [
       generateExercise({
         id: '1',
       }),
     ];
-    localStorage.setItem('exercises', JSON.stringify(testExercises));
+    localStorage.setItem('exercises', JSON.stringify(exercises));
 
     store = TestBed.inject(ExerciseStore);
 
-    expect(store.exercises()).toEqual(testExercises);
+    expect(store.exercises()).toEqual(exercises);
   });
 
-  it('should handle invalid json data', () => {
-    localStorage.setItem('exercises', 'invalid-data');
-
+  it('should save exercises to localStorage', fakeAsync(() => {
+    const exercises = [generateExercise({ id: '1' })];
     store = TestBed.inject(ExerciseStore);
-
-    expect(store.exercises()).toEqual([]);
-    expect(mockLoggerService.error).toHaveBeenCalledWith(
-      'Invalid exercises data : Unexpected token \'i\', "invalid-data" is not valid JSON, raw data: "invalid-data"',
-    );
-  });
-
-  it('should handle invalid exercise data', () => {
-    localStorage.setItem('exercises', JSON.stringify([{ invalid: 'data' }]));
-
-    store = TestBed.inject(ExerciseStore);
-
-    expect(store.exercises()).toEqual([]);
-    expect(mockLoggerService.error).toHaveBeenCalledWith(
-      'Invalid exercise data structure: Validation error: Required at "[0].id"; Required at "[0].name"; Required at "[0].description"; Required at "[0].usage"; Required at "[0].hidden"; Required at "[0].position"',
-    );
-  });
-
-  it('should not clear localStorage when state is invalid', fakeAsync(() => {
-    localStorage.setItem('exercises', JSON.stringify([{ invalid: 'data' }]));
-
-    store = TestBed.inject(ExerciseStore);
+    store.setExercises(exercises);
 
     tick();
-
-    expect(localStorage.getItem('exercises')).toEqual(
-      JSON.stringify([{ invalid: 'data' }]),
+    expect(localStorageSpy).toHaveBeenLastCalledWith(
+      'exercises',
+      JSON.stringify(exercises),
     );
   }));
-
-  it('should show error toast', () => {
-    localStorage.setItem('exercises', JSON.stringify([{ invalid: 'data' }]));
-
-    store = TestBed.inject(ExerciseStore);
-
-    expect(mockDisplayStateCorruptionToastService.show).toHaveBeenCalledWith(
-      'Exercises',
-    );
-  });
 });

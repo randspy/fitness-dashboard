@@ -15,11 +15,7 @@ import {
   withEntities,
   removeAllEntities,
 } from '@ngrx/signals/entities';
-import { z } from 'zod';
-import { fromError } from 'zod-validation-error';
-import { LoggerService } from '../../errors/services/logger.service';
-import { ExerciseSchema } from '../domain/exercise.schema';
-import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
+import { LocalStorageExerciseService } from '../services/local-storage-exercise.service';
 
 export const ExerciseStore = signalStore(
   { providedIn: 'root' },
@@ -53,46 +49,18 @@ export const ExerciseStore = signalStore(
     },
   })),
   withHooks((store) => {
-    const loggerService = inject(LoggerService);
-    const displayStateCorruptionToastService = inject(
-      DisplayStateCorruptionToastService,
-    );
-    let stateIsValidated = true;
+    const localStorageExerciseService = inject(LocalStorageExerciseService);
 
     return {
       onInit() {
-        const exercises = localStorage.getItem('exercises');
-        if (exercises) {
-          try {
-            const parsedExercises = JSON.parse(exercises);
-            const validatedExercises = z
-              .array(ExerciseSchema)
-              .parse(parsedExercises);
-
-            updateState(store, 'init', setEntities(validatedExercises));
-          } catch (error) {
-            stateIsValidated = false;
-            displayStateCorruptionToastService.show('Exercises');
-
-            if (error instanceof SyntaxError) {
-              loggerService.error(
-                `Invalid exercises data : ${error.message}, raw data: "${exercises}"`,
-              );
-            } else if (error instanceof z.ZodError) {
-              loggerService.error(
-                `Invalid exercise data structure: ${fromError(error).toString()}`,
-              );
-            }
-          }
-        }
+        updateState(
+          store,
+          'init',
+          setEntities(localStorageExerciseService.exercises),
+        );
 
         effect(() => {
-          if (stateIsValidated) {
-            localStorage.setItem(
-              'exercises',
-              JSON.stringify(store.exercises()),
-            );
-          }
+          localStorageExerciseService.exercises = store.exercises();
         });
       },
     };
