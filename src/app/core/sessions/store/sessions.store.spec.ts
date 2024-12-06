@@ -1,27 +1,34 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { SessionStore } from './sessions.store';
 import { generateSession } from '../../../../tests/test-object-generators';
-import { mockLoggerService } from '../../../../tests/mock-logger-service';
-import { LoggerService } from '../../errors/services/logger.service';
-import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
-import { mockDisplayStateCorruptionToastService } from '../../../../tests/mock-display-state-corruption-toast';
+import { LocalStorageSessionService } from '../services/local-storage-session.service';
 
 describe('SessionStore', () => {
   let store: InstanceType<typeof SessionStore>;
-  let localStorageSpy: jest.SpyInstance;
+  let mockLocalStorageSessionService: jest.Mocked<LocalStorageSessionService>;
+  let getSessionsSpy: jest.Mock;
+  let setSessionsSpy: jest.Mock;
+
   beforeEach(() => {
+    getSessionsSpy = jest.fn().mockReturnValue([]);
+    setSessionsSpy = jest.fn();
+
+    mockLocalStorageSessionService =
+      {} as jest.Mocked<LocalStorageSessionService>;
+    Object.defineProperty(mockLocalStorageSessionService, 'sessions', {
+      get: getSessionsSpy,
+      set: setSessionsSpy,
+    });
+
     TestBed.configureTestingModule({
       providers: [
         SessionStore,
         {
-          provide: DisplayStateCorruptionToastService,
-          useValue: mockDisplayStateCorruptionToastService,
+          provide: LocalStorageSessionService,
+          useValue: mockLocalStorageSessionService,
         },
-        { provide: LoggerService, useValue: mockLoggerService },
       ],
     });
-
-    localStorageSpy = jest.spyOn(Storage.prototype, 'setItem');
   });
 
   afterEach(() => {
@@ -117,10 +124,7 @@ describe('SessionStore', () => {
 
       tick();
 
-      expect(localStorageSpy).toHaveBeenLastCalledWith(
-        'sessions',
-        expect.stringContaining('exercise-1'),
-      );
+      expect(setSessionsSpy).toHaveBeenLastCalledWith([session]);
     }));
 
     it('should not update non-existent session', () => {
@@ -166,22 +170,11 @@ describe('SessionStore', () => {
 
   it('should load sessions from localStorage on init', () => {
     const testSessions = [generateSession({ id: '1' })];
-    localStorage.setItem('sessions', JSON.stringify(testSessions));
+    getSessionsSpy.mockReturnValue(testSessions);
 
     store = TestBed.inject(SessionStore);
 
     expect(store.sessions()).toEqual(testSessions);
+    expect(getSessionsSpy).toHaveBeenCalled();
   });
-
-  it('should save sessions to localStorage', fakeAsync(() => {
-    const sessions = [generateSession({ id: '1' })];
-    store = TestBed.inject(SessionStore);
-    store.setSessions(sessions);
-
-    tick();
-    expect(localStorageSpy).toHaveBeenLastCalledWith(
-      'sessions',
-      JSON.stringify(sessions),
-    );
-  }));
 });

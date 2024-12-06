@@ -1,28 +1,34 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ExerciseStore } from './exercise.store';
 import { generateExercise } from '../../../../tests/test-object-generators';
-import { LoggerService } from '../../errors/services/logger.service';
-import { mockLoggerService } from '../../../../tests/mock-logger-service';
-import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
-import { mockDisplayStateCorruptionToastService } from '../../../../tests/mock-display-state-corruption-toast';
+import { LocalStorageExerciseService } from '../services/local-storage-exercise.service';
 
 describe('ExerciseStore', () => {
   let store: InstanceType<typeof ExerciseStore>;
-  let localStorageSpy: jest.SpyInstance;
+  let mockLocalStorageExerciseService: jest.Mocked<LocalStorageExerciseService>;
+  let getExercisesSpy: jest.Mock;
+  let setExercisesSpy: jest.Mock;
 
   beforeEach(() => {
+    getExercisesSpy = jest.fn().mockReturnValue([]);
+    setExercisesSpy = jest.fn();
+
+    mockLocalStorageExerciseService =
+      {} as jest.Mocked<LocalStorageExerciseService>;
+    Object.defineProperty(mockLocalStorageExerciseService, 'exercises', {
+      get: getExercisesSpy,
+      set: setExercisesSpy,
+    });
+
     TestBed.configureTestingModule({
       providers: [
         ExerciseStore,
         {
-          provide: DisplayStateCorruptionToastService,
-          useValue: mockDisplayStateCorruptionToastService,
+          provide: LocalStorageExerciseService,
+          useValue: mockLocalStorageExerciseService,
         },
-        { provide: LoggerService, useValue: mockLoggerService },
       ],
     });
-
-    localStorageSpy = jest.spyOn(Storage.prototype, 'setItem');
   });
 
   afterEach(() => {
@@ -103,10 +109,7 @@ describe('ExerciseStore', () => {
 
       tick();
 
-      expect(localStorageSpy).toHaveBeenLastCalledWith(
-        'exercises',
-        expect.stringContaining('Push-ups'),
-      );
+      expect(setExercisesSpy).toHaveBeenLastCalledWith([exercise]);
     }));
 
     it('should not update non-existent exercise', () => {
@@ -181,22 +184,11 @@ describe('ExerciseStore', () => {
         id: '1',
       }),
     ];
-    localStorage.setItem('exercises', JSON.stringify(exercises));
+    getExercisesSpy.mockReturnValue(exercises);
 
     store = TestBed.inject(ExerciseStore);
 
     expect(store.exercises()).toEqual(exercises);
+    expect(getExercisesSpy).toHaveBeenCalled();
   });
-
-  it('should save exercises to localStorage', fakeAsync(() => {
-    const exercises = [generateExercise({ id: '1' })];
-    store = TestBed.inject(ExerciseStore);
-    store.setExercises(exercises);
-
-    tick();
-    expect(localStorageSpy).toHaveBeenLastCalledWith(
-      'exercises',
-      JSON.stringify(exercises),
-    );
-  }));
 });

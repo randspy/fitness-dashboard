@@ -1,30 +1,32 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { UserStore } from './user.store';
-import { LoggerService } from '../../errors/services/logger.service';
-import { mockLoggerService } from '../../../../tests/mock-logger-service';
-import { mockDisplayStateCorruptionToastService } from '../../../../tests/mock-display-state-corruption-toast';
-import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
+import { LocalStorageUserService } from '../services/local-storage-user.service';
 
 describe('UserStore', () => {
   let store: InstanceType<typeof UserStore>;
-  let localStorageSpy: jest.SpyInstance;
+  let mockLocalStorageUserService: jest.Mocked<LocalStorageUserService>;
+  let getUserSpy: jest.Mock;
+  let setUserSpy: jest.Mock;
 
   beforeEach(() => {
+    getUserSpy = jest.fn().mockReturnValue({ name: '' });
+    setUserSpy = jest.fn();
+
+    mockLocalStorageUserService = {} as jest.Mocked<LocalStorageUserService>;
+    Object.defineProperty(mockLocalStorageUserService, 'user', {
+      get: getUserSpy,
+      set: setUserSpy,
+    });
+
     TestBed.configureTestingModule({
       providers: [
         UserStore,
         {
-          provide: DisplayStateCorruptionToastService,
-          useValue: mockDisplayStateCorruptionToastService,
-        },
-        {
-          provide: LoggerService,
-          useValue: mockLoggerService,
+          provide: LocalStorageUserService,
+          useValue: mockLocalStorageUserService,
         },
       ],
     });
-
-    localStorageSpy = jest.spyOn(Storage.prototype, 'setItem');
   });
 
   afterEach(() => {
@@ -55,10 +57,8 @@ describe('UserStore', () => {
       store.setName('John');
 
       tick();
-      expect(localStorageSpy).toHaveBeenLastCalledWith(
-        'user',
-        JSON.stringify({ name: 'John' }),
-      );
+
+      expect(setUserSpy).toHaveBeenCalledWith({ name: 'John' });
     }));
 
     it('should reset state', () => {
@@ -71,21 +71,11 @@ describe('UserStore', () => {
   });
 
   it('should load user from localStorage', () => {
-    localStorage.setItem('user', JSON.stringify({ name: 'John' }));
+    getUserSpy.mockReturnValue({ name: 'John' });
 
     store = TestBed.inject(UserStore);
 
     expect(store.name()).toBe('John');
+    expect(getUserSpy).toHaveBeenCalled();
   });
-
-  it('should save user to localStorage', fakeAsync(() => {
-    store = TestBed.inject(UserStore);
-    store.setName('John');
-
-    tick();
-    expect(localStorageSpy).toHaveBeenLastCalledWith(
-      'user',
-      JSON.stringify({ name: 'John' }),
-    );
-  }));
 });
