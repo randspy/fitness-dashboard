@@ -11,6 +11,7 @@ import { DummyComponent } from '../../../../tests/dummy-component';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ButtonComponentHarness } from '../../../../tests/harness/ui/button.harness';
+import { DashboardRoute } from '../../../core/shared/domain/routes.config';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -28,7 +29,9 @@ describe('SidebarComponent', () => {
         NoopAnimationsModule,
       ],
       providers: [
-        provideRouter([{ path: 'app/dashboard', component: DummyComponent }]),
+        provideRouter([
+          { path: DashboardRoute.slice(1), component: DummyComponent },
+        ]),
       ],
     }).compileComponents();
 
@@ -96,6 +99,6 @@ describe('SidebarComponent', () => {
 
     await fixture.whenStable();
 
-    expect(router.url).toBe('/app/dashboard');
+    expect(router.url).toBe(DashboardRoute);
   });
 });

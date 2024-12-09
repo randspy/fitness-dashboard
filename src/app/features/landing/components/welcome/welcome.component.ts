@@ -11,6 +11,7 @@ import { InputComponent } from '../../../../ui/components/input/input.component'
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { UserStore } from '../../../../core/user/store/user.store';
 import { Router } from '@angular/router';
+import { DefaultRoute } from '../../../../core/shared/domain/routes.config';
 
 @Component({
   selector: 'fit-welcome',
@@ -40,7 +41,7 @@ export class WelcomeComponent {
   onSubmit() {
     if (this.welcomeForm.valid) {
       this.userStore.setName(this.welcomeForm.value.name);
-      this.router.navigate(['/app/dashboard']);
+      this.router.navigate([DefaultRoute]);
     } else {
       this.welcomeForm.markAllAsTouched();
     }

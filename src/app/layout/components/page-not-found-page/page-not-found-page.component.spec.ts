@@ -6,6 +6,11 @@ import { LinkComponent } from '../../../ui/components/link/link.component';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { LinkComponentHarness } from '../../../../tests/harness/ui/link.harness';
+import {
+  DefaultRoute,
+  DefaultRoutePageName,
+} from '../../../core/shared/domain/routes.config';
+
 describe('PageNotFoundPageComponent', () => {
   let component: PageNotFoundPageComponent;
   let fixture: ComponentFixture<PageNotFoundPageComponent>;
@@ -27,9 +32,10 @@ describe('PageNotFoundPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should redirect to dashboard on link click', async () => {
+  it('should redirect to default route on link click', async () => {
     const link = await loader.getHarness(LinkComponentHarness);
 
-    expect(await link.getLink()).toBe('/app/dashboard');
+    expect(await link.getLink()).toBe(DefaultRoute);
+    expect(await link.getText()).toBe(`Go to ${DefaultRoutePageName}`);
   });
 });

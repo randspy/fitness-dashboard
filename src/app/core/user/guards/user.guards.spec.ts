@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UserStore } from '../store/user.store';
 import { userSetupCompletedGuard, userSetupRequiredGuard } from './user.guards';
 import { provideTestServices } from '../../../../tests/test-providers';
+import { DefaultRoute } from '../../shared/domain/routes.config';
 
 describe('User Guards', () => {
   let router: jest.Mocked<Router>;
@@ -44,12 +45,12 @@ describe('User Guards', () => {
   });
 
   describe('userSetupRequiredGuard', () => {
-    it('should redirect to dashboard when user exists', () => {
+    it('should redirect to default route when user exists', () => {
       userStore.setName('John');
 
       TestBed.runInInjectionContext(userSetupRequiredGuard);
 
-      expect(router.navigate).toHaveBeenCalledWith(['/app/dashboard']);
+      expect(router.navigate).toHaveBeenCalledWith([DefaultRoute]);
     });
 
     it('should allow navigation when user does not exist', () => {

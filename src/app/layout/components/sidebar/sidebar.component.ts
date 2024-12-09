@@ -18,6 +18,11 @@ import {
   SidebarLinkItem,
 } from '../sidebar-link/sidebar-link.component';
 import { ButtonComponent } from '../../../ui/components/button/button.component';
+import {
+  DashboardRoute,
+  SessionsRoute,
+  ExercisesRoute,
+} from '../../../core/shared/domain/routes.config';
 
 @Component({
   selector: 'fit-sidebar',
@@ -57,17 +62,17 @@ export class SidebarComponent {
     {
       label: 'Dashboard',
       icon: 'lucideHouse',
-      routerLink: '/app/dashboard',
+      routerLink: DashboardRoute,
     },
     {
       label: 'Sessions',
       icon: 'lucideLandPlot',
-      routerLink: '/app/sessions',
+      routerLink: SessionsRoute,
     },
     {
       label: 'Exercises',
       icon: 'lucideDumbbell',
-      routerLink: '/app/exercises',
+      routerLink: ExercisesRoute,
     },
   ];
 

@@ -3,10 +3,12 @@ import {
   userSetupCompletedGuard,
   userSetupRequiredGuard,
 } from './core/user/guards/user.guards';
+import { DefaultRoute } from './core/shared/domain/routes.config';
+
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'app/dashboard',
+    redirectTo: DefaultRoute,
     pathMatch: 'full',
   },
   {

@@ -11,6 +11,7 @@ import { UserStore } from '../../../../core/user/store/user.store';
 import { Router, provideRouter } from '@angular/router';
 import { DummyComponent } from '../../../../../tests/dummy-component';
 import { provideTestServices } from '../../../../../tests/test-providers';
+import { DefaultRoute } from '../../../../core/shared/domain/routes.config';
 
 describe('WelcomeComponent', () => {
   let component: WelcomeComponent;
@@ -30,7 +31,9 @@ describe('WelcomeComponent', () => {
       ],
       providers: [
         UserStore,
-        provideRouter([{ path: 'app/dashboard', component: DummyComponent }]),
+        provideRouter([
+          { path: DefaultRoute.slice(1), component: DummyComponent },
+        ]),
         ...provideTestServices(),
       ],
     }).compileComponents();
@@ -94,7 +97,7 @@ describe('WelcomeComponent', () => {
     expect(userStore.name()).toBe('John Doe');
   });
 
-  it('should navigate to dashboard when submitted with valid data', async () => {
+  it('should navigate to default route when submitted with valid data', async () => {
     const input = inputInstance();
     input.onInput('John Doe');
     fixture.detectChanges();
@@ -105,7 +108,7 @@ describe('WelcomeComponent', () => {
 
     await fixture.whenStable();
 
-    expect(router.url).toEqual('/app/dashboard');
+    expect(router.url).toEqual(DefaultRoute);
   });
 
   function buttonQuery() {
