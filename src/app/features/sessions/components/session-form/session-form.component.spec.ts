@@ -211,6 +211,30 @@ describe('SessionFormComponent', () => {
       });
     });
 
+    it('should convert weight and repetitions to numbers', async () => {
+      const saveSpy = jest.spyOn(component.save, 'emit');
+
+      await changeSessionNameInput('Test session');
+      await changeExerciseInput(0, 'exercise-1');
+
+      await changeWeightInput(0, 0, '100');
+      await changeRepetitionsInput(0, 0, '10');
+      saveForm();
+
+      expect(saveSpy).toHaveBeenCalledWith({
+        date: expect.any(Date),
+        id: 'test-uuid',
+        name: 'Test session',
+        exercises: [
+          {
+            id: 'test-uuid',
+            exerciseId: 'exercise-1',
+            sets: [{ id: 'test-uuid', repetitions: 10, weight: 100 }],
+          },
+        ],
+      });
+    });
+
     describe('validation', () => {
       it('should show error for session name', async () => {
         saveForm();

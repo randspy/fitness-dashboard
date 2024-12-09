@@ -189,7 +189,9 @@ export class SessionFormComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.save.emit(this.form.value as Session);
+      this.save.emit(
+        this.convertFormValueToSession(this.form.value as Session),
+      );
       // without clearing the exercises array the unit tests will contain
       // unnecessary error logs for key tracking of list items in the template
       (this.form.get('exercises') as FormArray).clear();
@@ -197,6 +199,16 @@ export class SessionFormComponent implements OnInit {
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  convertFormValueToSession(formValue: Session): Session {
+    formValue.exercises.forEach((exercise) => {
+      exercise.sets.forEach((set) => {
+        set.weight = Number(set.weight);
+        set.repetitions = Number(set.repetitions);
+      });
+    });
+    return formValue;
   }
 
   onCancel() {
