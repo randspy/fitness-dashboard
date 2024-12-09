@@ -18,6 +18,7 @@ describe('NewExercisePageComponent', () => {
       .configureTestingModule({
         imports: [NewExercisePageComponent, NoopAnimationsModule],
         providers: [
+          ExerciseStoreService,
           ...provideTestServices(),
           {
             provide: ActivatedRoute,

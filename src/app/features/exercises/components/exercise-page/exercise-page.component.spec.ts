@@ -7,6 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 import { provideTestServices } from '../../../../../tests/test-providers';
 import { applyConfirmationDialogOverrides } from '../../../../../tests/apply-confirmation-dialog-overrides';
+import { ExerciseStoreService } from '../../services/exercise-store.service';
 
 describe('ExercisePageComponent', () => {
   let component: ExercisePageComponent;
@@ -17,7 +18,11 @@ describe('ExercisePageComponent', () => {
     await applyConfirmationDialogOverrides(TestBed)
       .configureTestingModule({
         imports: [ExercisePageComponent, NoopAnimationsModule],
-        providers: [provideRouter([]), ...provideTestServices()],
+        providers: [
+          ExerciseStoreService,
+          provideRouter([]),
+          ...provideTestServices(),
+        ],
       })
       .compileComponents();
 

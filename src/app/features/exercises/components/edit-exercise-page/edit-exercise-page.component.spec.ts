@@ -18,6 +18,7 @@ describe('EditExercisePageComponent', () => {
       .configureTestingModule({
         imports: [EditExercisePageComponent],
         providers: [
+          ExerciseStoreService,
           ...provideTestServices(),
           {
             provide: ActivatedRoute,

@@ -33,7 +33,12 @@ describe('ExerciseListComponent', () => {
           NoopAnimationsModule,
           ConfirmationDialogComponent,
         ],
-        providers: [ExerciseStore, provideRouter([]), ...provideTestServices()],
+        providers: [
+          ExerciseStoreService,
+          ExerciseStore,
+          provideRouter([]),
+          ...provideTestServices(),
+        ],
       })
       .compileComponents();
 

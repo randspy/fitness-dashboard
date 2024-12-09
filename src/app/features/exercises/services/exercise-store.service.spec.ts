@@ -12,7 +12,7 @@ describe('ExerciseStoreService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...provideTestServices()],
+      providers: [ExerciseStoreService, ...provideTestServices()],
     });
     service = TestBed.inject(ExerciseStoreService);
     exerciseStore = TestBed.inject(ExerciseStore);

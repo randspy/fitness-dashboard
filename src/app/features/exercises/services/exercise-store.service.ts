@@ -5,9 +5,7 @@ import {
   ExerciseForm,
 } from '../../../core/exercises/domain/exercise.types';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ExerciseStoreService {
   exerciseStore = inject(ExerciseStore);
 

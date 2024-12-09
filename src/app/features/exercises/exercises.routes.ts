@@ -4,21 +4,28 @@ import { ExercisePageComponent } from './components/exercise-page/exercise-page.
 import { unsavedChangesGuard } from '../../core/shared/guards/unsaved-changes.guard';
 import { EditExercisePageComponent } from './components/edit-exercise-page/edit-exercise-page.component';
 import { exerciseExistsGuard } from './guards/exercise-exists.guard';
+import { ExerciseStoreService } from './services/exercise-store.service';
 
 export const exercisesRoutes: Routes = [
   {
     path: '',
-    component: ExercisePageComponent,
-  },
-  {
-    path: 'new',
-    canDeactivate: [unsavedChangesGuard],
-    component: NewExercisePageComponent,
-  },
-  {
-    path: ':id',
-    component: EditExercisePageComponent,
-    canMatch: [exerciseExistsGuard],
-    canDeactivate: [unsavedChangesGuard],
+    providers: [ExerciseStoreService],
+    children: [
+      {
+        path: '',
+        component: ExercisePageComponent,
+      },
+      {
+        path: 'new',
+        canDeactivate: [unsavedChangesGuard],
+        component: NewExercisePageComponent,
+      },
+      {
+        path: ':id',
+        component: EditExercisePageComponent,
+        canMatch: [exerciseExistsGuard],
+        canDeactivate: [unsavedChangesGuard],
+      },
+    ],
   },
 ];
