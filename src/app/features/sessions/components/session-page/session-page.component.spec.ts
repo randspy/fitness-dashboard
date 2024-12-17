@@ -73,6 +73,7 @@ describe('SessionPageComponent', () => {
   it("should display session's list actions", () => {
     const session: Session = generateSession({
       id: '1',
+      name: 'session name',
     });
 
     sessionStore.setSessions([session]);
@@ -82,5 +83,6 @@ describe('SessionPageComponent', () => {
       By.directive(SessionListActionsComponent),
     );
     expect(sessionListActions.componentInstance.id()).toBe('1');
+    expect(sessionListActions.componentInstance.name()).toBe('session name');
   });
 });
