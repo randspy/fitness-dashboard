@@ -11,17 +11,12 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'fit-textarea',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InputTextareaModule,
-  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TextareaModule],
   templateUrl: './textarea.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [

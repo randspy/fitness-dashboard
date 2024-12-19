@@ -1,5 +1,5 @@
-import { definePreset } from 'primeng/themes';
-import { Aura } from 'primeng/themes/aura';
+import { definePreset } from '@primeng/themes';
+import Aura from '@primeng/themes/aura';
 
 const StylePreset = definePreset(Aura, {
   semantic: {

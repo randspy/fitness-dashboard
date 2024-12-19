@@ -7,6 +7,8 @@ import { Component } from '@angular/core';
 import { signal } from '@angular/core';
 import { SidebarLinkItem } from '../../domain/sidebar-link-item.types';
 import { By } from '@angular/platform-browser';
+import { provideIcons } from '@ng-icons/core';
+import { lucideCalendar, lucideHouse } from '@ng-icons/lucide';
 
 @Component({
   selector: 'fit-sidebar-mobile-menu-dropdown-test',
@@ -31,7 +33,10 @@ describe('SidebarMobileMenuDropdownComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [SidebarMobileMenuDropdownTestComponent],
       imports: [SidebarMobileMenuDropdownComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        provideIcons({ lucideHouse, lucideCalendar }),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SidebarMobileMenuDropdownTestComponent);

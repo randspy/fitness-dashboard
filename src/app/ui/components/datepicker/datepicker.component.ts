@@ -26,6 +26,14 @@ import { DatePickerModule } from 'primeng/datepicker';
       multi: true,
     },
   ],
+  styles: [
+    `
+      // bug on primeng side
+      .p-datepicker .p-datepicker-panel:not(.p-datepicker-panel-inline) {
+        position: absolute;
+      }
+    `,
+  ],
 })
 export class DatepickerComponent implements ControlValueAccessor {
   label = input('');

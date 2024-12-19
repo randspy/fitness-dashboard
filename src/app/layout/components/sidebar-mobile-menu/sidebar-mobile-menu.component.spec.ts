@@ -14,6 +14,8 @@ import { provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
 import { SidebarLinkItem } from '../../domain/sidebar-link-item.types';
 import { signal } from '@angular/core';
+import { provideIcons } from '@ng-icons/core';
+import { lucideHouse } from '@ng-icons/lucide';
 
 describe('SidebarMobileMenuComponent', () => {
   let component: SidebarMobileMenuComponent;
@@ -24,7 +26,7 @@ describe('SidebarMobileMenuComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SidebarMobileMenuComponent],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideIcons({ lucideHouse })],
     }).compileComponents();
 
     linkItems = [
