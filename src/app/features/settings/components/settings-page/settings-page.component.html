@@ -1,6 +1,7 @@
 <fit-page-skeleton title="Settings">
   <div content>
     <fit-card
+      [styleClass]="'break-all'"
       header="Hello {{
         this.userStore.name()
       }}. Would you like to change your name?"
@@ -11,6 +12,7 @@
         class="mt-2 flex flex-col gap-2"
       >
         <fit-input
+          [styleClass]="'break-all'"
           label="Name"
           formControlName="name"
           [showError]="isNameInvalid"
