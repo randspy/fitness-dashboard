@@ -16,13 +16,7 @@
     [placeholder]="placeholder()"
     [showIcon]="true"
     [showButtonBar]="true"
-  >
-    <ng-template pTemplate="header">
-      <!-- bug https://github.com/primefaces/primeng/issues/16590 -->
-      <p-button class="p-datepicker-prev hidden">Previous</p-button>
-      <p-button class="p-datepicker-next hidden">Next</p-button>
-    </ng-template>
-  </p-datepicker>
+  />
   <div class="h-5">
     @if (showError() && errorMessage()) {
       <p class="text-sm text-error">{{ errorMessage() }}</p>
