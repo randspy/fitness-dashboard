@@ -40,10 +40,8 @@ export class InputComponent implements ControlValueAccessor {
   disabled = signal(false);
   inputId = signal(crypto.randomUUID());
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange: (value: string) => void = () => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onTouched: () => void = () => {};
+  onChange!: (value: string) => void;
+  onTouched!: () => void;
 
   writeValue(value: string): void {
     this.value.set(value);

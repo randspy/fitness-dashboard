@@ -36,10 +36,8 @@ export class SelectComponent<T extends { id: string }>
 
   value = signal<T | undefined>({ id: 'rr' } as T);
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange: (value: string) => void = () => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onTouched: () => void = () => {};
+  onChange!: (value: string) => void;
+  onTouched!: () => void;
 
   writeValue(value: string): void {
     this.value.set(this.suggestions().find((s) => s.id === value));
