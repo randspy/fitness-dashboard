@@ -4,6 +4,7 @@ import { SettingsPageComponent } from './components/settings-page/settings-page.
 export const settingsRoutes: Routes = [
   {
     path: '',
+    title: 'Settings',
     component: SettingsPageComponent,
   },
 ];

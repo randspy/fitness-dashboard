@@ -9,6 +9,7 @@ import { SessionStoreService } from './service/session-store.service';
 export const sessionsRoutes: Routes = [
   {
     path: '',
+    title: 'Sessions',
     providers: [SessionStoreService],
     children: [
       {

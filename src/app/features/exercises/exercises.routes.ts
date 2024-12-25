@@ -9,6 +9,7 @@ import { ExerciseStoreService } from './services/exercise-store.service';
 export const exercisesRoutes: Routes = [
   {
     path: '',
+    title: 'Exercises',
     providers: [ExerciseStoreService],
     children: [
       {

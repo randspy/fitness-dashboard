@@ -13,6 +13,7 @@ export const routes: Routes = [
   },
   {
     path: 'welcome',
+    title: 'Welcome',
     loadComponent: () =>
       import('./features/landing/components/welcome/welcome.component').then(
         (m) => m.WelcomeComponent,
@@ -59,6 +60,7 @@ export const routes: Routes = [
   },
   {
     path: 'page-not-found',
+    title: 'Page Not Found',
     loadComponent: () =>
       import(
         './layout/components/page-not-found-page/page-not-found-page.component'

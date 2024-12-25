@@ -6,6 +6,7 @@ import { MotivationQuoteService } from './services/motivation-quote.service';
 export const dashboardRoutes: Routes = [
   {
     path: '',
+    title: 'Dashboard',
     component: DashboardPageComponent,
     providers: [DashboardCalendarService, MotivationQuoteService],
   },
