@@ -14,6 +14,7 @@ import { CardComponent } from '../../../../ui/components/card/card.component';
 import { TextareaComponent } from '../../../../ui/components/textarea/textarea.component';
 import { ExerciseForm } from '../../../../core/exercises/domain/exercise.types';
 import { isEqual } from 'lodash';
+import { CanComponentDeactivate } from '../../../../core/shared/domain/can-component-deactivate.types';
 
 @Component({
   selector: 'fit-exercise-form',
@@ -29,7 +30,7 @@ import { isEqual } from 'lodash';
   templateUrl: './exercise-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExerciseFormComponent implements OnInit {
+export class ExerciseFormComponent implements OnInit, CanComponentDeactivate {
   formBuilder = inject(FormBuilder);
 
   header = input<string>('');

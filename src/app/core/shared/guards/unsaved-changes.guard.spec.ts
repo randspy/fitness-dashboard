@@ -5,10 +5,8 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 
-import {
-  CanComponentDeactivate,
-  unsavedChangesGuard,
-} from './unsaved-changes.guard';
+import { unsavedChangesGuard } from './unsaved-changes.guard';
+import { CanComponentDeactivate } from '../domain/can-component-deactivate.types';
 
 describe('unsavedChangesGuard', () => {
   const currentRoute = {} as ActivatedRouteSnapshot;
@@ -19,10 +17,6 @@ describe('unsavedChangesGuard', () => {
     TestBed.runInInjectionContext(() =>
       unsavedChangesGuard(component, currentRoute, currentState, nextState),
     );
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-  });
 
   it('should be created', () => {
     expect(executeGuard).toBeTruthy();

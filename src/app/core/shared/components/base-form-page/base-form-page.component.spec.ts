@@ -12,10 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ConfirmationDialogService } from '../../../../ui/services/confirmation-dialog.service';
 import { mockConfirmationDialogService } from '../../../../../tests/mock-confirmation-dialog-service';
-
-interface TestFormComponent {
-  canDeactivate: () => boolean;
-}
+import { CanComponentDeactivate } from '../../domain/can-component-deactivate.types';
 
 @Component({
   standalone: true,
@@ -33,13 +30,13 @@ interface TestFormComponent {
     </form>
   `,
 })
-class TestFormPageComponent extends BaseFormPageComponent<TestFormComponent> {
+class TestFormPageComponent extends BaseFormPageComponent<CanComponentDeactivate> {
   formBuilder = inject(FormBuilder);
   form = this.formBuilder.group({
     testField: [''],
   });
 
-  child = signal<TestFormComponent>({
+  child = signal<CanComponentDeactivate>({
     canDeactivate: () => true,
   });
 }
@@ -89,6 +86,11 @@ describe('BaseFormComponent', () => {
 
   it('should pass through canDeactivate when true', () => {
     component.child.set({ canDeactivate: () => true });
+    expect(component.canDeactivate()).toBe(true);
+  });
+
+  it('should return true when canDeactivate is not defined', () => {
+    component.child.set({ canDeactivate: undefined });
     expect(component.canDeactivate()).toBe(true);
   });
 

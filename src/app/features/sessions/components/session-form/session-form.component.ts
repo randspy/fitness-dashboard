@@ -23,6 +23,7 @@ import { Session } from '../../../../core/sessions/domain/session.types';
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { SelectComponent } from '../../../../ui/components/select/select.component';
+import { CanComponentDeactivate } from '../../../../core/shared/domain/can-component-deactivate.types';
 
 @Component({
   selector: 'fit-session-form',
@@ -40,7 +41,7 @@ import { SelectComponent } from '../../../../ui/components/select/select.compone
   templateUrl: './session-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SessionFormComponent implements OnInit {
+export class SessionFormComponent implements OnInit, CanComponentDeactivate {
   formBuilder = inject(FormBuilder);
   exerciseStore = inject(ExerciseStore);
 
