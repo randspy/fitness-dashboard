@@ -2,7 +2,6 @@ import {
   Component,
   input,
   ChangeDetectionStrategy,
-  forwardRef,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -23,7 +22,7 @@ import { InputTextModule } from 'primeng/inputtext';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => InputComponent),
+      useExisting: InputComponent,
       multi: true,
     },
   ],

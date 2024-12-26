@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  forwardRef,
   input,
   signal,
 } from '@angular/core';
@@ -18,7 +17,7 @@ import { FormsModule } from '@angular/forms';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SelectComponent),
+      useExisting: SelectComponent,
       multi: true,
     },
   ],

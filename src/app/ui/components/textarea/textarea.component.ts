@@ -2,7 +2,6 @@ import {
   Component,
   input,
   ChangeDetectionStrategy,
-  forwardRef,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -28,7 +27,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TextareaComponent),
+      useExisting: TextareaComponent,
       multi: true,
     },
   ],
