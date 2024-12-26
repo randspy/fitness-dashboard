@@ -28,6 +28,7 @@ export const routes: Routes = [
       ),
     canMatch: [userSetupCompletedGuard],
     children: [
+      { path: '', redirectTo: DefaultRoute, pathMatch: 'full' },
       {
         path: 'dashboard',
         loadChildren: () =>
