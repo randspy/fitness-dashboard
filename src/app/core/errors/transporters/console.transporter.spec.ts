@@ -1,4 +1,4 @@
-import { ConsoleTransporter } from './console-transporter';
+import { ConsoleTransporter } from './console.transporter';
 
 describe('ConsoleTransporter', () => {
   let transporter: ConsoleTransporter<string>;

@@ -5,8 +5,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideHttpClient } from '@angular/common/http';
-import { GlobalErrorHandler } from './core/errors/handlers/global-error-handler';
-import { provideLogger } from './core/errors/logger.config';
+import { GlobalErrorHandler } from './core/errors/handlers/global-error.handler';
+import { provideLogger } from './core/errors/domain/logger.config';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
