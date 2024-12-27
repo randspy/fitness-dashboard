@@ -10,7 +10,6 @@ import { InputComponentHarness } from '../../../../../tests/harness/ui/input.har
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SessionFormComponent } from './session-form.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { cloneDeep } from 'lodash';
 import { SelectComponentHarness } from '../../../../../tests/harness/ui/select.harness';
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { generateExercise } from '../../../../../tests/test-object-generators';
@@ -392,7 +391,7 @@ describe('SessionFormComponent', () => {
 
       fixture.detectChanges();
 
-      const result = { ...cloneDeep(session), name: 'Test session' };
+      const result = { ...session, name: 'Test session' };
 
       expect(saveSpy).toHaveBeenCalledWith(result);
     });

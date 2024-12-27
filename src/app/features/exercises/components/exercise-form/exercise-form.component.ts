@@ -13,7 +13,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { TextareaComponent } from '../../../../ui/components/textarea/textarea.component';
 import { ExerciseForm } from '../../../../core/exercises/domain/exercise.types';
-import { isEqual } from 'lodash';
+import { deepEqual } from 'fast-equals';
 import { CanComponentDeactivate } from '../../../../core/shared/domain/can-component-deactivate.types';
 
 @Component({
@@ -80,6 +80,6 @@ export class ExerciseFormComponent implements OnInit, CanComponentDeactivate {
   }
 
   hasFormChanged(): boolean {
-    return !isEqual(this.notModifiedFormValue(), this.form.value);
+    return !deepEqual(this.notModifiedFormValue(), this.form.value);
   }
 }

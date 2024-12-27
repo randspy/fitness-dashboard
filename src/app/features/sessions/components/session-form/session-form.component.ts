@@ -14,7 +14,7 @@ import {
   Validators,
   FormsModule,
 } from '@angular/forms';
-import { isEqual } from 'lodash';
+import { deepEqual } from 'fast-equals';
 import { DatepickerComponent } from '../../../../ui/components/datepicker/datepicker.component';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
@@ -221,6 +221,6 @@ export class SessionFormComponent implements OnInit, CanComponentDeactivate {
   }
 
   hasFormChanged(): boolean {
-    return !isEqual(this.notModifiedFormValue(), this.form.value);
+    return !deepEqual(this.notModifiedFormValue(), this.form.value);
   }
 }
