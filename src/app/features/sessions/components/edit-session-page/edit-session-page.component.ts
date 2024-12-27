@@ -12,12 +12,11 @@ import { SessionStore } from '../../../../core/sessions/store/sessions.store';
 import { BaseFormPageComponent } from '../../../../core/shared/components/base-form-page/base-form-page.component';
 import { SessionStoreService } from '../../service/session-store.service';
 import { ConfirmationDialogService } from '../../../../ui/services/confirmation-dialog.service';
-import { ConfirmationDialogComponent } from '../../../../ui/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'fit-edit-session-page',
   standalone: true,
-  imports: [SessionFormComponent, ConfirmationDialogComponent],
+  imports: [SessionFormComponent],
   providers: [ConfirmationDialogService],
   templateUrl: './edit-session-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

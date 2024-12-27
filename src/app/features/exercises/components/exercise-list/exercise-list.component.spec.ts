@@ -202,13 +202,6 @@ describe('ExerciseListComponent', () => {
     expect(await link.getLink()).toBe('/1');
   });
 
-  it('should have a dialog', () => {
-    const dialog = fixture.debugElement.query(
-      By.css('fit-confirmation-dialog'),
-    );
-    expect(dialog).toBeTruthy();
-  });
-
   const clickDeleteButton = async () => {
     const deleteButton = await loader.getHarness(
       ButtonComponentHarness.with({

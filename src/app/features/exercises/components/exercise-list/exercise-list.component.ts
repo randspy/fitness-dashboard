@@ -11,7 +11,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonComponent } from '../../../../ui/components/button/button.component';
 import { LinkComponent } from '../../../../ui/components/link/link.component';
 import { ExerciseStoreService } from '../../services/exercise-store.service';
-import { ConfirmationDialogComponent } from '../../../../ui/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'fit-exercise-list',
@@ -24,7 +23,6 @@ import { ConfirmationDialogComponent } from '../../../../ui/components/confirmat
     ConfirmDialogModule,
     NgIconComponent,
     LinkComponent,
-    ConfirmationDialogComponent,
   ],
   templateUrl: './exercise-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

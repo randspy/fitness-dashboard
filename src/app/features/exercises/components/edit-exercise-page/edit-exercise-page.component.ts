@@ -11,13 +11,12 @@ import { BaseFormPageComponent } from '../../../../core/shared/components/base-f
 import { ExerciseStore } from '../../../../core/exercises/store/exercise.store';
 import { ExerciseForm } from '../../../../core/exercises/domain/exercise.types';
 import { ExerciseStoreService } from '../../services/exercise-store.service';
-import { ConfirmationDialogComponent } from '../../../../ui/components/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogService } from '../../../../ui/services/confirmation-dialog.service';
 
 @Component({
   selector: 'fit-edit-exercise-page',
   standalone: true,
-  imports: [ExerciseFormComponent, ConfirmationDialogComponent],
+  imports: [ExerciseFormComponent],
   templateUrl: './edit-exercise-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConfirmationDialogService],

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { provideTestServices } from '../tests/test-providers';
+import { By } from '@angular/platform-browser';
 
 jest.mock('./app.styles', () => ({
   themeConfig: {},
@@ -24,7 +25,13 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render toast', () => {
+  it('should render a toast', () => {
     expect(fixture.nativeElement.querySelector('fit-toast')).toBeTruthy();
+  });
+
+  it('should render a dialog', () => {
+    expect(
+      fixture.debugElement.query(By.css('fit-confirmation-dialog')),
+    ).toBeTruthy();
   });
 });

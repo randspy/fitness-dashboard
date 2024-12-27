@@ -87,11 +87,4 @@ describe('EditSessionPageComponent', () => {
 
     expect(updateSessionSpy).toHaveBeenCalledWith('1', updatedSession);
   });
-
-  it('should have a dialog', () => {
-    const dialog = fixture.debugElement.query(
-      By.css('fit-confirmation-dialog'),
-    );
-    expect(dialog).toBeTruthy();
-  });
 });

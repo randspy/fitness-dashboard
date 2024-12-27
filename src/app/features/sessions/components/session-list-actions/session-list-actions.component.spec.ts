@@ -10,7 +10,6 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { provideTestServices } from '../../../../../tests/test-providers';
 import { applyConfirmationDialogOverrides } from '../../../../../tests/apply-confirmation-dialog-overrides';
 import { mockConfirmationDialogService } from '../../../../../tests/mock-confirmation-dialog-service';
-import { By } from '@angular/platform-browser';
 
 describe('SessionListActionsComponent', () => {
   let fixture: ComponentFixture<SessionListActionsComponent>;
@@ -91,12 +90,5 @@ describe('SessionListActionsComponent', () => {
     expect(await deleteButton.getAriaLabel()).toBe(
       'Delete Test Session session',
     );
-  });
-
-  it('should have a dialog', () => {
-    const dialog = fixture.debugElement.query(
-      By.css('fit-confirmation-dialog'),
-    );
-    expect(dialog).toBeTruthy();
   });
 });

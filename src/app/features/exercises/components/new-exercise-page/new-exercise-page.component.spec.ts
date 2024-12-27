@@ -82,11 +82,4 @@ describe('NewExercisePageComponent', () => {
 
     expect(addExerciseSpy).toHaveBeenCalledWith(exerciseForm);
   });
-
-  it('should have a dialog', () => {
-    const dialog = fixture.debugElement.query(
-      By.css('fit-confirmation-dialog'),
-    );
-    expect(dialog).toBeTruthy();
-  });
 });

@@ -10,18 +10,12 @@ import { ButtonComponent } from '../../../../ui/components/button/button.compone
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideTrash } from '@ng-icons/lucide';
 import { SessionStoreService } from '../../service/session-store.service';
-import { ConfirmationDialogComponent } from '../../../../ui/components/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogService } from '../../../../ui/services/confirmation-dialog.service';
 
 @Component({
   selector: 'fit-session-list-actions',
   standalone: true,
-  imports: [
-    LinkComponent,
-    ButtonComponent,
-    NgIconComponent,
-    ConfirmationDialogComponent,
-  ],
+  imports: [LinkComponent, ButtonComponent, NgIconComponent],
   templateUrl: './session-list-actions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
