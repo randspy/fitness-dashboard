@@ -30,27 +30,6 @@
   <h1 class="text-1xl ml-4 mr-auto font-bold text-primary-foreground">
     Workout Tracker
   </h1>
-  <fit-button
-    (click)="menu.toggle($event)"
-    [raised]="false"
-    [ariaLabel]="'Sidebar menu'"
-    styleClass="text-secondary focus:outline-accent rounded-sm hover:text-accent hover:bg-transparent border-none"
-  >
-    <ng-icon name="lucideMenu" size="24"></ng-icon>
-  </fit-button>
-  <p-tieredmenu [model]="allGroups" #menu [popup]="true">
-    <ng-template pTemplate="item" let-item>
-      <a
-        [routerLink]="item.routerLink"
-        routerLinkActive="text-accent"
-        class="flex items-center gap-2 p-2"
-        [attr.aria-label]="item.label"
-      >
-        <ng-icon [name]="item.icon" size="24"></ng-icon>
-        <span>{{ item.label }}</span>
-      </a>
-    </ng-template>
-  </p-tieredmenu>
-
+  <fit-sidebar-mobile-menu [items]="allGroups" />
   <div class="mx-2 h-full w-[2px] bg-accent"></div>
 </div>

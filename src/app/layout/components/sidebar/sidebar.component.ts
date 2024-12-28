@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 
@@ -13,30 +12,27 @@ import {
 } from '@ng-icons/lucide';
 import { ButtonModule } from 'primeng/button';
 import { PopoverModule } from 'primeng/popover';
-import {
-  SidebarLinkComponent,
-  SidebarLinkItem,
-} from '../sidebar-link/sidebar-link.component';
-import { ButtonComponent } from '../../../ui/components/button/button.component';
+import { SidebarLinkComponent } from '../sidebar-link/sidebar-link.component';
+
 import {
   DashboardRoute,
   SessionsRoute,
   ExercisesRoute,
 } from '../../../core/shared/domain/routes.config';
+import { SidebarMobileMenuComponent } from '../sidebar-mobile-menu/sidebar-mobile-menu.component';
+import { SidebarLinkItem } from '../../domain/sidebar-link-item.types';
 
 @Component({
   selector: 'fit-sidebar',
   standalone: true,
   imports: [
     NgIconComponent,
-    RouterLink,
-    RouterLinkActive,
     TooltipModule,
     TieredMenuModule,
     ButtonModule,
     PopoverModule,
     SidebarLinkComponent,
-    ButtonComponent,
+    SidebarMobileMenuComponent,
   ],
   templateUrl: './sidebar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

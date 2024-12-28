@@ -1,0 +1,20 @@
+<nav
+  class="absolute right-8 top-9 mt-2 w-40 rounded-md bg-background shadow-lg"
+  aria-label="Navigation Menu"
+>
+  <ul role="menu" aria-orientation="vertical">
+    @for (item of items(); track item.label) {
+      <li role="none">
+        <a
+          class="flex items-center gap-2 rounded-md px-4 py-2 text-sm text-primary hover:bg-accent focus:outline-accent"
+          role="menuitem"
+          [routerLink]="item.routerLink"
+          (keydown)="onKeydown($event)"
+        >
+          <ng-icon [name]="item.icon" size="24"></ng-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

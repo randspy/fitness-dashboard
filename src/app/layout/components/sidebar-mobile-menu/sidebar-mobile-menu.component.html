@@ -1,0 +1,11 @@
+<fit-button
+  (click)="toggle($event)"
+  [raised]="false"
+  [ariaLabel]="'Navigation menu'"
+  styleClass="text-secondary focus:outline-accent rounded-sm hover:text-accent hover:bg-transparent border-none bg-transparent"
+>
+  <ng-icon name="lucideMenu" size="24"></ng-icon>
+</fit-button>
+@if (visible()) {
+  <fit-sidebar-mobile-menu-dropdown [items]="items()" [(visible)]="visible" />
+}
