@@ -24,7 +24,10 @@ export const ExerciseStore = signalStore(
   withComputed(({ entities }) => ({
     exercises: computed(() => entities()),
     length: computed(() => entities().length),
-    isEmpty: computed(() => entities().length === 0),
+    isEmpty: computed(
+      () =>
+        entities().length === 0 || entities().every((entity) => entity.hidden),
+    ),
   })),
   withMethods((store) => ({
     getExerciseById: (id: string) => store.entityMap()[id],

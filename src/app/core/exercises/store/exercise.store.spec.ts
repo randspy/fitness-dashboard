@@ -154,6 +154,17 @@ describe('ExerciseStore', () => {
         expect(store.isEmpty()).toBe(false);
       });
 
+      it('should return true if exercise entities are only hidden', () => {
+        store.setExercises([
+          generateExercise({
+            id: '1',
+            hidden: true,
+          }),
+        ]);
+
+        expect(store.isEmpty()).toBe(true);
+      });
+
       it('should get length of exercise entities', () => {
         store.setExercises([
           generateExercise({
