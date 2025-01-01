@@ -21,7 +21,7 @@ export class InitialAppStateService {
       description: 'This is an example exercise',
       hidden: false,
       position: 0,
-      usage: [{ id: '1' }],
+      usage: [{ id: 'session-1' }],
     },
   ];
 
