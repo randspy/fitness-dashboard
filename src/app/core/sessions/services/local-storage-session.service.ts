@@ -5,6 +5,7 @@ import { Session } from '../domain/session.types';
 import { z } from 'zod';
 import { fromError } from 'zod-validation-error';
 import { SessionSchema } from '../domain/session.schema';
+import { sessionsLocalStorageKey } from '../../shared/domain/local-storage.config';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class LocalStorageSessionService {
   private stateIsValidated = true;
 
   get sessions(): Session[] {
-    const sessionList = localStorage.getItem('sessions');
+    const sessionList = localStorage.getItem(sessionsLocalStorageKey);
     if (sessionList) {
       try {
         const rawSessions = JSON.parse(sessionList);
@@ -50,7 +51,10 @@ export class LocalStorageSessionService {
 
   set sessions(sessionList: Session[]) {
     if (this.stateIsValidated) {
-      localStorage.setItem('sessions', JSON.stringify(sessionList));
+      localStorage.setItem(
+        sessionsLocalStorageKey,
+        JSON.stringify(sessionList),
+      );
     }
   }
 }

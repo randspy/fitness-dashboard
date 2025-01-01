@@ -6,6 +6,7 @@ import { DisplayStateCorruptionToastService } from '../../errors/services/displa
 import { generateExercise } from '../../../../tests/test-object-generators';
 import { mockLoggerService } from '../../../../tests/mock-logger-service';
 import { LoggerService } from '../../errors/services/logger.service';
+import { exercisesLocalStorageKey } from '../../shared/domain/local-storage.config';
 
 describe('LocalStorageService', () => {
   let service: LocalStorageExerciseService;
@@ -34,7 +35,7 @@ describe('LocalStorageService', () => {
 
   it('should get exercises from localStorage', () => {
     localStorage.setItem(
-      'exercises',
+      exercisesLocalStorageKey,
       JSON.stringify([generateExercise({ id: '1' })]),
     );
 
@@ -46,7 +47,7 @@ describe('LocalStorageService', () => {
   });
 
   it('should handle invalid json data', () => {
-    localStorage.setItem('exercises', 'invalid-data');
+    localStorage.setItem(exercisesLocalStorageKey, 'invalid-data');
 
     expect(service.exercises).toEqual([]);
     expect(mockLoggerService.error).toHaveBeenCalledWith(
@@ -55,7 +56,10 @@ describe('LocalStorageService', () => {
   });
 
   it('should handle invalid exercise data structure', () => {
-    localStorage.setItem('exercises', JSON.stringify([{ invalid: 'data' }]));
+    localStorage.setItem(
+      exercisesLocalStorageKey,
+      JSON.stringify([{ invalid: 'data' }]),
+    );
 
     expect(service.exercises).toEqual([]);
     expect(mockLoggerService.error).toHaveBeenCalledWith(
@@ -64,7 +68,10 @@ describe('LocalStorageService', () => {
   });
 
   it('should show error toast', () => {
-    localStorage.setItem('exercises', JSON.stringify([{ invalid: 'data' }]));
+    localStorage.setItem(
+      exercisesLocalStorageKey,
+      JSON.stringify([{ invalid: 'data' }]),
+    );
 
     expect(service.exercises).toEqual([]);
     expect(mockDisplayStateCorruptionToastService.show).toHaveBeenCalledWith(
@@ -76,20 +83,23 @@ describe('LocalStorageService', () => {
     const exercises = [generateExercise({ id: '1' })];
     service.exercises = exercises;
 
-    expect(localStorage.getItem('exercises')).toEqual(
+    expect(localStorage.getItem(exercisesLocalStorageKey)).toEqual(
       JSON.stringify(exercises),
     );
   });
 
   it('should not save localStorage if it was invalid before setting new exercises', () => {
-    localStorage.setItem('exercises', JSON.stringify([{ invalid: 'data' }]));
+    localStorage.setItem(
+      exercisesLocalStorageKey,
+      JSON.stringify([{ invalid: 'data' }]),
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const unusedValue = service.exercises;
 
     service.exercises = [generateExercise({ id: '1' })];
 
-    expect(localStorage.getItem('exercises')).toEqual(
+    expect(localStorage.getItem(exercisesLocalStorageKey)).toEqual(
       JSON.stringify([{ invalid: 'data' }]),
     );
   });

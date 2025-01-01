@@ -5,6 +5,7 @@ import { ExerciseSchema } from '../domain/exercise.schema';
 import { z } from 'zod';
 import { fromError } from 'zod-validation-error';
 import { Exercise } from '../domain/exercise.types';
+import { exercisesLocalStorageKey } from '../../shared/domain/local-storage.config';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class LocalStorageExerciseService {
   private stateIsValidated = true;
 
   get exercises(): Exercise[] {
-    const exerciseList = localStorage.getItem('exercises');
+    const exerciseList = localStorage.getItem(exercisesLocalStorageKey);
     if (exerciseList) {
       try {
         const parsedExercises = JSON.parse(exerciseList);
@@ -48,7 +49,10 @@ export class LocalStorageExerciseService {
 
   set exercises(exerciseList: Exercise[]) {
     if (this.stateIsValidated) {
-      localStorage.setItem('exercises', JSON.stringify(exerciseList));
+      localStorage.setItem(
+        exercisesLocalStorageKey,
+        JSON.stringify(exerciseList),
+      );
     }
   }
 }

@@ -7,6 +7,7 @@ import { ButtonComponent } from '../../../../ui/components/button/button.compone
 import { UserStore } from '../../../../core/user/store/user.store';
 import { Router } from '@angular/router';
 import { DefaultRoute } from '../../../../core/shared/domain/routes.config';
+import { InitialAppStateService } from '../../services/initial-app-state.service';
 
 @Component({
   selector: 'fit-welcome',
@@ -25,6 +26,9 @@ export class WelcomeComponent {
   private router = inject(Router);
   private userStore = inject(UserStore);
   private fb = inject(FormBuilder);
+  // required for injecting initial app state into the local storage when leaving the welcome page
+  // don't remove it if you want to keep this functionality
+  private initialAppStateService = inject(InitialAppStateService);
 
   welcomeForm = this.fb.group({
     name: ['', [Validators.required]],

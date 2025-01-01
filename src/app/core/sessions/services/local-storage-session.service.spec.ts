@@ -6,6 +6,7 @@ import { LoggerService } from '../../errors/services/logger.service';
 import { mockLoggerService } from '../../../../tests/mock-logger-service';
 import { mockDisplayStateCorruptionToastService } from '../../../../tests/mock-display-state-corruption-toast';
 import { generateSession } from '../../../../tests/test-object-generators';
+import { sessionsLocalStorageKey } from '../../shared/domain/local-storage.config';
 
 describe('LocalStorageSessionService', () => {
   let service: LocalStorageSessionService;
@@ -34,7 +35,7 @@ describe('LocalStorageSessionService', () => {
 
   it('should get sessions from localStorage', () => {
     const sessions = [generateSession({ id: '1' })];
-    localStorage.setItem('sessions', JSON.stringify(sessions));
+    localStorage.setItem(sessionsLocalStorageKey, JSON.stringify(sessions));
 
     expect(service.sessions).toEqual(sessions);
   });
@@ -44,7 +45,7 @@ describe('LocalStorageSessionService', () => {
   });
 
   it('should handle invalid json data', () => {
-    localStorage.setItem('sessions', 'invalid-data');
+    localStorage.setItem(sessionsLocalStorageKey, 'invalid-data');
 
     expect(service.sessions).toEqual([]);
     expect(mockLoggerService.error).toHaveBeenCalledWith(
@@ -53,7 +54,10 @@ describe('LocalStorageSessionService', () => {
   });
 
   it('should handle invalid session data structure', () => {
-    localStorage.setItem('sessions', JSON.stringify([{ invalid: 'data' }]));
+    localStorage.setItem(
+      sessionsLocalStorageKey,
+      JSON.stringify([{ invalid: 'data' }]),
+    );
 
     expect(service.sessions).toEqual([]);
     expect(mockLoggerService.error).toHaveBeenCalledWith(
@@ -62,7 +66,10 @@ describe('LocalStorageSessionService', () => {
   });
 
   it('should show error toast', () => {
-    localStorage.setItem('sessions', JSON.stringify([{ invalid: 'data' }]));
+    localStorage.setItem(
+      sessionsLocalStorageKey,
+      JSON.stringify([{ invalid: 'data' }]),
+    );
 
     expect(service.sessions).toEqual([]);
     expect(mockDisplayStateCorruptionToastService.show).toHaveBeenCalledWith(
@@ -74,18 +81,23 @@ describe('LocalStorageSessionService', () => {
     const sessions = [generateSession({ id: '1' })];
     service.sessions = sessions;
 
-    expect(localStorage.getItem('sessions')).toEqual(JSON.stringify(sessions));
+    expect(localStorage.getItem(sessionsLocalStorageKey)).toEqual(
+      JSON.stringify(sessions),
+    );
   });
 
   it('should not save localStorage if it was invalid before setting new sessions', () => {
-    localStorage.setItem('sessions', JSON.stringify([{ invalid: 'data' }]));
+    localStorage.setItem(
+      sessionsLocalStorageKey,
+      JSON.stringify([{ invalid: 'data' }]),
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const unusedValue = service.sessions;
 
     service.sessions = [generateSession({ id: '1' })];
 
-    expect(localStorage.getItem('sessions')).toEqual(
+    expect(localStorage.getItem(sessionsLocalStorageKey)).toEqual(
       JSON.stringify([{ invalid: 'data' }]),
     );
   });

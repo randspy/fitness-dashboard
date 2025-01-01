@@ -5,6 +5,7 @@ import { LoggerService } from '../../errors/services/logger.service';
 import { DisplayStateCorruptionToastService } from '../../errors/services/display-state-corruption-toast.service';
 import { mockLoggerService } from '../../../../tests/mock-logger-service';
 import { mockDisplayStateCorruptionToastService } from '../../../../tests/mock-display-state-corruption-toast';
+import { userLocalStorageKey } from '../../shared/domain/local-storage.config';
 
 describe('LocalStorageUserService', () => {
   let service: LocalStorageUserService;
@@ -33,7 +34,7 @@ describe('LocalStorageUserService', () => {
 
   it('should load user from localStorage on init', () => {
     const user = { name: 'John' };
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem(userLocalStorageKey, JSON.stringify(user));
 
     expect(service.user).toEqual(user);
   });
@@ -43,7 +44,7 @@ describe('LocalStorageUserService', () => {
   });
 
   it('should handle invalid json data', () => {
-    localStorage.setItem('user', 'invalid-data');
+    localStorage.setItem(userLocalStorageKey, 'invalid-data');
 
     expect(service.user).toEqual({ name: '' });
     expect(mockLoggerService.error).toHaveBeenCalledWith(
@@ -52,7 +53,10 @@ describe('LocalStorageUserService', () => {
   });
 
   it('should handle invalid user data', () => {
-    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
+    localStorage.setItem(
+      userLocalStorageKey,
+      JSON.stringify({ invalid: 'data' }),
+    );
 
     expect(service.user).toEqual({ name: '' });
     expect(mockLoggerService.error).toHaveBeenCalledWith(
@@ -61,19 +65,25 @@ describe('LocalStorageUserService', () => {
   });
 
   it('should not clear localStorage when state is invalid', () => {
-    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
+    localStorage.setItem(
+      userLocalStorageKey,
+      JSON.stringify({ invalid: 'data' }),
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const unusedValue = service.user;
     service.user = { name: 'John' };
 
-    expect(localStorage.getItem('user')).toEqual(
+    expect(localStorage.getItem(userLocalStorageKey)).toEqual(
       JSON.stringify({ invalid: 'data' }),
     );
   });
 
   it('should show error toast', () => {
-    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
+    localStorage.setItem(
+      userLocalStorageKey,
+      JSON.stringify({ invalid: 'data' }),
+    );
 
     expect(service.user).toEqual({ name: '' });
     expect(mockDisplayStateCorruptionToastService.show).toHaveBeenCalledWith(
@@ -84,20 +94,23 @@ describe('LocalStorageUserService', () => {
   it('should set user to localStorage', () => {
     service.user = { name: 'John' };
 
-    expect(localStorage.getItem('user')).toEqual(
+    expect(localStorage.getItem(userLocalStorageKey)).toEqual(
       JSON.stringify({ name: 'John' }),
     );
   });
 
   it('should not save localStorage if it was invalid before setting new user', () => {
-    localStorage.setItem('user', JSON.stringify({ invalid: 'data' }));
+    localStorage.setItem(
+      userLocalStorageKey,
+      JSON.stringify({ invalid: 'data' }),
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const unusedValue = service.user;
 
     service.user = { name: 'John' };
 
-    expect(localStorage.getItem('user')).toEqual(
+    expect(localStorage.getItem(userLocalStorageKey)).toEqual(
       JSON.stringify({ invalid: 'data' }),
     );
   });
