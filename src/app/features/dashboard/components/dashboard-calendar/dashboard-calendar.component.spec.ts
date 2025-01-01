@@ -87,5 +87,8 @@ describe('DashboardCalendarComponent', () => {
     expect(calendar.componentInstance.dates()).toEqual([
       sessionStore.sessions()[0].date,
     ]);
+    expect(calendar.componentInstance.currentMonthDate()).toEqual(
+      new Date(2024, 11, 1),
+    );
   });
 });

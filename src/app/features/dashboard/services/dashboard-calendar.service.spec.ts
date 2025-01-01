@@ -38,7 +38,7 @@ describe('DashboardCalendarService', () => {
     expect(service.selectedMonthSessions()).toEqual([sessions[2]]);
   });
 
-  it('should get all sessions dates', () => {
+  it('should get specific month sessions dates', () => {
     const sessions = [
       generateSession({ id: '1', date: new Date(2023, 10, 3) }),
       generateSession({ id: '2', date: new Date(2024, 3, 1) }),
@@ -48,10 +48,11 @@ describe('DashboardCalendarService', () => {
     sessionStore.setSessions(sessions);
     service.setSelectedMonth({ month: 11, year: 2024 });
 
-    expect(service.sessionsDates()).toEqual([
-      sessions[2].date,
-      sessions[0].date,
-      sessions[1].date,
-    ]);
+    expect(service.sessionsDates()).toEqual([sessions[2].date]);
+  });
+
+  it('should return selected month date', () => {
+    service.setSelectedMonth({ month: 11, year: 2024 });
+    expect(service.selectedMonthDate()).toEqual(new Date(2024, 10, 1));
   });
 });

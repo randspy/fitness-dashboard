@@ -17,6 +17,7 @@ describe('CalendarComponent', () => {
     fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('dates', []);
+    fixture.componentRef.setInput('currentMonthDate', new Date());
     fixture.detectChanges();
   });
 
@@ -40,5 +41,27 @@ describe('CalendarComponent', () => {
     datepicker.triggerEventHandler('onMonthChange', monthChangeEvent);
 
     expect(emittedEvent).toEqual(monthChangeEvent);
+  });
+
+  it('should update the datepicker when the current month date changes', () => {
+    const currentMonthDate = new Date(2024, 10, 1);
+    fixture.componentRef.setInput('currentMonthDate', currentMonthDate);
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.nativeElement.innerHTML).toContain('2024');
+    expect(fixture.debugElement.nativeElement.innerHTML).toContain('November');
+  });
+
+  it('should update the datepicker when dates change', () => {
+    const dates = [new Date(2024, 10, 19), new Date(2024, 10, 26)];
+    fixture.componentRef.setInput('dates', dates);
+    fixture.componentRef.setInput('currentMonthDate', new Date(2024, 10, 1));
+    fixture.detectChanges();
+
+    const dateOneSelector = fixture.debugElement.nativeElement.querySelectorAll(
+      '.p-datepicker-day-selected',
+    );
+
+    expect(dateOneSelector.length).toBe(2);
   });
 });
