@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { UserStore } from '../store/user.store';
 import { userSetupCompletedGuard, userSetupRequiredGuard } from './user.guards';
 import { provideTestServices } from '../../../../tests/test-providers';
-import { DefaultRoute } from '../../shared/domain/routes.config';
+import { DefaultRoute, WelcomeRoute } from '../../shared/domain/routes.config';
 
 describe('User Guards', () => {
   let router: jest.Mocked<Router>;
@@ -31,7 +31,7 @@ describe('User Guards', () => {
 
       TestBed.runInInjectionContext(userSetupCompletedGuard);
 
-      expect(router.navigate).toHaveBeenCalledWith(['/welcome']);
+      expect(router.navigate).toHaveBeenCalledWith([WelcomeRoute]);
     });
 
     it('should allow navigation when user exists', () => {

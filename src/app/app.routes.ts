@@ -1,8 +1,5 @@
 import { Routes } from '@angular/router';
-import {
-  userSetupCompletedGuard,
-  userSetupRequiredGuard,
-} from './core/user/guards/user.guards';
+import { userSetupCompletedGuard } from './core/user/guards/user.guards';
 import { DefaultRoute } from './core/shared/domain/routes.config';
 
 export const routes: Routes = [
@@ -12,13 +9,9 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'welcome',
-    title: 'Welcome',
-    loadComponent: () =>
-      import('./features/landing/components/welcome/welcome.component').then(
-        (m) => m.WelcomeComponent,
-      ),
-    canMatch: [userSetupRequiredGuard],
+    path: 'landing',
+    loadChildren: () =>
+      import('./features/landing/landing.routes').then((m) => m.landingRoutes),
   },
   {
     path: 'app',
