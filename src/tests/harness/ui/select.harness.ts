@@ -74,4 +74,14 @@ export class SelectComponentHarness extends ComponentHarness {
     const classList = await select.getAttribute('class');
     return classList?.includes('ng-touched') ?? false;
   }
+
+  async getOptions(): Promise<string[]> {
+    const select = await this.getSelect();
+    await select.dispatchEvent('click', {});
+    const options = await this.locatorForAll(
+      'div[data-testid="select-option"]',
+    )();
+    const texts = await Promise.all(options.map((option) => option.text()));
+    return texts;
+  }
 }

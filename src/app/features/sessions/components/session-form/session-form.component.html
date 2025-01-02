@@ -39,7 +39,7 @@
                 label="Exercise name"
                 optionLabel="name"
                 filterBy="name"
-                [suggestions]="exerciseStore.exercises()"
+                [suggestions]="exerciseSuggestions()"
                 [showError]="isExerciseIdInvalid(exerciseIndex)"
                 errorMessage="Exercise name is required"
               />

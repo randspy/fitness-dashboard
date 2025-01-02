@@ -45,6 +45,8 @@ describe('SessionFormComponent', () => {
         .mockReturnValue(
           'test-uuid' as `${string}-${string}-${string}-${string}-${string}`,
         );
+
+      exerciseStore.reset();
     });
 
     it('should create', () => {
@@ -347,6 +349,20 @@ describe('SessionFormComponent', () => {
       const card = await loader.getHarness(CardComponentHarness);
       expect(await card.getHeaderText()).toBe('Custom Header');
     });
+
+    it('should show not hidden exercises', async () => {
+      exerciseStore.setExercises([
+        generateExercise({ id: 'exercise-1', name: 'Push-ups', hidden: false }),
+        generateExercise({ id: 'exercise-2', name: 'Pull-ups', hidden: true }),
+        generateExercise({ id: 'exercise-3', name: 'Squats', hidden: false }),
+      ]);
+      fixture.detectChanges();
+
+      const exerciseSelect = await exerciseNameSelect(0);
+      const suggestions = await exerciseSelect.getOptions();
+
+      expect(suggestions).toEqual(['Push-ups', 'Squats']);
+    });
   });
 
   describe('edit session', () => {
@@ -376,7 +392,7 @@ describe('SessionFormComponent', () => {
 
       exerciseStore.setExercises([
         generateExercise({ id: 'exercise-1', name: 'Push-ups' }),
-        generateExercise({ id: 'exercise-2', name: 'Pull-ups' }),
+        generateExercise({ id: 'exercise-2', name: 'Pull-ups', hidden: true }),
       ]);
       fixture.componentRef.setInput('session', session);
       fixture.detectChanges();
@@ -402,6 +418,13 @@ describe('SessionFormComponent', () => {
 
       const exerciseName = await exerciseNameSelect(0);
       expect(await exerciseName.getValue()).toBe('Push-ups');
+    });
+
+    it('should show selected exercise even when exercise is hidden', async () => {
+      const exerciseSelect = await exerciseNameSelect(0);
+      const suggestions = await exerciseSelect.getOptions();
+
+      expect(suggestions).toEqual(['Push-ups', 'Pull-ups']);
     });
   });
 

@@ -6,6 +6,7 @@ import {
   output,
   OnInit,
   input,
+  computed,
 } from '@angular/core';
 import {
   FormArray,
@@ -223,4 +224,14 @@ export class SessionFormComponent implements OnInit, CanComponentDeactivate {
   hasFormChanged(): boolean {
     return !deepEqual(this.notModifiedFormValue(), this.form.value);
   }
+
+  exerciseSuggestions = computed(() =>
+    this.exerciseStore
+      .exercises()
+      .filter(
+        (exercise) =>
+          !exercise.hidden ||
+          this.session()?.exercises.some((e) => e.exerciseId === exercise.id),
+      ),
+  );
 }
